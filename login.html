@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CD0023;
+    --red-bright: #ff1f42;
+    --red-dim: #7a0016;
+    --black: #000000;
+    --panel: #0a0505;
+    --panel-2: #120708;
+    --line: rgba(205, 0, 35, 0.22);
+    --text: #f2e9ea;
+    --text-dim: #8a7678;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    min-height: 100%;
+  }
+
+  /* ---------- Ambient background ---------- */
+  .bg-glow {
+    position: fixed;
+    inset: -20%;
+    pointer-events: none;
+    background:
+      radial-gradient(45% 35% at 22% 28%, rgba(205,0,35,0.16) 0%, rgba(205,0,35,0) 70%),
+      radial-gradient(40% 30% at 78% 74%, rgba(205,0,35,0.12) 0%, rgba(205,0,35,0) 70%);
+    animation: driftGlow 16s ease-in-out infinite alternate;
+    filter: blur(10px);
+    z-index: 0;
+  }
+  @keyframes driftGlow {
+    0%   { transform: translate3d(0,0,0) scale(1); }
+    50%  { transform: translate3d(2%, -3%, 0) scale(1.08); }
+    100% { transform: translate3d(-3%, 2%, 0) scale(1); }
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(205,0,35,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(205,0,35,0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(60% 60% at 50% 45%, black 0%, transparent 75%);
+    z-index: 0;
+  }
+
+  .page-stack {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .test-trigger {
+    background: transparent;
+    border: 1px dashed rgba(205,0,35,0.45);
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+  .test-trigger:hover {
+    color: var(--red-bright);
+    border-color: var(--red-bright);
+    background: rgba(205,0,35,0.06);
+  }
+
+  /* ---------- Card ---------- */
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+    margin: 24px;
+    padding: 44px 34px 38px;
+    background: linear-gradient(180deg, var(--panel-2) 0%, var(--panel) 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.6),
+      0 30px 60px -20px rgba(0,0,0,0.85),
+      0 0 60px -20px rgba(205,0,35,0.25);
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+    animation: cardIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    overflow: hidden;
+  }
+  @keyframes cardIn {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* traveling light along the card border */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 1px;
+    background: conic-gradient(from var(--ang, 0deg),
+      transparent 0%, transparent 78%, var(--red-bright) 88%, transparent 98%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 6s linear infinite;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  @property --ang {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes rotateBorder {
+    from { --ang: 0deg; }
+    to   { --ang: 360deg; }
+  }
+
+  form {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ---------- Fields ---------- */
+  .field {
+    position: relative;
+  }
+  .field svg.leading {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-dim);
+    pointer-events: none;
+    stroke-width: 2.3;
+    filter:
+      drop-shadow(0 -1px 0 rgba(255,255,255,0.18))
+      drop-shadow(0 2px 2px rgba(0,0,0,0.65))
+      drop-shadow(0 0 7px rgba(205,0,35,0.3));
+    transition: color 0.35s ease, filter 0.35s ease, transform 0.35s ease;
+    z-index: 1;
+  }
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    padding: 16px 44px 16px 42px;
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    outline: none;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, background 0.35s ease;
+  }
+  .field input::placeholder {
+    color: var(--text-dim);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .field input:focus::placeholder {
+    opacity: 0;
+    transform: translateX(22px);
+  }
+  .field input:focus {
+    border-color: var(--red);
+    background: rgba(205,0,35,0.045);
+    box-shadow: 0 0 0 4px rgba(205,0,35,0.12), 0 0 22px -4px rgba(205,0,35,0.45);
+    transform: translateY(-1px);
+  }
+  .field input:hover:not(:focus) {
+    border-color: rgba(205,0,35,0.35);
+  }
+  .field input:focus ~ svg.leading {
+    color: var(--red-bright);
+    filter:
+      drop-shadow(0 -1px 0 rgba(255,255,255,0.3))
+      drop-shadow(0 2px 3px rgba(0,0,0,0.7))
+      drop-shadow(0 0 10px rgba(255,31,66,0.55));
+    transform: translateY(-50%) scale(1.08);
+  }
+  .eye-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    z-index: 1;
+  }
+  .eye-btn:hover { color: var(--red-bright); }
+  .eye-icon-wrap {
+    display: flex;
+    width: 18px;
+    height: 18px;
+    transform-origin: center;
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .eye-icon-wrap.blink {
+    transform: scaleY(0.08);
+    transition: transform 0.14s cubic-bezier(0.4, 0, 1, 1);
+  }
+  .eye-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.3;
+    filter:
+      drop-shadow(0 -1px 0 rgba(255,255,255,0.22))
+      drop-shadow(0 2px 2px rgba(0,0,0,0.6));
+    transition: color 0.25s ease;
+  }
+
+  /* ---------- Success: fields slide away ---------- */
+  .field.success-exit svg.leading {
+    transition: transform 1.15s cubic-bezier(0.55, 0, 0.3, 1), opacity 1s ease;
+    transform: translateY(-50%) translateX(460px);
+    opacity: 0;
+  }
+  .field.success-exit input {
+    transition: transform 1.15s cubic-bezier(0.55, 0, 0.3, 1) 0.18s, opacity 0.9s ease 0.18s;
+    transform: translateX(460px);
+    opacity: 0;
+  }
+  .field.success-exit .eye-btn {
+    transition: opacity 0.6s ease;
+    opacity: 0;
+  }
+
+  /* password icon: unlock pop, then travel out with the rest */
+  #pwLockIcon.unlocking {
+    animation: unlockPopSlide 1.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes unlockPopSlide {
+    0%   { transform: translateY(-50%) translateX(0)    rotate(0deg)   scale(1);    opacity: 1; }
+    22%  { transform: translateY(-50%) translateX(3px)  rotate(-18deg) scale(1.28); opacity: 1; }
+    42%  { transform: translateY(-50%) translateX(8px)  rotate(10deg)  scale(1.08); opacity: 1; }
+    100% { transform: translateY(-50%) translateX(460px) rotate(6deg)  scale(1);    opacity: 0; }
+  }
+
+  /* submit button: slide away the same way as the fields, no shatter */
+  .submit.success-exit {
+    transition: transform 1.15s cubic-bezier(0.55, 0, 0.3, 1) 0.15s, opacity 0.9s ease 0.25s;
+    transform: translateX(460px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ---------- Button ---------- */
+  .submit {
+    position: relative;
+    margin-top: 6px;
+    padding: 15px 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-dim) 100%);
+    color: #fff;
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, filter 0.3s ease;
+    box-shadow: 0 8px 24px -8px rgba(205,0,35,0.55);
+  }
+  .submit::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.28) 50%, transparent 80%);
+    background-size: 220% 100%;
+    background-position: 130% 0;
+    animation: sheen 3.2s ease-in-out infinite;
+  }
+  @keyframes sheen {
+    0%, 60% { background-position: 130% 0; }
+    100% { background-position: -30% 0; }
+  }
+  .submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(205,0,35,0.75), 0 0 30px -6px var(--red-bright);
+    filter: brightness(1.08);
+  }
+  .submit:active {
+    transform: scale(0.96) translateY(0);
+    transition-duration: 0.12s;
+  }
+
+  .submit .label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .label-text {
+    display: inline-flex;
+  }
+  .letter {
+    display: inline-block;
+    white-space: pre;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .arrow-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    stroke-width: 2.6;
+    filter:
+      drop-shadow(0 -1px 0 rgba(255,255,255,0.35))
+      drop-shadow(0 2px 2px rgba(0,0,0,0.55));
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .submit.arrow-out .arrow-icon {
+    transform: translateX(26px);
+    opacity: 0;
+  }
+  .submit.letters-out .letter {
+    opacity: 0;
+    transform: translateY(-7px);
+    transition-delay: calc(var(--i) * 32ms);
+  }
+  .submit.letters-in .letter {
+    transition-delay: calc(var(--i) * 45ms);
+  }
+
+  .spinner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .submit.loading .spinner {
+    opacity: 1;
+  }
+  .spinner span {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .card {
+      padding: 36px 24px 30px;
+      border-radius: 16px;
+    }
+  }
+
+  /* ---------- Brand header ---------- */
+  .brand-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .brand-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(205,0,35,0.28) 0%, rgba(205,0,35,0.08) 100%);
+    border: 1px solid rgba(205,0,35,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    box-shadow: 0 0 30px -6px rgba(205,0,35,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .brand-icon svg {
+    width: 34px;
+    height: 34px;
+    color: var(--red-bright);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 8px rgba(255,31,66,0.5));
+  }
+  .brand-name {
+    font-family: 'Baloo 2', 'Chakra Petch', sans-serif;
+    font-weight: 800;
+    font-size: 27px;
+    letter-spacing: 0.01em;
+    margin: 0 0 2px;
+    background: linear-gradient(90deg, #ff4d6a 0%, #ff1f42 40%, #cd0023 70%, #ff8a9b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 14px rgba(255,31,66,0.5));
+  }
+  .brand-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <div class="page-stack">
+    <div class="card">
+      <div class="brand-header">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 9.4 9 10 5.2-.6 9-5 9-10V6l-9-4Z"/></svg>
+        </div>
+        <h1 class="brand-name">DekmaSH Stowe</h1>
+        <p class="brand-tagline">ระบบเฉพาะตัวแทนจำหน่าย · Private Reseller Portal</p>
+      </div>
+      <form id="loginForm" autocomplete="off">
+        <div class="field" id="userField">
+          <input type="text" name="username" placeholder="ชื่อผู้ใช้" required>
+          <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="field" id="pwField">
+          <input type="password" name="password" id="pw" placeholder="รหัสผ่าน" required>
+          <svg id="pwLockIcon" class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <button type="button" class="eye-btn" id="eyeBtn" aria-label="แสดงรหัสผ่าน">
+            <span class="eye-icon-wrap" id="eyeIconWrap">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+          </button>
+        </div>
+        <button type="submit" class="submit" id="submitBtn">
+          <span class="label">
+            <span class="label-text" id="labelText">เข้าสู่ระบบ</span>
+            <svg id="arrowIcon" class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </span>
+          <span class="spinner"><span></span></span>
+        </button>
+      </form>
+    </div>
+
+    <button type="button" id="testSuccessBtn" class="test-trigger">▶ ทดสอบอนิเมชั่น "เข้าสู่ระบบสำเร็จ"</button>
+  </div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const btn = document.getElementById('submitBtn');
+  const pw = document.getElementById('pw');
+  const eyeBtn = document.getElementById('eyeBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+  const eyeIconWrap = document.getElementById('eyeIconWrap');
+  const EYE_OPEN = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>';
+  const EYE_CLOSED = '<path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.88 4.24A9.9 9.9 0 0 1 12 4c7 0 11 8 11 8a17.9 17.9 0 0 1-3.15 4.02"/><path d="M6.5 6.5C3.7 8.3 1 12 1 12s2.4 4.2 6.1 6.1"/>';
+  let pwVisible = false;
+  eyeBtn.addEventListener('click', () => {
+    eyeIconWrap.classList.add('blink');
+    setTimeout(() => {
+      pwVisible = !pwVisible;
+      pw.type = pwVisible ? 'text' : 'password';
+      eyeIcon.innerHTML = pwVisible ? EYE_CLOSED : EYE_OPEN;
+      eyeBtn.setAttribute('aria-label', pwVisible ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+      eyeIconWrap.classList.remove('blink');
+    }, 140);
+  });
+
+  // Split the button label into grapheme-safe letters (keeps Thai tone/vowel marks attached)
+  const labelText = document.getElementById('labelText');
+  function wrapLetters(el) {
+    const text = el.textContent;
+    el.textContent = '';
+    const segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter)
+      ? new Intl.Segmenter('th', { granularity: 'grapheme' })
+      : null;
+    const chars = segmenter
+      ? Array.from(segmenter.segment(text), s => s.segment)
+      : Array.from(text);
+    chars.forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.className = 'letter';
+      span.style.setProperty('--i', i);
+      span.textContent = ch;
+      el.appendChild(span);
+    });
+    return chars.length;
+  }
+  const letterCount = wrapLetters(labelText);
+
+  // ---------- Success animation: fields slide away, button shatters ----------
+  const card = document.querySelector('.card');
+  const userField = document.getElementById('userField');
+  const pwField = document.getElementById('pwField');
+  const pwLockIcon = document.getElementById('pwLockIcon');
+  const testSuccessBtn = document.getElementById('testSuccessBtn');
+
+  const LOCK_CLOSED = '<rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>';
+  const LOCK_OPEN = '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>';
+
+  function triggerSuccess() {
+    userField.classList.add('success-exit');
+    pwField.classList.add('success-exit');
+    pwLockIcon.classList.add('unlocking');
+    pwLockIcon.innerHTML = LOCK_OPEN;
+    btn.classList.add('success-exit');
+    btn.disabled = true;
+  }
+
+  function resetSuccessDemo() {
+    userField.classList.remove('success-exit');
+    pwField.classList.remove('success-exit');
+    pwLockIcon.classList.remove('unlocking');
+    pwLockIcon.innerHTML = LOCK_CLOSED;
+    btn.classList.remove('success-exit', 'busy', 'arrow-out', 'letters-out', 'letters-in', 'loading');
+    btn.style.visibility = '';
+    btn.disabled = false;
+  }
+
+  if (testSuccessBtn) {
+    testSuccessBtn.addEventListener('click', () => {
+      resetSuccessDemo();
+      // allow the reset to paint before animating again
+      requestAnimationFrame(() => requestAnimationFrame(triggerSuccess));
+    });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (btn.classList.contains('busy')) return;
+    btn.classList.add('busy');
+    btn.disabled = true;
+
+    const ARROW_OUT = 350;
+    const LETTER_STAGGER = 32;
+    const LETTER_DUR = 260;
+    const lettersOutTotal = (letterCount - 1) * LETTER_STAGGER + LETTER_DUR;
+    const SPINNER_HOLD = 800;
+    const LETTER_IN_STAGGER = 45;
+    const LETTER_IN_DUR = 320;
+    const lettersInTotal = (letterCount - 1) * LETTER_IN_STAGGER + LETTER_IN_DUR;
+    const ARROW_IN = 350;
+
+    // 1) arrow slides right and disappears
+    btn.classList.add('arrow-out');
+
+    // 2) once the arrow is gone, letters vanish one by one
+    setTimeout(() => btn.classList.add('letters-out'), ARROW_OUT);
+
+    // 3) once letters are gone, show the spinner
+    const spinnerAt = ARROW_OUT + lettersOutTotal;
+    setTimeout(() => btn.classList.add('loading'), spinnerAt);
+
+    // 4) hide spinner, bring letters back in one by one
+    const lettersInAt = spinnerAt + SPINNER_HOLD;
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      btn.classList.remove('letters-out');
+      btn.classList.add('letters-in');
+    }, lettersInAt);
+
+    // 5) once letters finish, arrow slides back in
+    const arrowInAt = lettersInAt + lettersInTotal;
+    setTimeout(() => btn.classList.remove('arrow-out'), arrowInAt);
+
+    // 6) reset, ready for another click
+    setTimeout(() => {
+      btn.classList.remove('letters-in', 'busy');
+      btn.disabled = false;
+    }, arrowInAt + ARROW_IN);
+  });
+</script>
+
+</body>
+</html>
