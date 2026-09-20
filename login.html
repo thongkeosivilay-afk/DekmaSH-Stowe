@@ -182,7 +182,7 @@ svg{display:block;fill:currentColor;flex:none}
         </label>
         <div class="lg-field">
           <svg class="ic-l" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.8 12v1.6a2.6 2.6 0 0 0 5.2 0V12a9 9 0 1 0-3.5 7.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-          <input id="lgUser" name="username" type="text" autocomplete="username" placeholder="ປ້ອນ Username ຂອງທ່ານ" required>
+          <input id="lgUser" name="username" type="text" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ປ້ອນ Username ຂອງທ່ານ" required>
         </div>
 
         <label class="lg-lbl" for="lgPass">
@@ -237,10 +237,10 @@ svg{display:block;fill:currentColor;flex:none}
    ກ່ອນນຳໃຊ້ຈິງ ຄວນປ່ຽນໄປກວດກັບເຊີບເວີ/ຖານຂໍ້ມູນຈິງແທນ
    ===================================================================== */
 const $=q=>document.querySelector(q);
-const LK='dekma_auth_v1';
+const LK='dekma_auth_v2';
 let AUTH;
 try{AUTH=JSON.parse(localStorage.getItem(LK))}catch(e){}
-if(!AUTH||!AUTH.user) AUTH={user:'agent',pass:'123456'}; /* ບັນຊີທົດລອງເລີ່ມຕົ້ນ — ແກ້ໄດ້ບ່ອນນີ້ ຫຼືຜ່ານໜ້າແອດມິນພາຍຫຼັງ */
+if(!AUTH||!AUTH.user) AUTH={user:'BeertJ',pass:'97611B'}; /* ບັນຊີທົດລອງເລີ່ມຕົ້ນ — ແກ້ໄດ້ບ່ອນນີ້ ຫຼືຜ່ານໜ້າແອດມິນພາຍຫຼັງ */
 try{localStorage.setItem(LK,JSON.stringify(AUTH))}catch(e){}
 
 $('#lgDomain').textContent=location.hostname||'dekmash-stowe.example';
