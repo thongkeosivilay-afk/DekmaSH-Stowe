@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>DekmaSH Stowe - เข้าสู่ระบบ</title>
+<title>DekmaSH Stowe - ເຂົ້າສູ່ລະບົບ</title>
 <script>
 /* Some in-app WebViews mis-measure vw / don't support clamp() reliably, which can make
    the whole layout render oversized and spill off the edge of the screen. This forces the
    root font-size from an actually-measured width, so sizing is always correct no matter
-   what browser/webview opens the page. (คัดลอกมาจาก index.html เพื่อให้สัดส่วนตรงกันทุกเครื่อง) */
+   what browser/webview opens the page. (ກັອບປີ້ມາຈາກ index.html ເພື່ອໃຫ້ສັດສ່ວນກົງກັນທຸກເຄື່ອງ) */
 (function(){
   function setFS(){
     var w = (document.documentElement && document.documentElement.clientWidth) || window.innerWidth || 390;
@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Lao+Looped:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== Design tokens — เหมือนกับ index.html เป๊ะๆ (ชื่อ/ค่าตัวแปรเดียวกัน) ===== */
+/* ===== Design tokens — ຄືກັບ index.html ທຸກຢ່າງ (ຊື່/ຄ່າຕົວແປຄືກັນ) ===== */
 :root{
   --bg:#000000; --glow:#1f0509;
   --card-bg:#0a0505; --card-bg-2:#120708; --card-border:rgba(205,0,35,.22);
@@ -34,7 +34,7 @@
   --text:#f2e9ea; --muted:#8a7678;
   --pill-bg:#1c0508; --pill-border:rgba(205,0,35,.5); --pill-text:#ff4d6a;
   --green:#4ade80;
-  --red:#CD0023; --red-bright:#ff1f42; --red-dim:#7a0016; /* ชื่อเดียวกับ index.html */
+  --red:#CD0023; --red-bright:#ff1f42; --red-dim:#7a0016; /* ຊື່ຄືກັບ index.html */
   --b2-bd:#e01a3a;
   --accent:#ff1f42;
   --font:'Sora','Noto Sans Lao','Phetsarath OT','Lao UI','Leelawadee UI',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -157,7 +157,7 @@ svg{display:block;fill:currentColor;flex:none}
         <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.4 3.4 9.5 8 11 4.6-1.5 8-5.6 8-11V5z"/><path d="M8.6 12.4l2.4 2.4 4.6-4.8" fill="none" stroke="#7a0016" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <h1 class="lg-name">DekmaSH Stowe</h1>
-      <p class="lg-sub">ระบบเฉพาะตัวแทนจำหน่าย · Private Reseller Portal</p>
+      <p class="lg-sub">ລະບົບສະເພາະຕົວແທນຈຳໜ່າຍ · Private Reseller Portal</p>
       <div class="lg-badges">
         <span class="lg-b" style="--c:#4ade80;--ibg:rgba(74,222,128,.1);--bd:rgba(74,222,128,.35)"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.4" fill="none" stroke="currentColor" stroke-width="2.1"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>HTTPS</span>
         <span class="lg-b" style="--c:#ff8fa3;--ibg:rgba(255,31,66,.1);--bd:rgba(255,31,66,.4)"><svg viewBox="0 0 24 24"><path d="M12 2 5 4.6v5.6c0 5 3 8.8 7 9.8 4-1 7-4.8 7-9.8V4.6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 12.2l1.9 1.9 3.7-3.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>2FA</span>
@@ -169,57 +169,57 @@ svg{display:block;fill:currentColor;flex:none}
     <div class="lg-body">
       <h2 class="lg-h2">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.6" cy="7.6" r="3.3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.6 18.4c.9-3.4 3.4-5.1 6-5.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="13.6" y="12.6" width="8" height="7" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.2 12.6v-1.5a2.4 2.4 0 0 1 4.8 0v1.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-        เข้าสู่ระบบ
+        ເຂົ້າສູ່ລະບົບ
       </h2>
 
       <div class="lg-err" id="lgErr" role="alert">
         <svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/><path d="M12 10v4.3M12 17.3v.1" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
-        <span id="lgErrMsg">Username หรือรหัสผ่านไม่ถูกต้อง</span>
+        <span id="lgErrMsg">Username ຫຼືລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ</span>
       </div>
 
       <form id="lgForm" novalidate>
         <label class="lg-lbl" for="lgUser">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1-4 4-6 7.5-6s6.5 2 7.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          ชื่อผู้ใช้ (Username)
+          ຊື່ຜູ້ໃຊ້ (Username)
         </label>
         <div class="lg-field">
           <svg class="ic-l" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.8 12v1.6a2.6 2.6 0 0 0 5.2 0V12a9 9 0 1 0-3.5 7.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-          <input id="lgUser" name="username" type="text" autocomplete="username" placeholder="กรอก Username ของคุณ" required>
+          <input id="lgUser" name="username" type="text" autocomplete="username" placeholder="ປ້ອນ Username ຂອງທ່ານ" required>
         </div>
 
         <label class="lg-lbl" for="lgPass">
           <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.4 12.6 19 4M16 7l2 2M13.2 9.8l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          รหัสผ่าน (Password)
+          ລະຫັດຜ່ານ (Password)
         </label>
         <div class="lg-field">
           <svg class="ic-l" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่านของคุณ" required>
-          <button type="button" class="ic-r" id="lgEye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
+          <input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="ປ້ອນລະຫັດຜ່ານຂອງທ່ານ" required>
+          <button type="button" class="ic-r" id="lgEye" aria-label="ສະແດງ/ເຊື່ອງລະຫັດຜ່ານ" aria-pressed="false">
             <svg id="lgEyeIco" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
           </button>
         </div>
 
         <button type="submit" class="lg-cta" id="lgGo">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l6 7-6 7M3 12h15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>เข้าสู่ระบบ</span>
+          <span>ເຂົ້າສູ່ລະບົບ</span>
         </button>
       </form>
 
-      <div class="lg-or">หรือ</div>
+      <div class="lg-or">ຫຼື</div>
 
       <button type="button" class="lg-alt" id="lgSignup">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M19 3.2l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
-        เติมเงินเพื่อเปิดบัญชีตัวแทนใหม่
+        ຕື່ມເງິນເພື່ອເປີດບັນຊີຕົວແທນໃໝ່
       </button>
 
       <div class="lg-info">
         <h3>
           <svg viewBox="0 0 24 24"><path d="M12 2 4 5v5.5c0 5 3.2 8.9 8 10.5 4.8-1.6 8-5.5 8-10.5V5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          สิทธิ์เข้าถึงสินค้าตามยอดเปิดบัญชี:
+          ສິດເຂົ້າເຖິງສິນຄ້າຕາມຍອດເປີດບັນຊີ:
         </h3>
         <ul>
-          <li>· <b>₭50,000</b> → เห็นเฉพาะ <b>GBOX &amp; PROXY</b> (เงินเข้าเครดิต ₭50,000)</li>
-          <li>· <b>₭100,000</b> → มองเห็นสินค้าทั้งหมด <b>100%</b> (เงินเข้าเครดิต ₭100,000)</li>
+          <li>· <b>₭50,000</b> → ເຫັນສະເພາະ <b>GBOX &amp; PROXY</b> (ເງິນເຂົ້າເຄຣດິດ ₭50,000)</li>
+          <li>· <b>₭100,000</b> → ເຫັນສິນຄ້າທັງໝົດ <b>100%</b> (ເງິນເຂົ້າເຄຣດິດ ₭100,000)</li>
         </ul>
       </div>
     </div>
@@ -233,15 +233,15 @@ svg{display:block;fill:currentColor;flex:none}
 <script>
 /* =====================================================================
    DekmaSH Stowe — Login Gate
-   ข้อควรรู้: หน้านี้ตรวจสอบ Username/Password แบบฝั่งไคลเอ็นต์ (localStorage)
-   เพื่อสาธิตเท่านั้น — ใครก็ดูรหัสผ่านที่ตั้งไว้จากซอร์สโค้ด/localStorage ได้
-   ก่อนใช้งานจริง ควรเปลี่ยนไปเช็คกับเซิร์ฟเวอร์/ฐานข้อมูลจริงแทน
+   ຂໍ້ຄວນຮູ້: ໜ້ານີ້ກວດສອບ Username/Password ແບບຝັ່ງໄຄລເອັນ (localStorage)
+   ເພື່ອສາທິດເທົ່ານັ້ນ — ໃຜກໍສາມາດເບິ່ງລະຫັດຜ່ານທີ່ຕັ້ງໄວ້ຈາກຊອສໂຄ້ດ/localStorage ໄດ້
+   ກ່ອນນຳໃຊ້ຈິງ ຄວນປ່ຽນໄປກວດກັບເຊີບເວີ/ຖານຂໍ້ມູນຈິງແທນ
    ===================================================================== */
 const $=q=>document.querySelector(q);
 const LK='dekma_auth_v1';
 let AUTH;
 try{AUTH=JSON.parse(localStorage.getItem(LK))}catch(e){}
-if(!AUTH||!AUTH.user) AUTH={user:'agent',pass:'123456'}; /* บัญชีทดสอบเริ่มต้น — แก้ได้ที่นี่ หรือผ่านหน้าแอดมินภายหลัง */
+if(!AUTH||!AUTH.user) AUTH={user:'agent',pass:'123456'}; /* ບັນຊີທົດລອງເລີ່ມຕົ້ນ — ແກ້ໄດ້ບ່ອນນີ້ ຫຼືຜ່ານໜ້າແອດມິນພາຍຫຼັງ */
 try{localStorage.setItem(LK,JSON.stringify(AUTH))}catch(e){}
 
 $('#lgDomain').textContent=location.hostname||'dekmash-stowe.example';
@@ -249,7 +249,7 @@ $('#lgDomain').textContent=location.hostname||'dekmash-stowe.example';
 const toast=$('#toast'); let tt;
 function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2200)}
 
-/* ---- toggle แสดง/ซ่อนรหัสผ่าน ---- */
+/* ---- toggle ສະແດງ/ເຊື່ອງລະຫັດຜ່ານ ---- */
 const EYE='<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/>';
 const EYE_OFF='<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 3.5l17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
 const lgPass=$('#lgPass'), lgEye=$('#lgEye'), lgEyeIco=$('#lgEyeIco');
@@ -260,7 +260,7 @@ lgEye.addEventListener('click',()=>{
   lgEye.setAttribute('aria-pressed',show);
 });
 
-/* ---- ส่งฟอร์ม ---- */
+/* ---- ສົ່ງຟອມ ---- */
 const lgCard=$('#lgCard'), lgErr=$('#lgErr'), lgErrMsg=$('#lgErrMsg'), lgGo=$('#lgGo'), lgUser=$('#lgUser');
 const SPIN='<svg class="lg-spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,.35)"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#fff"/></svg>';
 const GO_HTML=lgGo.innerHTML;
@@ -273,20 +273,20 @@ $('#lgForm').addEventListener('submit',async e=>{
   e.preventDefault();
   lgErr.classList.remove('show');
   const u=lgUser.value.trim(), p=lgPass.value;
-  if(!u||!p) return showErr('กรุณากรอก Username และรหัสผ่านให้ครบ');
-  lgGo.disabled=true; lgGo.innerHTML=SPIN+'<span>กำลังเข้าสู่ระบบ…</span>';
-  await new Promise(r=>setTimeout(r,650)); /* หน่วงสั้นๆ ให้เห็นสถานะโหลดชัดเจน */
+  if(!u||!p) return showErr('ກະລຸນາປ້ອນ Username ແລະລະຫັດຜ່ານໃຫ້ຄົບ');
+  lgGo.disabled=true; lgGo.innerHTML=SPIN+'<span>ກຳລັງເຂົ້າສູ່ລະບົບ…</span>';
+  await new Promise(r=>setTimeout(r,650)); /* ໜ່ວງສັ້ນໆ ໃຫ້ເຫັນສະຖານະໂຫຼດຊັດເຈນ */
   if(u===AUTH.user && p===AUTH.pass){
     try{sessionStorage.setItem('dekma_session','1')}catch(err){}
-    lgGo.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>สำเร็จ กำลังพาไปหน้าเว็บ…</span>';
+    lgGo.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>ສຳເລັດ ກຳລັງພາໄປໜ້າເວັບ…</span>';
     location.href='index.html';
     return;
   }
   lgGo.disabled=false; lgGo.innerHTML=GO_HTML;
-  showErr('Username หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+  showErr('Username ຫຼືລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ');
 });
 
-$('#lgSignup').addEventListener('click',()=>say('กรุณาติดต่อแอดมินเพื่อเปิดบัญชีตัวแทนใหม่'));
+$('#lgSignup').addEventListener('click',()=>say('ກະລຸນາຕິດຕໍ່ແອດມິນເພື່ອເປີດບັນຊີຕົວແທນໃໝ່'));
 </script>
 </body>
 </html>
