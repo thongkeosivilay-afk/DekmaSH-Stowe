@@ -6,6 +6,13 @@
 <meta name="color-scheme" content="dark">
 <title>DekmaSH Stowe - ລະບົບຕົວແທນຈຳໜ່າຍ</title>
 <script>
+/* ===== Login gate: ต้องเข้าสู่ระบบผ่าน login.html ก่อนถึงจะเข้าหน้านี้ได้ (ตรวจสอบฝั่งไคลเอ็นต์ผ่าน sessionStorage) ===== */
+(function(){
+  try{ if(sessionStorage.getItem('dekma_session')!=='1'){ location.replace('login.html'); } }
+  catch(e){}
+})();
+</script>
+<script>
 /* Some in-app WebViews mis-measure vw / don't support clamp() reliably, which can make
    the whole layout render oversized and spill off the edge of the screen. This forces the
    root font-size from an actually-measured width, so sizing is always correct no matter
@@ -818,6 +825,8 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 .om-dtxt{position:relative;display:flex;flex-direction:column;gap:.25rem}
 .om-dchip b{position:relative;font-family:var(--font-display);font-size:1.65rem;font-weight:700;transition:color .3s}
 .om-dchip .om-dtxt span{position:relative;color:var(--om-mute);font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums;transition:color .3s}
+.om-dright{position:relative;flex:none;display:flex;align-items:center;gap:.9rem}
+.om-rdy{flex:none;white-space:nowrap;transition:opacity .3s}
 .om-dchip .om-dcheck{position:relative;flex:none;display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;
   border:.15rem solid rgba(255,255,255,.2);color:transparent;transition:background .3s,border-color .3s,color .2s,box-shadow .3s,transform .3s var(--om-ease)}
 .om-dchip .om-dcheck svg{width:1.4rem;height:1.4rem;stroke:currentColor;stroke-width:.3;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .35s ease .05s}
@@ -837,6 +846,18 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 .om-dchip.on .om-dcheck{background:var(--om-c);border-color:var(--om-c);color:#fff;box-shadow:0 0 1rem color-mix(in srgb,var(--om-c) 60%,transparent);
   transform:scale(1.08);transition-delay:.05s}
 .om-dchip.on .om-dcheck svg{stroke-dashoffset:0}
+/* --- Quantity stepper --- */
+.om-qty{display:flex;align-items:center;justify-content:space-between;gap:1.2rem}
+.om-qty-lbl{color:var(--om-mute);font-size:1.35rem;font-weight:600}
+.om-qty-stepper{display:flex;align-items:center;gap:0;flex:none;border-radius:1.4rem;border:max(1px,.15rem) solid var(--glass-line);
+  background:linear-gradient(100deg,var(--glass),var(--glass-2));overflow:hidden}
+.om-qty-btn{flex:none;display:grid;place-items:center;width:4.6rem;height:4.6rem;padding:0;border:0;background:transparent;
+  color:var(--text);font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1;transition:background .25s,color .25s,opacity .25s}
+.om-qty-btn:not(:disabled):active{background:color-mix(in srgb,var(--om-c) 22%,transparent)}
+.om-qty-btn:disabled{opacity:.3}
+.om-qty-val{flex:none;min-width:4.4rem;text-align:center;font-family:var(--font-display);font-size:1.7rem;font-weight:700;
+  border-left:1px solid var(--glass-line);border-right:1px solid var(--glass-line)}
+.om-qty-val.pop{animation:omBalPop .4s ease}
 .om-total b.pop{animation:omTotalPop .45s var(--om-ease)}
 @keyframes omTotalPop{0%{transform:scale(1)}45%{transform:scale(1.14);text-shadow:0 0 2.8rem rgba(255,31,66,.8)}100%{transform:scale(1)}}
 .om-bal b.pop{animation:omBalPop .4s ease}
@@ -1064,7 +1085,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
       <button class="row" data-say="ປະຫວັດຄຳສັ່ງຊື້"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ປະຫວັດຄຳສັ່ງຊື້<svg><use href="#i-chev"/></svg></button>
       <button class="row" data-go="topup"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span>ເຕີມເງິນເຄຣດິດ<svg><use href="#i-chev"/></svg></button>
     </div>
-    <div class="card" style="padding:.6rem 1.6rem"><button class="row out" data-say="ອອກຈາກລະບົບ"><span class="ico" style="--c:#f87171;--ibg:#2f1420;--bd:#7a2b3d"><svg><use href="#i-out"/></svg></span>ອອກຈາກລະບົບ</button></div>
+    <div class="card" style="padding:.6rem 1.6rem"><button class="row out" id="btnLogout"><span class="ico" style="--c:#f87171;--ibg:#2f1420;--bd:#7a2b3d"><svg><use href="#i-out"/></svg></span>ອອກຈາກລະບົບ</button></div>
   </div>
 </div>
 <!-- ===== แอดมิน ===== -->
@@ -1348,6 +1369,10 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g) return show(g.dataset.go);
   const s=e.target.closest('[data-say]'); if(s) say(s.dataset.say+' — ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ລະບົບ');
 });
+$('#btnLogout')?.addEventListener('click',()=>{
+  try{sessionStorage.removeItem('dekma_session')}catch(e){}
+  location.href='login.html';
+});
 $$('.nav .item').forEach(b=>b.addEventListener('click',()=>{
   $$('.nav .item').forEach(x=>x.classList.remove('bump'));
   requestAnimationFrame(()=>b.classList.add('bump'));
@@ -1403,23 +1428,25 @@ $('#plist').addEventListener('click',e=>{ /* แตะรูปปก = สล�
 });
 
 /* ----- สั่งซื้อ + ส่งสินค้าอัตโนมัติ ----- */
-function addOrder(p,k,price,durLabel){DB.orders=DB.orders||[];DB.orderSeq=DB.orderSeq||1;
-  DB.orders.unshift({id:DB.orderSeq++,t:Date.now(),code:p.code,cat:p.cat,name:p.name,price:price!=null?price:p.price,dur:durLabel||'',status:k?'auto':'wait',key:k||''});
+function addOrder(p,k,price,durLabel,qty){DB.orders=DB.orders||[];DB.orderSeq=DB.orderSeq||1;
+  DB.orders.unshift({id:DB.orderSeq++,t:Date.now(),code:p.code,cat:p.cat,name:p.name,price:price!=null?price:p.price,dur:durLabel||'',qty:qty||1,status:k?'auto':'wait',key:k||''});
   DB.orders.length=Math.min(DB.orders.length,300)}
 /* ระบบออเดอร์เดิม: ตรรกะทุกบรรทัดเหมือนเดิม (เช็กสต็อก → เช็กเครดิต → หักเครดิต → addTx → ดึงคีย์ → ตัดสต็อก → addOrder → save → paint/render)
    แยกเป็น placeOrder() ที่ "คืนผลลัพธ์" แทนการ toast/เปิด sheet เอง เพื่อให้หน้าต่างยืนยันแสดง Success / Error ได้
    Flow: ปุ่ม "ສັ່ງຊື້" → buy() → openOrderModal() → กดยืนยัน → placeOrder() → Loading → Success / Error */
-function placeOrder(id,amount,durLabel){
+function placeOrder(id,amount,durLabel,qty){
   const p=DB.products.find(x=>x.id==id);
+  const n=Math.max(1,+qty||1);
   if(!p) return {ok:false,code:'notfound',msg:'ບໍ່ພົບສິນຄ້ານີ້ໃນລະບົບ'};
-  if(p.stock<1) return {ok:false,code:'stock',msg:'ສິນຄ້ານີ້ໝົດສະຕັອກແລ້ວ'};
-  const total=(amount!=null&&amount>0)?amount:p.price;
+  if(p.stock<n) return {ok:false,code:'stock',msg:'ສິນຄ້ານີ້ມີສະຕັອກບໍ່ພຽງພໍ'};
+  const total=(amount!=null&&amount>0)?amount:p.price*n;
   if(DB.credit<total) return {ok:false,code:'credit',msg:'ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ'};
-  DB.credit-=total;addTx('buy',-total,durLabel||'',p.name); const k=p.auto&&p.keys.length?p.keys.shift():null;
-  p.stock=p.auto?p.keys.length:p.stock-1; addOrder(p,k,total,durLabel); save();
+  DB.credit-=total;addTx('buy',-total,durLabel||'',p.name);
+  const k=p.auto&&p.keys.length>=n?p.keys.splice(0,n).join('\n'):null;
+  p.stock=p.auto?p.keys.length:p.stock-n; addOrder(p,k,total,durLabel,n); save();
   const order=DB.orders[0];
   try{paint();renderP();renderAdmin()}catch(e){console.error(e)} /* ออเดอร์สำเร็จแล้ว — ถ้า render พลาดต้องไม่ทำให้กลายเป็น Error (กันสั่งซ้ำ) */
-  return {ok:true,p,key:k,order,total};
+  return {ok:true,p,key:k,order,total,qty:n};
 }
 function buy(id,trigger){openOrderModal(id,trigger)}
 
@@ -1525,7 +1552,7 @@ function renderOrders(){
   const fl=os.filter(o=>(o.name+o.code).toLowerCase().includes(q)).filter(o=>ordF==='all'||(ordF==='wait'&&o.status==='wait')||(ordF==='done'&&o.status!=='wait')||(ordF==='auto'&&o.status==='auto'));
   $$('#ordF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===ordF));
   $('#ordCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${tot} ອໍເດີ`;
-  $('#ordList').innerHTML=fl.slice(0,100).map(o=>`<div class="prow"><div class="th"><svg><use href="#${ordIcon(o)}"/></svg></div><div class="pi"><b>${esc(o.name)}</b><div class="m">${o.code?esc(o.code)+' · ':''}${K(o.price)} · ${fdate(o.t)}</div><div class="bg">${ordBadge(o)}</div></div>`+
+  $('#ordList').innerHTML=fl.slice(0,100).map(o=>`<div class="prow"><div class="th"><svg><use href="#${ordIcon(o)}"/></svg></div><div class="pi"><b>${esc(o.name)}${o.qty>1?' ×'+o.qty:''}</b><div class="m">${o.code?esc(o.code)+' · ':''}${K(o.price)} · ${fdate(o.t)}</div><div class="bg">${ordBadge(o)}</div></div>`+
     (o.status==='wait'?`<div class="pa"><button class="ib go" data-orddone="${o.id}">ສົ່ງແລ້ວ</button></div>`:o.key?`<div class="pa"><button class="ib" data-ordkey="${o.id}"><svg><use href="#i-copy"/></svg></button></div>`:'')+`</div>`).join('')||'<p class="note">ຍັງບໍ່ມີອໍເດີ</p>';
 }
 
@@ -1793,7 +1820,7 @@ if(!RM) document.addEventListener('pointerdown',e=>{
    ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້
    ข้อมูลทั้งหมดมาจาก DB จริง (สินค้า/ราคา/เครดิต) และเรียก placeOrder() เดิม — ไม่มีข้อมูลจำลอง
    ===================================================================== */
-const om={open:false,busy:false,done:false,pid:null,trigger:null,cv:'c1',timer:0,dur:30,total:0};
+const om={open:false,busy:false,done:false,pid:null,trigger:null,cv:'c1',timer:0,dur:30,qty:1,total:0};
 /* ตัวเลือกไລยะเวลา: mul = สัดส่วนราคาเทียบกับราคาสินค้าที่ตั้งไว้ (ถือเป็นราคาแพ็ก 30 ມື້) — ปรับตัวเลขได้ตามต้องการ */
 const OM_DUR=[{d:7,label:'7 ມື້',mul:.42},{d:14,label:'14 ມື້',mul:.72},{d:30,label:'30 ມື້',mul:1}];
 const durPrice=(p,dd)=>Math.max(1000,Math.round(p.price*dd.mul/1000)*1000);
@@ -1814,7 +1841,8 @@ function omReview(p){
   const im=p.imgs&&p.imgs[0];
   const dd=OM_DUR.find(x=>x.d===om.dur)||OM_DUR[OM_DUR.length-1];
   const disc=0; /* ร้านนี้ยังไม่มีระบบส่วนลด → 0 (ตรงกับที่ระบบเดิมหักจริง) */
-  const total=durPrice(p,dd)-disc, short=DB.credit<total;
+  const maxQ=Math.max(1,p.stock||1); if(om.qty>maxQ) om.qty=maxQ;
+  const total=durPrice(p,dd)*om.qty-disc, short=DB.credit<total;
   om.total=total;
   omFoot.className='om-foot';
   omScroll.innerHTML=`
@@ -1827,16 +1855,24 @@ function omReview(p){
         ${im?`<img src="${esc(im)}" alt="">`:`<span class="om-hero-ico"><svg aria-hidden="true"><use href="#${sym(p)}"/></svg></span>`}
         <span class="om-hero-scrim" aria-hidden="true"></span>
         <span class="om-hero-shine" aria-hidden="true"></span>
-        <span class="om-hero-qty">x1</span>
+        <span class="om-hero-qty" id="omHeroQty">x${om.qty}</span>
         <div class="om-hero-info"><b>${esc(p.name)}</b><span class="om-cat">${esc(p.cat)}</span></div>
       </div>
       <div class="om-dur om-in" style="--i:4">
         <span class="om-dur-lbl"><svg aria-hidden="true"><use href="#i-clock"/></svg>ເລືອກໄລຍະເວລາ</span>
         <div class="om-dur-grid" id="omDurGrid">
-          ${OM_DUR.map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></button>`).join('')}
+          ${OM_DUR.map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dright"><span class="tag om-rdy">ພ້ອມສົ່ງ</span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></span></button>`).join('')}
         </div>
       </div>
-      <div class="om-sum om-in" style="--i:5">
+      <div class="om-qty om-in" style="--i:5">
+        <span class="om-qty-lbl">ຈຳນວນທີ່ຕ້ອງການສັ່ງຊື້:</span>
+        <div class="om-qty-stepper">
+          <button type="button" class="om-qty-btn" id="omQtyMinus" aria-label="ຫຼຸດຈຳນວນ" ${om.qty<=1?'disabled':''}>−</button>
+          <span class="om-qty-val" id="omQtyVal">${om.qty}</span>
+          <button type="button" class="om-qty-btn" id="omQtyPlus" aria-label="ເພີ່ມຈຳນວນ" ${om.qty>=maxQ?'disabled':''}>+</button>
+        </div>
+      </div>
+      <div class="om-sum om-in" style="--i:6">
         <div class="om-row"><span>ລາຄາສິນຄ້າ</span><b id="omPriceVal">${K(total)}</b></div>
         <div class="om-row"><span>ສ່ວນຫຼຸດ</span><b>${K(disc)}</b></div>
         <div class="om-hr"></div>
@@ -1845,7 +1881,7 @@ function omReview(p){
         <div class="om-warn" id="omWarnWrap"${short?'':' hidden'}><svg aria-hidden="true"><use href="#i-alert"/></svg><span>ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ</span></div>
       </div>
     </div>`;
-  omFoot.innerHTML=`<div class="om-in" style="--i:6"><button class="om-cta" id="omGo" type="button">${OM_TICK}<span>ຢືນຢັນການສັ່ງຊື້</span></button></div>`;
+  omFoot.innerHTML=`<div class="om-in" style="--i:7"><button class="om-cta" id="omGo" type="button">${OM_TICK}<span>ຢືນຢັນການສັ່ງຊື້</span></button></div>`;
 }
 
 /* นับตัวเลขไล่ขึ้น/ลงแบบนุ่มๆ แทนการเปลี่ยนค่าทันที */
@@ -1875,13 +1911,35 @@ function omSetDur(d){
     b.setAttribute('aria-pressed',on);
     if(on&&!RM){b.classList.remove('burst');void b.offsetWidth;b.classList.add('burst')}
   });
-  const total=durPrice(p,dd), short=DB.credit<total;
+  const total=durPrice(p,dd)*om.qty, short=DB.credit<total;
   om.total=total;
   omAnimNum($('#omPriceVal'),prevTotal,total,380);
   omAnimNum($('#omTotalVal'),prevTotal,total,380);
   const tv=$('#omTotalVal'); if(tv){tv.classList.remove('pop');void tv.offsetWidth;tv.classList.add('pop')}
   const bal=$('#omBal'); if(bal) bal.classList.toggle('warn',short);
   const bb=bal&&bal.querySelector('b'); if(bb&&!RM){bb.classList.remove('pop');void bb.offsetWidth;bb.classList.add('pop')}
+  const warn=$('#omWarnWrap'); if(warn) warn.hidden=!short;
+}
+
+/* ---- เปลี่ยนจำนวนที่สั่งซื้อ ---- */
+function omSetQty(delta){
+  if(!om.open||om.busy||om.done) return;
+  const p=DB.products.find(x=>x.id==om.pid); if(!p) return;
+  const maxQ=Math.max(1,p.stock||1);
+  const q=Math.min(maxQ,Math.max(1,om.qty+delta));
+  if(q===om.qty) return;
+  om.qty=q;
+  const dd=OM_DUR.find(x=>x.d===om.dur)||OM_DUR[OM_DUR.length-1];
+  const prevTotal=om.total, total=durPrice(p,dd)*om.qty, short=DB.credit<total;
+  om.total=total;
+  const qv=$('#omQtyVal'); if(qv){qv.textContent=om.qty;qv.classList.remove('pop');void qv.offsetWidth;qv.classList.add('pop')}
+  const hq=$('#omHeroQty'); if(hq) hq.textContent='x'+om.qty;
+  const mb=$('#omQtyMinus'); if(mb) mb.disabled=om.qty<=1;
+  const pb=$('#omQtyPlus'); if(pb) pb.disabled=om.qty>=maxQ;
+  omAnimNum($('#omPriceVal'),prevTotal,total,380);
+  omAnimNum($('#omTotalVal'),prevTotal,total,380);
+  const tv=$('#omTotalVal'); if(tv){tv.classList.remove('pop');void tv.offsetWidth;tv.classList.add('pop')}
+  const bal=$('#omBal'); if(bal) bal.classList.toggle('warn',short);
   const warn=$('#omWarnWrap'); if(warn) warn.hidden=!short;
 }
 
@@ -1896,7 +1954,7 @@ function omSuccess(res){
       <h2 class="om-title rs" id="omT" style="--i:0">ສັ່ງຊື້ສຳເລັດ</h2>
       <p class="om-sub rs" style="--i:1">ຄຳສັ່ງຊື້ຂອງທ່ານຖືກສ້າງຮຽບຮ້ອຍແລ້ວ</p>
       ${o?`<span class="om-oid rs" style="--i:2">ອໍເດີ #${omPad(o.id)}</span>`:''}
-      <p class="om-line rs" style="--i:3">${esc(p.name)}${o&&o.dur?' · '+esc(o.dur):''} · ${K(res.total!=null?res.total:p.price)}</p>
+      <p class="om-line rs" style="--i:3">${esc(p.name)}${o&&o.dur?' · '+esc(o.dur):''}${res.qty>1?' · x'+res.qty:''} · ${K(res.total!=null?res.total:p.price)}</p>
       ${k?`<div class="om-key rs" style="--i:4"><span class="om-kl">ລະຫັດສິນຄ້າຂອງທ່ານ</span><code>${esc(k)}</code><button class="om-cp" type="button" data-omcopy="${esc(k)}"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>ສຳເນົາລະຫັດ</span></button></div>`
         :`<div class="om-note rs" style="--i:4">ທີມງານຈະສົ່ງສິນຄ້າໃຫ້ຕາມຊ່ອງທາງທີ່ຕິດຕໍ່</div>`}
     </div>`;
@@ -1925,7 +1983,7 @@ function openOrderModal(id,trigger){
   if(!p) return say('ບໍ່ພົບສິນຄ້ານີ້ໃນລະບົບ');
   clearTimeout(om.timer);
   const pc=trigger&&trigger.closest&&trigger.closest('.pcard'), cv=pc&&pc.querySelector('.cv'); /* ใช้สีปกเดียวกับการ์ดสินค้าที่กด */
-  Object.assign(om,{open:true,busy:false,done:false,pid:p.id,trigger:trigger||document.activeElement,cv:(cv&&(cv.className.match(/\bc[1-4]\b/)||[])[0])||'c1',dur:30,total:0});
+  Object.assign(om,{open:true,busy:false,done:false,pid:p.id,trigger:trigger||document.activeElement,cv:(cv&&(cv.className.match(/\bc[1-4]\b/)||[])[0])||'c1',dur:30,qty:1,total:0});
   omEl.dataset.st='review'; omX.disabled=false; omCard.classList.remove('swap','shake');
   omReview(p); omScroll.scrollTop=0;
   document.documentElement.classList.add('om-lock');
@@ -1957,7 +2015,7 @@ async function omRun(btn){
   omCard.focus({preventScroll:true});
   const t0=performance.now(); let res;
   const durLabel=(OM_DUR.find(x=>x.d===om.dur)||{}).label||'';
-  try{res=await placeOrder(om.pid,om.total,durLabel)}catch(e){res={ok:false,msg:(e&&e.message)||''}}
+  try{res=await placeOrder(om.pid,om.total,durLabel,om.qty)}catch(e){res={ok:false,msg:(e&&e.message)||''}}
   if(!res||typeof res!=='object') res={ok:false,msg:''};
   const rest=OM_MIN-(performance.now()-t0); if(rest>0) await omSleep(rest);
   omCard.classList.add('swap'); await omSleep(180);
@@ -1981,6 +2039,8 @@ function omGoTopup(){omClose({restore:false});show('topup')}
 omEl.addEventListener('click',e=>{
   const t=e.target;
   const dchip=t.closest('.om-dchip'); if(dchip) return omSetDur(+dchip.dataset.d);
+  if(t.closest('#omQtyMinus')) return omSetQty(-1);
+  if(t.closest('#omQtyPlus')) return omSetQty(1);
   const run=t.closest('#omGo,#omRetry'); if(run) return omRun(run);
   const cp=t.closest('[data-omcopy]');
   if(cp){

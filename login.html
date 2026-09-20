@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>DekmaSH Stowe - เข้าสู่ระบบ</title>
+<script>
+/* Some in-app WebViews mis-measure vw / don't support clamp() reliably, which can make
+   the whole layout render oversized and spill off the edge of the screen. This forces the
+   root font-size from an actually-measured width, so sizing is always correct no matter
+   what browser/webview opens the page. (คัดลอกมาจาก index.html เพื่อให้สัดส่วนตรงกันทุกเครื่อง) */
+(function(){
+  function setFS(){
+    var w = (document.documentElement && document.documentElement.clientWidth) || window.innerWidth || 390;
+    var fs = Math.max(7.5, Math.min(10.75, w*0.02336));
+    document.documentElement.style.fontSize = fs.toFixed(3)+'px';
+  }
+  setFS();
+  document.addEventListener('DOMContentLoaded', setFS);
+  window.addEventListener('resize', setFS);
+  window.addEventListener('orientationchange', setFS);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Lao+Looped:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Design tokens — เหมือนกับ index.html เป๊ะๆ (ชื่อ/ค่าตัวแปรเดียวกัน) ===== */
+:root{
+  --bg:#000000; --glow:#1f0509;
+  --card-bg:#0a0505; --card-bg-2:#120708; --card-border:rgba(205,0,35,.22);
+  --input-bg:#0f0809; --input-border:rgba(255,255,255,.1); --placeholder:#6f5f61;
+  --text:#f2e9ea; --muted:#8a7678;
+  --pill-bg:#1c0508; --pill-border:rgba(205,0,35,.5); --pill-text:#ff4d6a;
+  --green:#4ade80;
+  --red:#CD0023; --red-bright:#ff1f42; --red-dim:#7a0016; /* ชื่อเดียวกับ index.html */
+  --b2-bd:#e01a3a;
+  --accent:#ff1f42;
+  --font:'Sora','Noto Sans Lao','Phetsarath OT','Lao UI','Leelawadee UI',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Sora','Noto Sans Lao Looped','Noto Sans Lao','Phetsarath OT','Lao UI',system-ui,sans-serif;
+  --ease-premium:cubic-bezier(.16,1,.3,1);
+  --glass:rgba(255,255,255,.045); --glass-2:rgba(0,0,0,.32); --glass-line:rgba(255,255,255,.08); --glass-hi:rgba(255,255,255,.06);
+  --sheen:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{font-size:10px}
+html{font-size:clamp(7.5px,2.336vw,10.75px);-webkit-text-size-adjust:100%;touch-action:manipulation}
+*,*::before,*::after{box-sizing:border-box}
+html,body{width:100%;max-width:100vw;overflow-x:hidden}
+body{margin:0;min-height:100vh;background:radial-gradient(70% 26rem at 50% 0,var(--glow),transparent),var(--bg);color:var(--text);font-family:var(--font);font-size:1.6rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation;display:flex;align-items:center;min-height:100dvh}
+body::after{content:"";position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(120% 85% at 50% 0%,transparent 55%,rgba(0,0,0,.6) 100%)}
+.grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+p{margin:0}
+svg{display:block;fill:currentColor;flex:none}
+:focus-visible{outline:.2rem solid var(--accent);outline-offset:.2rem}
+
+.wrap{position:relative;z-index:1;width:100%;max-width:46rem;margin:0 auto;padding:2.4rem 1.6rem calc(3rem + env(safe-area-inset-bottom,0px))}
+
+.lg-card{position:relative;overflow:hidden;border-radius:2.8rem;border:max(1px,.15rem) solid var(--card-border);
+  background:linear-gradient(165deg,rgba(28,11,13,.85),rgba(6,3,3,.94));backdrop-filter:blur(1.8rem);-webkit-backdrop-filter:blur(1.8rem);
+  box-shadow:0 1rem 5rem rgba(205,0,35,.22),inset 0 .1rem 0 var(--glass-hi)}
+.lg-card::before{content:"";position:absolute;top:0;left:0;right:0;height:.4rem;z-index:2;
+  background:linear-gradient(90deg,var(--red-dim),var(--red-bright) 40%,#ff9fb0 60%,var(--red-bright));
+  background-size:220% auto;animation:titleShimmer 5s ease-in-out infinite}
+.lg-card::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(60% 55% at 50% -6%,rgba(255,31,66,.22),transparent 70%)}
+@keyframes titleShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes lgShake{10%,90%{transform:translateX(-.15rem)}20%,80%{transform:translateX(.3rem)}30%,50%,70%{transform:translateX(-.5rem)}40%,60%{transform:translateX(.5rem)}}
+.lg-card.shake{animation:lgShake .5s}
+
+.lg-head{position:relative;z-index:1;padding:3.4rem 2.4rem 2.2rem;text-align:center}
+.lg-ico{position:relative;margin:0 auto 1.8rem;width:7.6rem;height:7.6rem;border-radius:2.1rem;display:grid;place-items:center;
+  background:linear-gradient(150deg,var(--red-bright),var(--red-dim));box-shadow:0 .7rem 2.4rem rgba(255,31,66,.45),inset 0 .1rem 0 rgba(255,255,255,.25)}
+.lg-ico svg{width:3.8rem;height:3.8rem;color:#fff;filter:drop-shadow(0 .3rem .7rem rgba(0,0,0,.35))}
+.lg-name{margin:0;font-family:var(--font-display);font-size:2.6rem;font-weight:700;letter-spacing:-.02em;color:#fff}
+.lg-sub{margin:.7rem 0 0;color:var(--muted);font-size:1.3rem;line-height:1.9rem}
+.lg-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:.8rem;margin-top:2rem}
+.lg-b{display:inline-flex;align-items:center;gap:.6rem;height:2.9rem;padding:0 1.3rem;border-radius:99rem;font-size:1.15rem;font-weight:700;
+  border:max(1px,.13rem) solid var(--bd);color:var(--c);background:var(--ibg)}
+.lg-b svg{width:1.4rem;height:1.4rem}
+
+.lg-div{position:relative;z-index:1;height:1px;background:linear-gradient(90deg,transparent,var(--card-border) 15%,var(--card-border) 85%,transparent)}
+
+.lg-body{position:relative;z-index:1;padding:2.4rem 2.4rem 2.8rem}
+.lg-h2{display:flex;align-items:center;gap:1rem;margin:0 0 1.9rem;font-size:1.75rem;font-weight:700;color:#fff}
+.lg-h2 svg{width:2.1rem;height:2.1rem;color:var(--red-bright)}
+
+.lg-err{display:none;align-items:center;gap:.9rem;margin:0 0 1.6rem;padding:1.2rem 1.4rem;border-radius:1.3rem;
+  background:rgba(248,113,113,.1);border:max(1px,.13rem) solid rgba(248,113,113,.35);color:#fca5a5;font-size:1.3rem;line-height:1.8rem}
+.lg-err svg{width:1.7rem;height:1.7rem;flex:none;color:#f87171}
+.lg-err.show{display:flex}
+
+.lg-lbl{display:flex;align-items:center;gap:.7rem;margin:0 0 .9rem;color:var(--pill-text);font-size:1.3rem;font-weight:600}
+.lg-lbl svg{width:1.5rem;height:1.5rem}
+.lg-field{position:relative;margin-bottom:1.7rem}
+.lg-field input{width:100%;height:5.5rem;padding:0 1.6rem 0 4.8rem;border-radius:1.7rem;border:max(1px,.15rem) solid var(--input-border);
+  background:var(--input-bg);color:var(--text);font-size:1.5rem;transition:border-color .25s,box-shadow .25s}
+.lg-field input::placeholder{color:var(--placeholder)}
+.lg-field input:focus{outline:none;border-color:var(--red-bright);box-shadow:0 0 0 .35rem rgba(255,31,66,.15)}
+.lg-field .ic-l{position:absolute;left:1.7rem;top:50%;transform:translateY(-50%);width:1.9rem;height:1.9rem;color:var(--muted);pointer-events:none}
+.lg-field input[type=text]{padding-right:1.6rem}
+.lg-field .ic-r{position:absolute;right:1rem;top:50%;transform:translateY(-50%);width:3.6rem;height:3.6rem;color:var(--muted);
+  background:none;border:0;border-radius:50%;display:grid;place-items:center;transition:color .2s,background .2s}
+.lg-field .ic-r svg{width:2rem;height:2rem}
+.lg-field .ic-r:hover{background:rgba(255,255,255,.06);color:var(--text)}
+
+.lg-cta{position:relative;overflow:hidden;isolation:isolate;width:100%;height:5.7rem;margin-top:.4rem;border-radius:1.7rem;
+  border:max(1px,.15rem) solid var(--b2-bd);background:linear-gradient(90deg,var(--red),var(--red-bright));color:#fff;
+  font-size:1.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:1rem;
+  box-shadow:0 .6rem 2.2rem rgba(205,0,35,.42);transition:filter .2s,transform .15s}
+.lg-cta::after{content:"";position:absolute;inset:0;background:var(--sheen);transform:translateX(-130%);transition:transform .7s var(--ease-premium)}
+.lg-cta:active::after{transform:translateX(130%)}
+.lg-cta svg{position:relative;width:2rem;height:2rem}
+.lg-cta>span{position:relative}
+.lg-cta:hover{filter:brightness(1.1)}
+.lg-cta:active{transform:scale(.98)}
+.lg-cta:disabled{opacity:.7;cursor:progress}
+.lg-spin{width:2.1rem;height:2.1rem;fill:none;stroke-width:3;stroke-linecap:round;animation:lgSpin .8s linear infinite}
+@keyframes lgSpin{to{transform:rotate(360deg)}}
+
+.lg-or{display:flex;align-items:center;gap:1.3rem;margin:2.3rem 0;color:var(--muted);font-size:1.25rem}
+.lg-or::before,.lg-or::after{content:"";flex:1;height:1px;background:var(--card-border)}
+
+.lg-alt{width:100%;height:5.3rem;border-radius:1.7rem;border:max(1px,.15rem) solid rgba(255,31,66,.5);
+  background:rgba(255,31,66,.08);color:#ffd7dd;font-size:1.5rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:1rem;transition:background .2s,transform .15s}
+.lg-alt svg{width:1.9rem;height:1.9rem;color:#ff8fa3}
+.lg-alt:active{transform:scale(.98);background:rgba(255,31,66,.14)}
+
+.lg-info{margin-top:2.2rem;padding:1.9rem;border-radius:1.9rem;border:max(1px,.15rem) dashed rgba(245,197,66,.4);background:rgba(245,197,66,.05)}
+.lg-info h3{display:flex;align-items:center;gap:.8rem;margin:0 0 1.1rem;color:#f5c542;font-size:1.4rem;font-weight:700;line-height:1.9rem}
+.lg-info h3 svg{width:1.8rem;height:1.8rem;flex:none}
+.lg-info ul{margin:0;padding:0;list-style:none;display:grid;gap:.9rem}
+.lg-info li{font-size:1.3rem;line-height:1.95rem;color:var(--text)}
+.lg-info b{color:#f5c542}
+
+.lg-domain{position:relative;z-index:1;display:flex;justify-content:center;margin-top:2rem}
+.lg-domain span{padding:.8rem 1.8rem;border-radius:99rem;background:rgba(10,5,5,.8);backdrop-filter:blur(1rem);
+  border:max(1px,.13rem) solid var(--glass-line);color:var(--muted);font-size:1.2rem;font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:2.2rem;transform:translateX(-50%) translateY(1.4rem);z-index:20;max-width:calc(100vw - 3.2rem);
+  padding:1.2rem 1.8rem;border-radius:1.4rem;background:rgba(15,8,9,.94);border:max(1px,.15rem) solid var(--card-border);
+  color:var(--text);font-size:1.35rem;text-align:center;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;box-shadow:0 .8rem 2.4rem rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="lg-card" id="lgCard">
+    <div class="lg-head">
+      <div class="lg-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.4 3.4 9.5 8 11 4.6-1.5 8-5.6 8-11V5z"/><path d="M8.6 12.4l2.4 2.4 4.6-4.8" fill="none" stroke="#7a0016" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h1 class="lg-name">DekmaSH Stowe</h1>
+      <p class="lg-sub">ระบบเฉพาะตัวแทนจำหน่าย · Private Reseller Portal</p>
+      <div class="lg-badges">
+        <span class="lg-b" style="--c:#4ade80;--ibg:rgba(74,222,128,.1);--bd:rgba(74,222,128,.35)"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.4" fill="none" stroke="currentColor" stroke-width="2.1"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>HTTPS</span>
+        <span class="lg-b" style="--c:#ff8fa3;--ibg:rgba(255,31,66,.1);--bd:rgba(255,31,66,.4)"><svg viewBox="0 0 24 24"><path d="M12 2 5 4.6v5.6c0 5 3 8.8 7 9.8 4-1 7-4.8 7-9.8V4.6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.2 12.2l1.9 1.9 3.7-3.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>2FA</span>
+        <span class="lg-b" style="--c:#7dd3fc;--ibg:rgba(56,189,248,.1);--bd:rgba(56,189,248,.35)"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.4 19h3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Device Lock</span>
+        <span class="lg-b" style="--c:#f5c542;--ibg:rgba(245,197,66,.1);--bd:rgba(245,197,66,.35)"><svg viewBox="0 0 24 24"><rect x="4" y="8.4" width="16" height="10.6" rx="2.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8.4V5.2M9.2 3.6h5.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="13.4" r="1.15"/><circle cx="15" cy="13.4" r="1.15"/><path d="M9 16.4h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>WAF</span>
+      </div>
+    </div>
+    <div class="lg-div"></div>
+    <div class="lg-body">
+      <h2 class="lg-h2">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.6" cy="7.6" r="3.3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.6 18.4c.9-3.4 3.4-5.1 6-5.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="13.6" y="12.6" width="8" height="7" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.2 12.6v-1.5a2.4 2.4 0 0 1 4.8 0v1.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        เข้าสู่ระบบ
+      </h2>
+
+      <div class="lg-err" id="lgErr" role="alert">
+        <svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/><path d="M12 10v4.3M12 17.3v.1" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
+        <span id="lgErrMsg">Username หรือรหัสผ่านไม่ถูกต้อง</span>
+      </div>
+
+      <form id="lgForm" novalidate>
+        <label class="lg-lbl" for="lgUser">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1-4 4-6 7.5-6s6.5 2 7.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          ชื่อผู้ใช้ (Username)
+        </label>
+        <div class="lg-field">
+          <svg class="ic-l" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.8 12v1.6a2.6 2.6 0 0 0 5.2 0V12a9 9 0 1 0-3.5 7.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+          <input id="lgUser" name="username" type="text" autocomplete="username" placeholder="กรอก Username ของคุณ" required>
+        </div>
+
+        <label class="lg-lbl" for="lgPass">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.4 12.6 19 4M16 7l2 2M13.2 9.8l2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          รหัสผ่าน (Password)
+        </label>
+        <div class="lg-field">
+          <svg class="ic-l" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่านของคุณ" required>
+          <button type="button" class="ic-r" id="lgEye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
+            <svg id="lgEyeIco" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+        </div>
+
+        <button type="submit" class="lg-cta" id="lgGo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5l6 7-6 7M3 12h15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>เข้าสู่ระบบ</span>
+        </button>
+      </form>
+
+      <div class="lg-or">หรือ</div>
+
+      <button type="button" class="lg-alt" id="lgSignup">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/><path d="M19 3.2l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
+        เติมเงินเพื่อเปิดบัญชีตัวแทนใหม่
+      </button>
+
+      <div class="lg-info">
+        <h3>
+          <svg viewBox="0 0 24 24"><path d="M12 2 4 5v5.5c0 5 3.2 8.9 8 10.5 4.8-1.6 8-5.5 8-10.5V5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          สิทธิ์เข้าถึงสินค้าตามยอดเปิดบัญชี:
+        </h3>
+        <ul>
+          <li>· <b>₭50,000</b> → เห็นเฉพาะ <b>GBOX &amp; PROXY</b> (เงินเข้าเครดิต ₭50,000)</li>
+          <li>· <b>₭100,000</b> → มองเห็นสินค้าทั้งหมด <b>100%</b> (เงินเข้าเครดิต ₭100,000)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg-domain"><span id="lgDomain">dekmash-stowe.example</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   DekmaSH Stowe — Login Gate
+   ข้อควรรู้: หน้านี้ตรวจสอบ Username/Password แบบฝั่งไคลเอ็นต์ (localStorage)
+   เพื่อสาธิตเท่านั้น — ใครก็ดูรหัสผ่านที่ตั้งไว้จากซอร์สโค้ด/localStorage ได้
+   ก่อนใช้งานจริง ควรเปลี่ยนไปเช็คกับเซิร์ฟเวอร์/ฐานข้อมูลจริงแทน
+   ===================================================================== */
+const $=q=>document.querySelector(q);
+const LK='dekma_auth_v1';
+let AUTH;
+try{AUTH=JSON.parse(localStorage.getItem(LK))}catch(e){}
+if(!AUTH||!AUTH.user) AUTH={user:'agent',pass:'123456'}; /* บัญชีทดสอบเริ่มต้น — แก้ได้ที่นี่ หรือผ่านหน้าแอดมินภายหลัง */
+try{localStorage.setItem(LK,JSON.stringify(AUTH))}catch(e){}
+
+$('#lgDomain').textContent=location.hostname||'dekmash-stowe.example';
+
+const toast=$('#toast'); let tt;
+function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('show'),2200)}
+
+/* ---- toggle แสดง/ซ่อนรหัสผ่าน ---- */
+const EYE='<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/>';
+const EYE_OFF='<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 3.5l17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+const lgPass=$('#lgPass'), lgEye=$('#lgEye'), lgEyeIco=$('#lgEyeIco');
+lgEye.addEventListener('click',()=>{
+  const show=lgPass.type==='password';
+  lgPass.type=show?'text':'password';
+  lgEyeIco.innerHTML=show?EYE_OFF:EYE;
+  lgEye.setAttribute('aria-pressed',show);
+});
+
+/* ---- ส่งฟอร์ม ---- */
+const lgCard=$('#lgCard'), lgErr=$('#lgErr'), lgErrMsg=$('#lgErrMsg'), lgGo=$('#lgGo'), lgUser=$('#lgUser');
+const SPIN='<svg class="lg-spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,.35)"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#fff"/></svg>';
+const GO_HTML=lgGo.innerHTML;
+function showErr(msg){
+  lgErrMsg.textContent=msg;
+  lgErr.classList.add('show');
+  lgCard.classList.remove('shake'); void lgCard.offsetWidth; lgCard.classList.add('shake');
+}
+$('#lgForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  lgErr.classList.remove('show');
+  const u=lgUser.value.trim(), p=lgPass.value;
+  if(!u||!p) return showErr('กรุณากรอก Username และรหัสผ่านให้ครบ');
+  lgGo.disabled=true; lgGo.innerHTML=SPIN+'<span>กำลังเข้าสู่ระบบ…</span>';
+  await new Promise(r=>setTimeout(r,650)); /* หน่วงสั้นๆ ให้เห็นสถานะโหลดชัดเจน */
+  if(u===AUTH.user && p===AUTH.pass){
+    try{sessionStorage.setItem('dekma_session','1')}catch(err){}
+    lgGo.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>สำเร็จ กำลังพาไปหน้าเว็บ…</span>';
+    location.href='index.html';
+    return;
+  }
+  lgGo.disabled=false; lgGo.innerHTML=GO_HTML;
+  showErr('Username หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+});
+
+$('#lgSignup').addEventListener('click',()=>say('กรุณาติดต่อแอดมินเพื่อเปิดบัญชีตัวแทนใหม่'));
+</script>
+</body>
+</html>
