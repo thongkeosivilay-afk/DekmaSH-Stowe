@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>DekmaSH Stowe - Reseller Portal</title>
+<title>DekmaSH Stowe - ລະບົບຕົວແທນຈຳໜ່າຍ</title>
+<script>
+/* Some in-app WebViews mis-measure vw / don't support clamp() reliably, which can make
+   the whole layout render oversized and spill off the edge of the screen. This forces the
+   root font-size from an actually-measured width, so sizing is always correct no matter
+   what browser/webview opens the page. */
+(function(){
+  function setFS(){
+    var w = (document.documentElement && document.documentElement.clientWidth) || window.innerWidth || 390;
+    var fs = Math.max(7.5, Math.min(10.75, w*0.02336));
+    document.documentElement.style.fontSize = fs.toFixed(3)+'px';
+  }
+  setFS();
+  document.addEventListener('DOMContentLoaded', setFS);
+  window.addEventListener('resize', setFS);
+  window.addEventListener('orientationchange', setFS);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Lao+Looped:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ===== Design tokens (แก้สี/ค่าหลักที่นี่) ===== */
 :root{
@@ -24,7 +41,8 @@
   --sel-outer:#1a1112; --sel-outer-bd:#3a2a2c; --sel-inner:#0a0505; --sel-inner-bd:#2a1a1c;
   --chip-bd:#CD0023; --accent:#ff1f42;
   --nav-bg:#0a0505; --nav-line:#4a0d18; --nav-idle:#8a7678;
-  --font:'Prompt','Noto Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font:'Sora','Noto Sans Lao','Phetsarath OT','Lao UI','Leelawadee UI',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Sora','Noto Sans Lao Looped','Noto Sans Lao','Phetsarath OT','Lao UI',system-ui,sans-serif;
   /* ===== Cinematic Motion System ===== */
   --ease-premium:cubic-bezier(.16,1,.3,1);
   --t-exit:.5s; --t-enter:.72s;
@@ -35,13 +53,14 @@
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 /* 1rem = 10px ที่ความกว้าง 428px — ทุกขนาดย่อ/ขยายตามสัดส่วนของภาพต้นฉบับ */
+html{font-size:10px} /* fallback สำหรับเบราว์เซอร์/เว็บวิวที่ไม่รองรับ clamp() หรือ vw ผิดพลาด */
 html{font-size:clamp(7.5px,2.336vw,10.75px);-webkit-text-size-adjust:100%;touch-action:manipulation}
 *,*::before,*::after{box-sizing:border-box}
 html,body{width:100%;max-width:100vw;overflow-x:hidden}
 body{margin:0;min-height:100vh;background:radial-gradient(70% 22rem at 50% 0,var(--glow),transparent),var(--bg);color:var(--text);font-family:var(--font);font-size:1.6rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 body::after{content:"";position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(120% 85% at 50% 0%,transparent 55%,rgba(0,0,0,.6) 100%)}
 .grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 p{margin:0}
 svg{display:block;fill:currentColor}
@@ -296,6 +315,324 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .pd{color:var(--muted);font-size:1.2rem;line-height:1.7rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:.4rem}
 .item.admin svg{color:#ff4d6a}.cv{cursor:pointer}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Lao typography: Noto Sans Lao (body) + Noto Sans Lao Looped (headings) + Sora (Latin/digits) ===== */
+body{line-height:1.55;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+h1,h2,.sh-t,.price,.val b,.sum b,.badge,.av,.btn,.buy{font-family:var(--font-display)}
+h1{line-height:4.1rem;letter-spacing:0;padding-bottom:.3rem}
+#storeName{display:inline-block;line-height:3.5rem;letter-spacing:-.01em}
+.badge,.live{letter-spacing:.02em}
+.lb,.h3{letter-spacing:0}.lb{line-height:2rem}
+.stat>div{min-width:0}.stat .lb{overflow:hidden;text-overflow:ellipsis}
+.pg h2{line-height:3.6rem;letter-spacing:0}.pg small{line-height:2rem}
+.pn{line-height:2.4rem;min-height:4.8rem}
+.pd{line-height:2rem}
+.note{line-height:2.2rem}
+.sh-t{line-height:1.5}
+
+/* ===== Compact product cards: 2 per row, fill the screen width, scroll for more ===== */
+#plist.grid2{grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;align-items:start}
+#plist .pcard{gap:.7rem;padding:.6rem;border-radius:1.8rem}
+#plist .cv{aspect-ratio:16/11;border-radius:1.3rem}
+#plist .cv .g{width:3.8rem;height:3.8rem}
+#plist .cv::before{width:8rem;height:8rem;right:-2.8rem;bottom:-3.4rem}
+#plist .cv::after{width:4.4rem;height:4.4rem}
+#plist .cv .cb,#plist .cv .tag{top:.5rem;font-size:1rem;padding:.1rem .6rem}
+#plist .cv .cb{left:.5rem}#plist .cv .tag{right:.5rem}
+#plist .pb{padding:0 .3rem}
+#plist .pn{font-size:1.35rem;line-height:2.1rem;min-height:4.2rem}
+#plist .pd{font-size:1.1rem;line-height:1.7rem;-webkit-line-clamp:1}
+#plist .price{font-size:1.6rem}
+#plist .buy{height:3rem;font-size:1.3rem}
+
+/* ===== Fix: page was wider than the screen (grid column grew to fit the scrolling category chips) ===== */
+.app{grid-template-columns:minmax(0,1fr)}
+.view{min-width:0}
+.stack{grid-template-columns:minmax(0,1fr)}
+
+/* ===== Admin v2: tabs, dashboard, animation ===== */
+[hidden]{display:none!important}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:none;transform:none}
+select.field{padding-right:4rem;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238a7678' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 1.6rem center}
+.field.sm{height:4rem;font-size:1.4rem;border-radius:1.4rem}
+.hint{margin:.7rem .2rem 0;color:var(--muted);font-size:1.2rem;line-height:1.9rem}
+.hint b{color:var(--text)}
+.sec-t{display:flex;align-items:center;gap:.9rem;margin:0 0 1.3rem;font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:2.2rem}
+.sec-t::before{content:"";flex:none;width:.4rem;height:1.8rem;border-radius:99rem;background:linear-gradient(var(--red-bright),var(--red-dim))}
+
+/* tabs */
+.ad-tabs{margin:0 -1.6rem 1.4rem;padding:.2rem 1.6rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ad-tabs::-webkit-scrollbar{display:none}
+.ad-tabs-in{position:relative;display:flex;gap:.3rem;width:max-content;padding:.5rem;border-radius:2.3rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03)}
+.ad-ind{position:absolute;top:.5rem;bottom:.5rem;left:0;width:0;border-radius:1.8rem;background:linear-gradient(120deg,var(--b2-a),var(--b2-b));box-shadow:0 0 2rem rgba(255,31,66,.45),inset 0 .1rem 0 rgba(255,255,255,.25);transition:transform .55s var(--ease-premium),width .55s var(--ease-premium);z-index:0}
+.ad-tab{position:relative;z-index:1;display:flex;align-items:center;gap:.7rem;height:4.2rem;padding:0 1.5rem;border:0;border-radius:1.8rem;background:none;color:var(--nav-idle);font-size:1.4rem;font-weight:600;white-space:nowrap;transition:color .3s}
+.ad-tab svg{width:1.9rem;height:1.9rem;transition:transform .45s var(--ease-premium)}
+.ad-tab.on{color:#fff;--slit:#a1001c}
+.ad-tab.on svg{transform:scale(1.14) rotate(-6deg)}
+
+/* alert */
+.ad-alert{display:flex;align-items:center;gap:1.1rem;margin-bottom:1.4rem;padding:1.1rem 1.3rem;border-radius:1.8rem;border:max(1px,.15rem) solid rgba(245,183,49,.4);background:linear-gradient(90deg,rgba(245,183,49,.15),rgba(245,183,49,.04));animation:alertIn .6s var(--ease-premium) both}
+.ad-alert.mute{display:none}
+.ad-alert svg{flex:none;width:2.2rem;height:2.2rem;color:#f5b731;animation:bell 3.2s ease-in-out infinite;transform-origin:50% 20%}
+.ad-alert span{flex:1;min-width:0;font-size:1.3rem;line-height:2rem}
+.ad-alert button{flex:none;height:3.2rem;padding:0 1.3rem;border-radius:99rem;border:max(1px,.15rem) solid #b98a1c;background:rgba(245,183,49,.16);color:#ffe08a;font-size:1.25rem;font-weight:700}
+@keyframes alertIn{from{opacity:0;transform:translate3d(0,-1rem,0)}}
+@keyframes bell{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-14deg)}94%{transform:rotate(11deg)}97%{transform:rotate(-6deg)}}
+
+/* panes + staggered entrance */
+.ad-pane{display:none}
+.ad-pane.on{display:grid;grid-template-columns:minmax(0,1fr);gap:1.2rem}
+.ad-pane.on>*{animation:adUp .6s var(--ease-premium) both}
+.ad-pane.on>*:nth-child(1){animation-delay:.02s}.ad-pane.on>*:nth-child(2){animation-delay:.07s}.ad-pane.on>*:nth-child(3){animation-delay:.12s}
+.ad-pane.on>*:nth-child(4){animation-delay:.17s}.ad-pane.on>*:nth-child(5){animation-delay:.22s}.ad-pane.on>*:nth-child(6){animation-delay:.27s}
+.ad-pane.on>*:nth-child(n+7){animation-delay:.32s}
+@keyframes adUp{from{opacity:0;transform:translate3d(0,1.8rem,0) scale(.985)}to{opacity:1;transform:none}}
+.ad-help{display:flex;gap:1.2rem;padding:1.3rem 1.4rem;border-radius:1.8rem;border:max(1px,.15rem) solid rgba(74,168,232,.35);background:rgba(18,42,69,.35)}
+.ad-i{flex:none;display:grid;place-items:center;width:2.4rem;height:2.4rem;margin-top:.1rem;border-radius:50%;background:#2f5f96;color:#fff;font-size:1.3rem;font-weight:700;font-style:italic}
+.ad-help b{display:block;margin-bottom:.3rem;font-size:1.4rem}
+.ad-help p{color:#c9d6e2;font-size:1.25rem;line-height:2rem}
+
+/* dashboard: ring */
+.ring-card{position:relative;display:flex;align-items:center;gap:1.8rem;overflow:hidden}
+.ring-card::before{content:"";position:absolute;top:-8rem;right:-8rem;width:22rem;height:22rem;background:radial-gradient(circle,rgba(255,31,66,.16),transparent 70%);pointer-events:none}
+.ring-wrap{position:relative;flex:none;width:13.2rem;height:13.2rem}
+.ring{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.rg-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:12}
+.rg-arc{fill:none;stroke-width:12;stroke-dasharray:var(--l) var(--c);animation:arcIn 1.3s var(--ease-premium) .15s both}
+.rg-arc.ok{stroke:#4ade80;filter:drop-shadow(0 0 .7rem rgba(74,222,128,.5))}
+.rg-arc.low{stroke:#f5b731;filter:drop-shadow(0 0 .7rem rgba(245,183,49,.5))}
+.rg-arc.out{stroke:#f87171;filter:drop-shadow(0 0 .7rem rgba(248,113,113,.5))}
+@keyframes arcIn{from{stroke-dasharray:0 var(--c)}}
+.ring-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring-c b{font-family:var(--font-display);font-size:3rem;line-height:3.6rem}
+.ring-c small{color:var(--muted);font-size:1.1rem;line-height:1.6rem}
+.ring-in{position:relative;flex:1;min-width:0}
+.lg-r{display:flex;align-items:center;gap:.9rem;padding:.5rem 0;font-size:1.35rem;line-height:2rem}
+.lg-r b{margin-left:auto;font-family:var(--font-display)}
+.dt{flex:none;width:1rem;height:1rem;border-radius:50%}
+.dt.ok{background:#4ade80;box-shadow:0 0 .8rem #4ade80}.dt.low{background:#f5b731;box-shadow:0 0 .8rem #f5b731}.dt.out{background:#f87171;box-shadow:0 0 .8rem #f87171}
+
+/* dashboard: metrics, bars, quick actions */
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+.mt{position:relative;overflow:hidden;padding:1.4rem 1.3rem;border-radius:2rem;border:max(1px,.15rem) solid var(--glass-line);background:linear-gradient(135deg,var(--glass),var(--glass-2) 80%);box-shadow:inset 0 .1rem 0 var(--glass-hi)}
+.mt .ico{margin-bottom:1.1rem}
+.mt small{display:block;color:var(--muted);font-size:1.15rem;line-height:1.7rem}
+.mt b{display:block;margin-top:.2rem;font-family:var(--font-display);font-size:1.75rem;line-height:2.6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:.8rem;border-radius:99rem;background:rgba(255,255,255,.06);overflow:hidden}
+.bar.sm{height:.5rem;margin-top:.8rem}
+.bar-fill{display:block;width:100%;height:100%;border-radius:inherit;transform-origin:left center;transform:scaleX(var(--s,0));background:linear-gradient(90deg,var(--red),var(--red-bright));animation:barGrow .9s var(--ease-premium) both}
+.bar.sm .bar-fill{animation-duration:.55s}
+.bar-fill.ok{background:linear-gradient(90deg,#16a34a,#4ade80)}.bar-fill.low{background:linear-gradient(90deg,#c98a0b,#f5b731)}.bar-fill.out{background:linear-gradient(90deg,#b91c3a,#f87171)}
+@keyframes barGrow{from{transform:scaleX(0)}}
+.cb-r{padding:.9rem 0}.cb-r:first-child{padding-top:0}.cb-r:last-child{padding-bottom:0}
+.cb-h{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.7rem}
+.cb-h b{font-size:1.4rem;font-weight:600}.cb-h span{color:var(--muted);font-size:1.15rem}
+.qa{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.qa button{display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:1.5rem .4rem;border-radius:2rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03);font-size:1.25rem;font-weight:600;line-height:1.8rem;text-align:center;transition:transform .2s,border-color .25s,background .25s}
+.qa button svg{width:2.6rem;height:2.6rem;color:#ff4d6a;transition:transform .45s var(--ease-premium)}
+.qa button:hover{border-color:rgba(255,79,106,.5);background:rgba(205,0,35,.1)}
+.qa button:hover svg{transform:translateY(-.25rem) scale(1.12)}
+.qa button:active{transform:scale(.96)}
+
+/* ledger / feed rows */
+.tx{display:flex;align-items:center;gap:1.1rem;padding:1.1rem 0;border-top:1px solid var(--card-border)}
+.tx:first-child{border:0;padding-top:0}.tx:last-child{padding-bottom:0}
+.tx-i{flex:none;display:grid;place-items:center;width:3.6rem;height:3.6rem;border-radius:1.2rem;border:1px solid}
+.tx-i svg{width:1.8rem;height:1.8rem}
+.tx-i.in{color:var(--green);background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3)}
+.tx-i.out{color:#f87171;background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.3)}
+.tx-b{flex:1;min-width:0}
+.tx-b b{display:block;font-size:1.4rem;line-height:2rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-b span{display:block;color:var(--muted);font-size:1.15rem;line-height:1.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-a{flex:none;text-align:right}
+.tx-a b{display:block;font-family:var(--font-display);font-size:1.4rem;line-height:2rem}
+.tx-a b.pos{color:var(--green)}.tx-a b.neg{color:#f87171}
+.tx-a span{display:block;color:var(--muted);font-size:1.1rem;line-height:1.6rem}
+
+/* credit hero + segmented control */
+.bal{position:relative;overflow:hidden;padding:2.2rem 2rem;border-radius:2.4rem;border:max(1px,.15rem) solid rgba(255,79,106,.32);background:linear-gradient(150deg,rgba(66,10,20,.92),rgba(10,4,5,.96));box-shadow:0 .8rem 3rem rgba(205,0,35,.2),inset 0 .1rem 0 var(--glass-hi)}
+.bal::before{content:"";position:absolute;top:0;bottom:0;left:-55%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.09),transparent);animation:balSheen 6s ease-in-out infinite}
+@keyframes balSheen{0%,55%{left:-55%}100%{left:130%}}
+.bal small{display:block;color:#e8b4bc;font-size:1.25rem;line-height:1.8rem}
+.bal b{display:block;margin:.3rem 0;font-family:var(--font-display);font-size:3.6rem;line-height:4.6rem;text-shadow:0 0 2.4rem rgba(255,31,66,.4)}
+.bal span{color:#c99aa3;font-size:1.2rem}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:.4rem;border-radius:1.9rem;background:rgba(0,0,0,.35);border:max(1px,.15rem) solid var(--glass-line)}
+.seg button{display:flex;align-items:center;justify-content:center;gap:.7rem;height:4.2rem;border-radius:1.5rem;border:0;background:none;color:var(--muted);font-weight:700;font-size:1.4rem;transition:background .35s var(--ease-premium),color .3s,box-shadow .3s}
+.seg button svg{width:1.8rem;height:1.8rem}
+.seg button[aria-pressed=true].add{background:linear-gradient(90deg,#15803d,#22c55e);color:#fff;box-shadow:0 0 1.6rem rgba(34,197,94,.35)}
+.seg button[aria-pressed=true].sub{background:linear-gradient(90deg,var(--b2-a),var(--b2-b));color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.35)}
+.step-b{width:4.9rem;height:4.9rem;padding:0;border-radius:1.8rem;display:grid;place-items:center}
+.step-b svg{width:1.8rem;height:1.8rem}
+
+/* restock steps */
+.step{display:flex;align-items:center;gap:1.1rem;margin-bottom:1.3rem}
+.step i{position:relative;flex:none;display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:50%;background:linear-gradient(145deg,#ff1f42,#7a0016);font-style:normal;font-weight:700;font-size:1.4rem;transition:background .4s}
+.step i em{font-style:normal}
+.step i svg{display:none;width:1.6rem;height:1.6rem;color:#fff}
+.step i.done{background:linear-gradient(145deg,#22c55e,#15803d);box-shadow:0 0 1.2rem rgba(34,197,94,.45)}
+.step i.done em{display:none}
+.step i.done svg{display:block;animation:tickPop .5s var(--ease-premium)}
+@keyframes tickPop{from{transform:scale(.3) rotate(-30deg);opacity:0}}
+.step b{display:block;font-size:1.6rem;line-height:2.2rem}
+.step small{display:block;color:var(--muted);font-size:1.2rem;line-height:1.8rem;font-weight:500}
+.rs-info{margin-top:1.2rem}
+.mode{display:grid;gap:.9rem}
+.mopt{display:block;width:100%;padding:1.3rem 1.4rem;border-radius:1.7rem;border:max(1px,.15rem) solid var(--input-border);background:var(--input-bg);text-align:left;transition:border-color .25s,box-shadow .25s,background .25s}
+.mopt b{display:block;font-size:1.45rem;line-height:2.1rem}
+.mopt span{display:block;margin-top:.3rem;color:var(--muted);font-size:1.2rem;line-height:1.9rem;font-weight:400}
+.mopt[aria-pressed=true]{border-color:var(--accent);background:rgba(205,0,35,.08);box-shadow:0 0 0 .2rem rgba(205,0,35,.18)}
+.mopt:disabled{opacity:.45;cursor:not-allowed}
+.ta-lg{height:15rem}
+.tools{display:flex;gap:.7rem;margin-top:.9rem}
+.cnt{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.qk{display:flex;gap:.8rem;margin-top:1rem;overflow-x:auto;scrollbar-width:none}
+.qk::-webkit-scrollbar{display:none}
+.prev{margin:1.4rem 0 0;padding:1.3rem 1.4rem;border-radius:1.6rem;border:max(1px,.15rem) dashed var(--input-border);background:rgba(0,0,0,.25);color:var(--muted);font-size:1.35rem;line-height:2.1rem;white-space:pre-line;transition:border-color .3s,color .3s}
+.prev.ok{border-color:rgba(74,222,128,.5);color:#d8f8e4}
+.prev.warn{border-color:rgba(245,183,49,.6);color:#fde8b0}
+.pbar{display:flex;height:1rem;margin-top:1rem;border-radius:99rem;background:rgba(255,255,255,.06);overflow:hidden}
+.pbar i{display:block;height:100%;transition:width .7s var(--ease-premium)}
+.pb-cur{width:calc(var(--c,0)*100%);background:rgba(255,255,255,.35)}
+.pb-add{width:calc(var(--a,0)*100%);background:linear-gradient(90deg,#22c55e,#4ade80);box-shadow:0 0 1rem rgba(74,222,128,.6)}
+
+/* badges + rows */
+.bg{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.bdg{display:inline-flex;align-items:center;height:2.2rem;padding:0 .9rem;border-radius:99rem;border:1px solid;font-size:1.1rem;font-weight:700;white-space:nowrap}
+button.bdg{cursor:pointer;font-family:inherit;transition:transform .15s,filter .2s}
+button.bdg:active{transform:scale(.94)}button.bdg:hover{filter:brightness(1.2)}
+.bdg.ok{color:var(--green);background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3)}
+.bdg.low{color:#f5b731;background:rgba(245,183,49,.1);border-color:rgba(245,183,49,.35)}
+.bdg.out{color:#f87171;background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.3)}
+.bdg.auto{color:#7cc4f5;background:rgba(74,168,232,.1);border-color:rgba(74,168,232,.35)}
+.bdg.man{color:#cdbfc1;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
+.bdg.code{color:#d9cccd;background:var(--input-bg);border-color:var(--card-border);letter-spacing:.04em}
+.chips{display:flex;gap:.7rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 0 0;padding-right:1.6rem}
+.chips::-webkit-scrollbar{display:none}
+.legend{margin-top:1.2rem;padding-top:1.1rem;border-top:1px solid var(--card-border)}
+.legend summary{cursor:pointer;color:var(--muted);font-size:1.25rem;font-weight:600;line-height:2rem;list-style:none}
+.legend summary::-webkit-details-marker{display:none}
+.legend summary::after{content:" ▾";color:#ff4d6a}
+.legend[open] summary::after{content:" ▴"}
+.legend[open]>div{animation:adUp .4s var(--ease-premium) both}
+.legend div{display:flex;align-items:center;gap:.9rem;padding:.3rem 0;color:var(--muted);font-size:1.2rem;line-height:2rem}
+.legend div:first-of-type{margin-top:.8rem}
+.mini-bar{display:inline-block;width:5rem;height:.5rem;border-radius:99rem;background:linear-gradient(90deg,#16a34a 60%,rgba(255,255,255,.08) 60%)}
+.prow{display:flex;align-items:center;gap:1.1rem;padding:1.2rem 0;border-top:1px solid var(--card-border)}
+.prow:first-child{border:0;padding-top:0}.prow:last-child{padding-bottom:0}
+.pi{flex:1;min-width:0}
+.pi b{display:block;font-size:1.45rem;line-height:2.1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi .m{color:var(--muted);font-size:1.15rem;line-height:1.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pa{flex:none;display:flex;flex-direction:column;gap:.6rem}.pa.row{flex-direction:row}
+.pa .ib{min-width:5.6rem}.pa.row .ib{min-width:3.8rem;padding:0}
+.ib.go{border-color:var(--b2-bd);background:linear-gradient(90deg,var(--b2-a),var(--b2-b));color:#fff}
+.ib.dng svg{color:#f87171}
+.ib.dng.sure{background:#2f1420;border-color:#7a2b3d;color:#f87171;font-size:1.2rem}
+.ed-h{margin:2.2rem 0 1.2rem;padding-top:1.6rem;border-top:1px solid var(--card-border);font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:2.2rem}
+.ed-h.first{margin-top:1.6rem}
+
+/* keys manager sheet */
+.km-s{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.4rem 0 1.2rem}
+.km-s div{padding:1.2rem;border-radius:1.6rem;border:max(1px,.15rem) solid var(--card-border);background:var(--input-bg);text-align:center}
+.km-s b{display:block;font-family:var(--font-display);font-size:2.4rem;line-height:3rem}
+.km-s span{color:var(--muted);font-size:1.15rem}
+.km-l{max-height:34vh;overflow-y:auto;border-radius:1.4rem;border:1px solid var(--card-border);padding:0 1.1rem}
+.krow{display:flex;align-items:center;gap:.9rem;padding:.8rem 0;border-top:1px solid var(--card-border)}.krow:first-child{border:0}
+.krow code{flex:1;min-width:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;word-break:break-all;color:#e6dadc}
+.ki{width:2.6rem;color:var(--muted);font-size:1.1rem;text-align:right}
+.krow .ib{height:3.2rem;min-width:3.2rem;padding:0 .8rem}
+
+/* success burst */
+.okpop{position:fixed;inset:0;z-index:60;display:grid;place-content:center;justify-items:center;gap:.6rem;background:rgba(0,0,0,.62);pointer-events:none;animation:popBg .35s ease both}
+.okpop.out{animation:popOut .4s ease both}
+@keyframes popBg{from{opacity:0}}@keyframes popOut{to{opacity:0}}
+.okc{position:relative;width:11rem;height:11rem;display:grid;place-items:center}
+.okc svg{width:100%;height:100%;overflow:visible}
+.okr{fill:rgba(34,197,94,.12);stroke:#4ade80;stroke-width:2.5;stroke-dasharray:151;stroke-dashoffset:151;animation:dashIn .6s var(--ease-premium) .05s forwards;filter:drop-shadow(0 0 1.2rem rgba(74,222,128,.6))}
+.okt{fill:none;stroke:#4ade80;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:dashIn .45s var(--ease-premium) .5s forwards}
+@keyframes dashIn{to{stroke-dashoffset:0}}
+.okc::after{content:"";position:absolute;inset:0;border-radius:50%;border:.2rem solid rgba(74,222,128,.6);animation:ringOut .95s ease-out .35s both}
+@keyframes ringOut{from{transform:scale(.8);opacity:.9}to{transform:scale(2);opacity:0}}
+.okc u{position:absolute;left:50%;top:50%;width:.7rem;height:.7rem;margin:-.35rem;border-radius:50%;background:#4ade80;opacity:0;animation:spark .85s ease-out .45s both}
+@keyframes spark{0%{opacity:1;transform:rotate(var(--a)) translateY(0)}100%{opacity:0;transform:rotate(var(--a)) translateY(-8.5rem)}}
+.okpop b{font-family:var(--font-display);font-size:3.2rem;line-height:4rem;animation:adUp .5s var(--ease-premium) .6s both}
+.okpop span{color:#cdbfc1;font-size:1.4rem;animation:adUp .5s var(--ease-premium) .7s both}
+.okpop.neg .okr,.okpop.neg .okt{stroke:#f87171}.okpop.neg .okr{fill:rgba(248,113,113,.12);filter:drop-shadow(0 0 1.2rem rgba(248,113,113,.6))}
+.okpop.neg .okc::after{border-color:rgba(248,113,113,.6)}.okpop.neg .okc u{background:#f87171}
+@media (prefers-reduced-motion:reduce){.okr,.okt{stroke-dashoffset:0!important}.bar-fill{transform:scaleX(var(--s,0))!important}}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.amt{font-size:1.45rem;padding:0 .4rem}
+
+/* ===== Admin v3: ออเดอร์ + รายงาน + ripple ===== */
+.btn,.cat,.ib,.chip,.qa button,.mopt,.pm,.row,.buy,.ad-tab,.seg button,.step-b,.back{position:relative;overflow:hidden}
+.rip{position:absolute;border-radius:50%;transform:scale(0);opacity:.55;background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);pointer-events:none;animation:rip .65s var(--ease-premium) forwards;z-index:5}
+@keyframes rip{to{transform:scale(2.8);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rip{display:none}}
+
+/* revenue bar chart (รายงาน) */
+.rchart{display:flex;align-items:flex-end;gap:.7rem;margin-top:1.5rem;padding:0 .1rem}
+.rc-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.rc-v{font-size:1.05rem;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.rc-track{width:100%;height:10rem;display:flex;align-items:flex-end;justify-content:center}
+.rc-bar{width:100%;max-width:3rem;border-radius:.9rem .9rem .3rem .3rem;background:linear-gradient(180deg,var(--red-bright),var(--red-dim));box-shadow:0 0 1.2rem rgba(255,31,66,.35);transform-origin:bottom;animation:rcGrow .8s var(--ease-premium) both;min-height:.4rem}
+.rc-bar.zero{background:rgba(255,255,255,.08);box-shadow:none}
+.rc-bar.today{background:linear-gradient(180deg,#ff8fa3,var(--red-bright));box-shadow:0 0 1.6rem rgba(255,79,106,.55)}
+.rc-d{font-size:1.1rem;color:var(--muted);font-weight:600}
+@keyframes rcGrow{from{transform:scaleY(0)}}
+@media (prefers-reduced-motion:reduce){.rc-bar{animation:none}}
+
+/* order rows reuse .prow layout */
+.prow .bdg.wait{color:#f5b731;background:rgba(245,183,49,.1);border-color:rgba(245,183,49,.35)}
+
+/* ===== เติมเงิน: ดีไซน์ใหม่ ===== */
+.tu-bal{display:flex;flex-direction:column}
+.tu-bal-ic{position:absolute;top:2rem;right:2.1rem;display:grid;place-items:center;width:5rem;height:5rem;border-radius:50%;background:rgba(255,255,255,.07);border:max(1px,.15rem) solid rgba(255,255,255,.18);color:#ffb8c2;animation:tuFloat 3.4s ease-in-out infinite}
+.tu-bal-ic svg{width:2.4rem;height:2.4rem}
+@keyframes tuFloat{50%{transform:translateY(-.6rem)}}
+.tu-bal-sub{display:flex;align-items:center;gap:.6rem;margin-top:.6rem;color:#c99aa3;font-size:1.2rem}
+.tu-dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--green);box-shadow:0 0 .8rem var(--green);animation:pulse 2s ease-in-out infinite}
+
+.tu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem}
+.tu-chip{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;height:6.6rem;border-radius:1.8rem;border:max(1px,.15rem) solid var(--input-border);background:var(--input-bg);transition:transform .2s,border-color .3s,background .3s,box-shadow .3s}
+.tu-chip b{font-family:var(--font-display);font-size:1.55rem;font-weight:700;transition:color .3s}
+.tu-chip span{color:var(--muted);font-size:1.05rem}
+.tu-chip:active{transform:scale(.96)}
+.tu-chip.on{border-color:var(--accent);background:linear-gradient(135deg,rgba(205,0,35,.24),rgba(205,0,35,.05));box-shadow:0 0 1.8rem rgba(205,0,35,.35)}
+.tu-chip.on::before{content:"";position:absolute;top:.6rem;right:.6rem;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--accent) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/60% no-repeat;box-shadow:0 0 .9rem var(--accent);animation:tuPop .3s var(--ease-premium)}
+@keyframes tuPop{from{transform:scale(0)}}
+.tu-pop{position:absolute;top:-.9rem;left:50%;transform:translateX(-50%);padding:.2rem .9rem;border-radius:99rem;background:linear-gradient(90deg,var(--b2-a),var(--b2-b));font-size:.95rem;font-weight:800;white-space:nowrap;box-shadow:0 0 1rem rgba(255,31,66,.5);z-index:1}
+.tu-custom{position:relative;margin-top:1.3rem}
+.tu-pre{position:absolute;left:1.7rem;top:50%;transform:translateY(-50%);font-family:var(--font-display);font-weight:700;color:var(--accent);font-size:1.6rem;pointer-events:none}
+.tu-custom .field{padding-left:3.6rem}
+
+.tu-pms{display:grid;gap:.9rem}
+.tu-pm{display:flex;align-items:center;gap:1.3rem;width:100%;padding:1.2rem 1.3rem;border-radius:1.8rem;border:max(1px,.15rem) solid var(--input-border);background:var(--input-bg);text-align:left;transition:border-color .3s,background .3s,box-shadow .3s}
+.tu-pm-ic{flex:none;display:grid;place-items:center;width:4.4rem;height:4.4rem;border-radius:1.4rem;color:#fff;transition:transform .3s var(--ease-premium)}
+.tu-pm-ic svg{width:2.2rem;height:2.2rem}
+.tu-pm-ic.bcel{background:linear-gradient(145deg,#3a7bef,#173a80)}
+.tu-pm-ic.umoney{background:linear-gradient(145deg,#f0b030,#8a5c12)}
+.tu-pm-ic.bank{background:linear-gradient(145deg,#3fc07f,#1c5c3c)}
+.tu-pm div{flex:1;min-width:0}
+.tu-pm b{display:block;font-size:1.5rem;font-weight:700}
+.tu-pm span{display:block;color:var(--muted);font-size:1.2rem;margin-top:.1rem}
+.tu-check{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;border:.15rem solid rgba(255,255,255,.2);display:grid;place-items:center;color:transparent;transition:all .3s var(--ease-premium)}
+.tu-check svg{width:1.4rem;height:1.4rem}
+.tu-pm[aria-pressed=true]{border-color:var(--accent);background:linear-gradient(135deg,rgba(205,0,35,.18),rgba(205,0,35,.04));box-shadow:0 0 1.8rem rgba(205,0,35,.28)}
+.tu-pm[aria-pressed=true] .tu-pm-ic{transform:scale(1.08)}
+.tu-pm[aria-pressed=true] .tu-check{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 1rem rgba(255,31,66,.5);animation:tuPop .3s var(--ease-premium)}
+
+.tu-qr{display:none;flex-direction:column;align-items:center;gap:1rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--card-border);animation:adUp .45s var(--ease-premium) both}
+.tu-qr.on{display:flex}
+.tu-qr-box{position:relative;width:13rem;height:13rem;border-radius:1.8rem;background:#fff;padding:1.4rem;box-shadow:0 0 2.6rem rgba(255,31,66,.4)}
+.tu-qr-box svg{width:100%;height:100%;color:#0a0505}
+.tu-qr-scan{position:absolute;left:.8rem;right:.8rem;height:.24rem;border-radius:99rem;background:linear-gradient(90deg,transparent,var(--red-bright),transparent);top:1.4rem;box-shadow:0 0 .8rem var(--red-bright);animation:tuScan 2.4s ease-in-out infinite}
+@keyframes tuScan{0%,100%{top:1.4rem}50%{top:calc(100% - 1.6rem)}}
+.tu-qr p{color:var(--muted);font-size:1.2rem;text-align:center;max-width:26rem}
+
+.tu-sum-card .sum{margin-bottom:1.6rem}
+.tu-sum-card .sum b{font-family:var(--font-display);font-size:3.2rem;background:linear-gradient(100deg,#fff 10%,#ffd2da 35%,#ff4d6a 55%,#ffe3e7 70%,#ff4d6a 92%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:titleShimmer 5.5s ease-in-out infinite}
+.tu-pay{box-shadow:0 0 2.4rem rgba(255,31,66,.4);animation:tuGlow 2.6s ease-in-out infinite}
+@keyframes tuGlow{50%{box-shadow:0 0 3.6rem rgba(255,31,66,.62)}}
+@media (prefers-reduced-motion:reduce){.tu-pay,.tu-qr-scan,.tu-bal-ic,.tu-dot{animation:none}}
 </style>
 </head>
 <body>
@@ -322,106 +659,333 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
   <symbol id="i-android" viewBox="0 0 24 24"><path d="M5 14.5a7 7 0 0 1 14 0z"/><rect x="5" y="15.7" width="14" height="6" rx="2"/><rect x="1.6" y="15.7" width="2.4" height="5" rx="1.2"/><rect x="20" y="15.7" width="2.4" height="5" rx="1.2"/><path d="M8 6.8 6.4 4.2M16 6.8l1.600-2.600" fill="none" stroke="currentColor" stroke-width="1.500" stroke-linecap="round"/><circle cx="9.200" cy="11.300" r=".95" fill="var(--slit,#0a0505)"/><circle cx="14.800" cy="11.300" r=".95" fill="var(--slit,#0a0505)"/></symbol>
   <symbol id="i-admin" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.200 3.400 9.200 8 11 4.600-1.800 8-5.800 8-11V5z"/><path d="M13.300 6.500 8.800 12.800h3.100l-1 4.900 4.500-6.400h-3.100z" fill="var(--slit,#0a0505)"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.500" fill="none" stroke="currentColor" stroke-width="2.200"/><path d="M16 5.500V5a2 2 0 0 0-2-2H5.500A2.500 2.500 0 0 0 3 5.500V14a2 2 0 0 0 2 2h.5" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.500" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.500 2.500 20h19z" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linejoin="round"/><path d="M12 10v4.500M12 17.500v.1" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M2.5 3h2.4l1 3M5.9 6l2 9.5a2 2 0 0 0 2 1.6h7a2 2 0 0 0 2-1.6L20.5 8H5.9" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20.5" r="1.500"/><circle cx="17" cy="20.5" r="1.500"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 21V9M9.5 21V3M16 21v-7M21 21H3" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="7" height="7" rx="1.200" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14.5" y="2.5" width="7" height="7" rx="1.200" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2.5" y="14.5" width="7" height="7" rx="1.200" fill="none" stroke="currentColor" stroke-width="2"/><rect x="5.3" y="5.3" width="1.8" height="1.8"/><rect x="17.3" y="5.3" width="1.8" height="1.8"/><rect x="5.3" y="17.3" width="1.8" height="1.8"/><rect x="14.5" y="14.5" width="3.1" height="3.1"/><rect x="18.7" y="14.5" width="2.8" height="2.8"/><rect x="14.5" y="18.7" width="2.8" height="2.8"/><rect x="18.7" y="18.7" width="2.3" height="2.3"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="1.5" width="12" height="21" rx="2.600" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 19.2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="10.5" r="2.8" fill="var(--slit,#0a0505)" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="M12 2 2 7.5v1.7h20V7.5z"/><path d="M4 10.5v8M9 10.5v8M15 10.5v8M20 10.5v8" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/><rect x="2" y="19.5" width="20" height="2.200" rx="1"/></symbol>
 </svg>
 
 <main class="app">
 <div class="view on" id="v-home">
   <section class="hero">
-    <div class="badge"><svg><use href="#i-bolt"/></svg>RESELLER LICENSE PORTAL<span class="live"><i></i>LIVE 24/7</span></div>
-    <h1><span id="storeName">DekmaSH Stowe</span> - Reseller<br>Portal</h1>
+    <div class="badge"><svg><use href="#i-bolt"/></svg>ສູນໄລເຊັນຕົວແທນ<span class="live"><i></i>ອອນລາຍ 24/7</span></div>
+    <h1><span id="storeName">DekmaSH Stowe</span><br>ລະບົບຕົວແທນຈຳໜ່າຍ</h1>
     <div class="actions">
-      <button class="btn b2" data-go="products" data-label="สินค้าทั้งหมด"><svg><use href="#i-store"/></svg>สินค้าทั้งหมด</button>
-      <button class="btn b3" data-go="status" data-label="สถานะระบบ"><svg><use href="#i-signal"/></svg>สถานะระบบ</button>
-      <button class="btn b4" data-go="topup" data-label="เติมเงินเครดิต"><svg><use href="#i-wallet"/></svg>เติมเงินเครดิต</button>
+      <button class="btn b2" data-go="products" data-label="ສິນຄ້າທັງໝົດ"><svg><use href="#i-store"/></svg>ສິນຄ້າທັງໝົດ</button>
+      <button class="btn b4" data-go="topup" data-label="ເຕີມເງິນເຄຣດິດ"><svg><use href="#i-wallet"/></svg>ເຕີມເງິນເຄຣດິດ</button>
     </div>
   </section>
 
   <section class="stats">
-    <div class="stat s1"><span class="ico"><svg><use href="#i-users"/></svg></span><div><p class="lb">ตัวแทน RESELLER</p><p class="val"><b>19</b><small>บัญชี</small></p></div></div>
-    <div class="stat s2"><span class="ico"><svg><use href="#i-boxes"/></svg></span><div><p class="lb">สินค้าในระบบ</p><p class="val"><b>172</b><small>รายการ</small></p></div></div>
-    <div class="stat s3"><span class="ico"><svg><use href="#i-key"/></svg></span><div><p class="lb">LICENSE KEYS ที่ออก</p><p class="val"><b>1,765</b><small>คีย์</small></p></div></div>
-    <div class="stat s4"><span class="ico"><svg><use href="#i-check"/></svg></span><div><p class="lb">คำสั่งซื้อสำเร็จ</p><p class="val"><b>870</b><small>ออเดอร์</small></p></div></div>
+    <div class="stat s1"><span class="ico"><svg><use href="#i-users"/></svg></span><div><p class="lb">ຕົວແທນຈຳໜ່າຍ</p><p class="val"><b>0</b><small>ບັນຊີ</small></p></div></div>
+    <div class="stat s2"><span class="ico"><svg><use href="#i-boxes"/></svg></span><div><p class="lb">ສິນຄ້າໃນລະບົບ</p><p class="val"><b>0</b><small>ລາຍການ</small></p></div></div>
+    <div class="stat s3"><span class="ico"><svg><use href="#i-key"/></svg></span><div><p class="lb">ລະຫັດທີ່ອອກແລ້ວ</p><p class="val"><b>0</b><small>ລະຫັດ</small></p></div></div>
+    <div class="stat s4"><span class="ico"><svg><use href="#i-check"/></svg></span><div><p class="lb">ຄຳສັ່ງຊື້ສຳເລັດ</p><p class="val"><b>0</b><small>ອໍເດີ</small></p></div></div>
   </section>
 
   <section class="panel" id="search">
     <div class="search">
       <svg><use href="#i-search"/></svg>
-      <input id="q" type="text" placeholder="ค้นหาชื่อสินค้า, โปรแกรม, หรือหมวดหมู่..." autocomplete="off" enterkeyhint="search" aria-label="ค้นหาสินค้า">
+      <input id="q" type="text" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ, ໂປຣແກຣມ, ຫຼື ໝວດໝູ່..." autocomplete="off" enterkeyhint="search" aria-label="ຄົ້ນຫາສິນຄ້າ">
     </div>
     <div class="filters">
-      <button class="chip" data-cat="IOS"><span class="tile ios"><svg><use href="#i-apple"/></svg></span>หมวดหมู่ IOS</button>
-      <button class="chip" data-cat="ANDROID"><span class="tile and"><svg><use href="#i-android"/></svg></span>หมวดหมู่ ANDROID</button>
+      <button class="chip" data-cat="IOS"><span class="tile ios"><svg><use href="#i-apple"/></svg></span>ໝວດໝູ່ IOS</button>
+      <button class="chip" data-cat="ANDROID"><span class="tile and"><svg><use href="#i-android"/></svg></span>ໝວດໝູ່ ANDROID</button>
     </div>
   </section>
 </div>
 
 <!-- ===== สินค้า ===== -->
 <div class="view" id="v-products">
-  <div class="pg"><button class="back" data-go="home" aria-label="กลับ"><svg><use href="#i-back"/></svg></button><div><h2>สินค้าทั้งหมด</h2><small id="pcount"> </small></div></div>
-  <div class="search"><svg><use href="#i-search"/></svg><input class="field" id="pq" style="padding-left:var(--search-pad)" placeholder="ค้นหาชื่อสินค้า, โปรแกรม, หรือหมวดหมู่..." autocomplete="off" aria-label="ค้นหาสินค้า"></div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ສິນຄ້າທັງໝົດ</h2><small id="pcount"> </small></div></div>
+  <div class="search"><svg><use href="#i-search"/></svg><input class="field" id="pq" style="padding-left:var(--search-pad)" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ, ໂປຣແກຣມ, ຫຼື ໝວດໝູ່..." autocomplete="off" aria-label="ຄົ້ນຫາສິນຄ້າ"></div>
   <div class="cats" id="cats"></div>
   <div class="grid2" id="plist"></div>
 </div>
 
 <!-- ===== เติมเงิน ===== -->
 <div class="view" id="v-topup">
-  <div class="pg"><button class="back" data-go="home" aria-label="กลับ"><svg><use href="#i-back"/></svg></button><div><h2>เติมเงินเครดิต</h2><small>เติมแล้วเครดิตเข้าทันที</small></div></div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ເຕີມເງິນເຄຣດິດ</h2><small>ເຕີມແລ້ວ ເຄຣດິດເຂົ້າທັນທີ</small></div></div>
   <div class="stack">
-    <div class="card" style="display:flex;align-items:center;gap:1.6rem"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span><div><p class="lb">เครดิตคงเหลือ</p><p class="val"><b id="credit">0</b><small>บาท</small></p></div></div>
-    <div class="card"><p class="h3">เลือกจำนวนเงิน</p>
-      <div class="grid3" id="amts"><button class="cat amt" data-a="100">฿100</button><button class="cat amt" data-a="300">฿300</button><button class="cat amt on" data-a="500">฿500</button><button class="cat amt" data-a="1000">฿1,000</button><button class="cat amt" data-a="2000">฿2,000</button><button class="cat amt" data-a="5000">฿5,000</button></div>
-      <input class="field" id="amt" type="number" inputmode="numeric" min="1" placeholder="จำนวนเงินอื่น ๆ (บาท)" style="margin-top:1.2rem"></div>
-    <div class="card"><p class="h3">ช่องทางชำระเงิน</p>
-      <div class="stack" id="pms"><button class="pm" aria-pressed="true">พร้อมเพย์ (QR)<i></i></button><button class="pm" aria-pressed="false">TrueMoney Wallet<i></i></button><button class="pm" aria-pressed="false">โอนผ่านธนาคาร<i></i></button></div></div>
-    <div class="card"><div class="sum"><span>ยอดที่ต้องชำระ</span><b id="tot">฿500</b></div><button class="btn b2 wide" id="pay"><svg><use href="#i-wallet"/></svg>ยืนยันเติมเงิน</button></div>
-    <div class="card"><p class="h3">ประวัติล่าสุด</p><div id="hist"></div></div>
+    <div class="card bal tu-bal">
+      <span class="tu-bal-ic"><svg><use href="#i-wallet"/></svg></span>
+      <small>ເຄຣດິດຄົງເຫຼືອ</small>
+      <b id="credit" data-pre="₭">₭0</b>
+      <span class="tu-bal-sub"><i class="tu-dot"></i>ອັບເດດອັດຕະໂນມັດ · ປອດໄພ 100%</span>
+    </div>
+
+    <div class="card">
+      <p class="sec-t">ເລືອກຈຳນວນເງິນ</p>
+      <div class="tu-grid" id="amts">
+        <button class="tu-chip" data-a="50000"><b>₭50,000</b><span>ຂັ້ນຕ່ຳ</span></button>
+        <button class="tu-chip" data-a="100000"><b>₭100,000</b></button>
+        <button class="tu-chip pop on" data-a="200000"><i class="tu-pop">ຍອດນິຍົມ</i><b>₭200,000</b></button>
+        <button class="tu-chip" data-a="500000"><b>₭500,000</b></button>
+        <button class="tu-chip" data-a="1000000"><b>₭1,000,000</b></button>
+        <button class="tu-chip" data-a="2000000"><b>₭2,000,000</b><span>ຄຸ້ມສຸດ</span></button>
+      </div>
+      <div class="tu-custom"><span class="tu-pre">₭</span><input class="field" id="amt" type="number" inputmode="numeric" min="1" placeholder="ໃສ່ຈຳນວນເອງ"></div>
+    </div>
+
+    <div class="card">
+      <p class="sec-t">ຊ່ອງທາງຊຳລະເງິນ</p>
+      <div class="tu-pms" id="pms">
+        <button class="tu-pm" data-pm="BCEL One (LaoQR)" aria-pressed="true"><span class="tu-pm-ic bcel"><svg><use href="#i-qr"/></svg></span><div><b>BCEL One</b><span>ສະແກນ LaoQR ຈ່າຍທັນທີ</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
+        <button class="tu-pm" data-pm="U-Money" aria-pressed="false"><span class="tu-pm-ic umoney"><svg><use href="#i-phone"/></svg></span><div><b>U-Money</b><span>ກະເປົາເງິນມືຖື</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
+        <button class="tu-pm" data-pm="ໂອນຜ່ານທະນາຄານ" aria-pressed="false"><span class="tu-pm-ic bank"><svg><use href="#i-bank"/></svg></span><div><b>ໂອນທະນາຄານ</b><span>ໂອນແລ້ວແຈ້ງສະລິບ</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
+      </div>
+      <div class="tu-qr on" id="tuQr">
+        <div class="tu-qr-box"><svg><use href="#i-qr"/></svg><i class="tu-qr-scan"></i></div>
+        <p>ສະແກນຜ່ານແອັບທະນາຄານ ຫຼືວໍເລັດທີ່ຮອງຮັບ LaoQR</p>
+      </div>
+    </div>
+
+    <div class="card tu-sum-card">
+      <div class="sum"><span>ຍອດທີ່ຕ້ອງຊຳລະ</span><b id="tot" data-pre="₭">₭200,000</b></div>
+      <button class="btn b2 wide tu-pay" id="pay"><svg><use href="#i-wallet"/></svg>ຢືນຢັນເຕີມເງິນ</button>
+      <p class="hint" style="text-align:center;margin:1rem 0 0">ເຄຣດິດເຂົ້າບັນຊີທັນທີຫຼັງຢືນຢັນ</p>
+    </div>
+
+    <div class="card"><p class="h3">ປະຫວັດຫຼ້າສຸດ</p><div id="hist"></div></div>
   </div>
 </div>
 
-<!-- ===== สถานะระบบ ===== -->
-<div class="view" id="v-status">
-  <div class="pg"><button class="back" data-go="home" aria-label="กลับ"><svg><use href="#i-back"/></svg></button><div><h2>สถานะระบบ</h2><small id="upd"> </small></div></div>
-  <div class="stack">
-    <div class="card"><div style="display:flex;align-items:center;gap:1.6rem"><span class="ico s4"><svg><use href="#i-check"/></svg></span><div><p class="lb">ภาพรวม</p><p class="val"><b style="color:var(--green)">ทำงานปกติ</b></p></div><div style="margin-left:auto;text-align:right"><p class="lb">UPTIME 30 วัน</p><p class="val" style="justify-content:flex-end"><b>99.98</b><small>%</small></p></div></div>
-      <div class="bars" id="bars"></div><div class="axis"><span>30 วันก่อน</span><span>วันนี้</span></div></div>
-    <div class="card" id="svcs"></div>
-  </div>
-</div>
 
 <!-- ===== เมนู ===== -->
 <div class="view" id="v-menu">
-  <div class="pg"><button class="back" data-go="home" aria-label="กลับ"><svg><use href="#i-back"/></svg></button><div><h2>เมนู</h2><small>บัญชีและการตั้งค่า</small></div></div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ເມນູ</h2><small>ບັນຊີ ແລະ ການຕັ້ງຄ່າ</small></div></div>
   <div class="stack">
-    <div class="card" style="display:flex;align-items:center;gap:1.6rem"><span class="av">RS</span><div><p style="font-size:1.8rem;font-weight:700" id="uname"></p><p class="lb" style="letter-spacing:0">ตัวแทน Reseller</p></div><button class="btn b3" data-go="topup" style="margin-left:auto;height:3.4rem"><svg><use href="#i-wallet"/></svg><span id="ucredit"></span></button></div>
+    <div class="card" style="display:flex;align-items:center;gap:1.6rem"><span class="av">ຕທ</span><div><p style="font-size:1.8rem;font-weight:700" id="uname"></p><p class="lb" style="letter-spacing:0">ຕົວແທນຈຳໜ່າຍ</p></div><button class="btn b3" data-go="topup" style="margin-left:auto;height:3.4rem"><svg><use href="#i-wallet"/></svg><span id="ucredit"></span></button></div>
     <div class="card" style="padding:.6rem 1.6rem">
-      <button class="row" data-say="บัญชีของฉัน"><span class="ico s1"><svg><use href="#i-users"/></svg></span>บัญชีของฉัน<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-say="License Keys ของฉัน"><span class="ico s3"><svg><use href="#i-key"/></svg></span>License Keys ของฉัน<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-say="ประวัติคำสั่งซื้อ"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ประวัติคำสั่งซื้อ<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-go="topup"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span>เติมเงินเครดิต<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-go="status"><span class="ico s4"><svg><use href="#i-signal"/></svg></span>สถานะระบบ<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-say="ບັນຊີຂອງຂ້ອຍ"><span class="ico s1"><svg><use href="#i-users"/></svg></span>ບັນຊີຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-say="ລະຫັດໄລເຊັນຂອງຂ້ອຍ"><span class="ico s3"><svg><use href="#i-key"/></svg></span>ລະຫັດໄລເຊັນຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-say="ປະຫວັດຄຳສັ່ງຊື້"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ປະຫວັດຄຳສັ່ງຊື້<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-go="topup"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span>ເຕີມເງິນເຄຣດິດ<svg><use href="#i-chev"/></svg></button>
     </div>
-    <div class="card" style="padding:.6rem 1.6rem"><button class="row out" data-say="ออกจากระบบ"><span class="ico" style="--c:#f87171;--ibg:#2f1420;--bd:#7a2b3d"><svg><use href="#i-out"/></svg></span>ออกจากระบบ</button></div>
+    <div class="card" style="padding:.6rem 1.6rem"><button class="row out" data-say="ອອກຈາກລະບົບ"><span class="ico" style="--c:#f87171;--ibg:#2f1420;--bd:#7a2b3d"><svg><use href="#i-out"/></svg></span>ອອກຈາກລະບົບ</button></div>
   </div>
 </div>
 <!-- ===== แอดมิน ===== -->
 <div class="view" id="v-admin">
-  <div class="pg"><button class="back" data-go="home" aria-label="กลับ"><svg><use href="#i-back"/></svg></button><div><h2>แอดมิน</h2><small>จัดการร้าน สินค้า ราคา และสต๊อก</small></div></div>
-  <div class="stack">
-    <div class="card"><p class="h3">ชื่อร้าน</p><div class="line"><input class="field" id="aName" placeholder="ชื่อร้าน"><button class="btn b2" id="aNameSave">บันทึก</button></div></div>
-    <div class="card"><p class="h3">หมวดหมู่สินค้า</p><div class="tags" id="aCats"></div><div class="line" style="margin-top:1.2rem"><input class="field" id="aCatIn" placeholder="ชื่อหมวดหมู่ใหม่"><button class="btn b2" id="aCatAdd">เพิ่ม</button></div></div>
-    <div class="card"><div class="line" style="justify-content:space-between;margin-bottom:1.2rem"><p class="h3" style="margin:0">สินค้าทั้งหมด</p><button class="btn b2" id="aNew" style="height:3.6rem">+ เพิ่มสินค้า</button></div><div id="aList"></div></div>
-    <p class="note">ข้อมูลที่แก้ที่นี่ถูกบันทึกในเบราว์เซอร์ของเครื่องนี้เท่านั้น (ยังไม่ได้เชื่อมฐานข้อมูลกลาง)</p>
-  </div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ແອດມິນ</h2><small>ສູນຄວບຄຸມຮ້ານ: ພາບລວມ ເຕີມສະຕັອກ ສິນຄ້າ ເຄຣດິດ</small></div></div>
+
+  <div class="ad-tabs" id="adTabs" role="tablist" aria-label="ເມນູແອດມິນ"><div class="ad-tabs-in">
+    <i class="ad-ind" id="adInd"></i>
+    <button class="ad-tab on" role="tab" aria-selected="true" data-tab="dash"><svg><use href="#i-grid"/></svg><span>ພາບລວມ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="orders"><svg><use href="#i-cart"/></svg><span>ອໍເດີ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="reports"><svg><use href="#i-chart"/></svg><span>ລາຍງານ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="restock"><svg><use href="#i-boxes"/></svg><span>ເຕີມສະຕັອກ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="products"><svg><use href="#i-store"/></svg><span>ສິນຄ້າ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="cats"><svg><use href="#i-menu"/></svg><span>ໝວດໝູ່</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="credit"><svg><use href="#i-wallet"/></svg><span>ເຄຣດິດ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="shop"><svg><use href="#i-admin"/></svg><span>ຕັ້ງຄ່າ</span></button>
+  </div></div>
+
+  <div class="ad-alert" id="adAlert" hidden><svg><use href="#i-alert"/></svg><span id="adAlertT"></span><button id="adAlertGo">ເຕີມເລີຍ</button></div>
+
+  <!-- ===== ແຖບ: ພາບລວມ ===== -->
+  <section class="ad-pane on" id="ap-dash" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເບິ່ງຮ້ານທັງໝົດໃນທີ່ດຽວ: ສຸຂະພາບສະຕັອກ, ມູນຄ່າສິນຄ້າ, ລະຫັດທີ່ພ້ອມສົ່ງ, ເຄຣດິດຄົງເຫຼືອ ແລະກິດຈະກຳລ່າສຸດ. ເປີດແອດມິນມາຈະເຫັນໜ້ານີ້ກ່ອນ ເພື່ອຮູ້ວ່າມີສິ່ງໃດຕ້ອງເຮັດ.</p></div></div>
+
+    <div class="card ring-card">
+      <div class="ring-wrap"><svg class="ring" viewBox="0 0 140 140" aria-hidden="true"><circle class="rg-bg" cx="70" cy="70" r="56"/><g id="rgArcs"></g></svg><div class="ring-c"><b id="rgPct" data-suf="%">0%</b><small>ສະຕັອກປົກກະຕິ</small></div></div>
+      <div class="ring-in">
+        <p class="sec-t" style="margin-bottom:.6rem">ສຸຂະພາບສະຕັອກ</p>
+        <div id="rgLeg"></div>
+        <p class="hint" id="rgMsg" style="margin-left:0"></p>
+        <button class="btn b2" id="rgGo" hidden style="height:3.6rem;margin-top:1rem">ໄປເຕີມເລີຍ</button>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="mt"><span class="ico s3"><svg><use href="#i-boxes"/></svg></span><small>ມູນຄ່າສິນຄ້າໃນສະຕັອກ</small><b id="mtValue" data-pre="₭">₭0</b></div>
+      <div class="mt"><span class="ico s2"><svg><use href="#i-key"/></svg></span><small>ລະຫັດພ້ອມສົ່ງ</small><b id="mtKeys">0</b></div>
+      <div class="mt"><span class="ico s4"><svg><use href="#i-bolt"/></svg></span><small>ສິນຄ້າສົ່ງອັດຕະໂນມັດ</small><b id="mtAuto">0</b></div>
+      <div class="mt"><span class="ico s1"><svg><use href="#i-wallet"/></svg></span><small>ເຄຣດິດຄົງເຫຼືອ</small><b id="mtCredit" data-pre="₭">₭0</b></div>
+      <div class="mt"><span class="ico s2"><svg><use href="#i-cart"/></svg></span><small>ອໍເດີທັງໝົດ</small><b id="mtOrders">0</b></div>
+      <div class="mt"><span class="ico s4"><svg><use href="#i-chart"/></svg></span><small>ລາຍຮັບລວມ</small><b id="mtRevenue" data-pre="₭">₭0</b></div>
+    </div>
+
+    <div class="card"><p class="sec-t">ສະຕັອກແຍກຕາມໝວດ</p><div id="dsCats"></div></div>
+
+    <div class="card"><p class="sec-t">ທາງລັດ</p>
+      <div class="qa">
+        <button data-qa="restock"><svg><use href="#i-boxes"/></svg>ເຕີມສະຕັອກ</button>
+        <button data-qa="new"><svg><use href="#i-plus"/></svg>ເພີ່ມສິນຄ້າ</button>
+        <button data-qa="credit"><svg><use href="#i-wallet"/></svg>ເຄຣດິດ</button>
+      </div>
+    </div>
+
+    <div class="card"><p class="sec-t">ກິດຈະກຳລ່າສຸດ</p><div id="dsFeed"></div></div>
+  </section>
+
+  <!-- ===== ແຖບ: ອໍເດີ ===== -->
+  <section class="ad-pane" id="ap-orders" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເບິ່ງທຸກຄຳສັ່ງຊື້ຂອງລູກຄ້າ: ສິນຄ້າຫຍັງ, ເວລາໃດ, ລາຄາເທົ່າໃດ ແລະສະຖານະການສົ່ງ. ອໍເດີແບບອັດຕະໂນມັດຈະສຳເລັດທັນທີພ້ອມລະຫັດ; ອໍເດີແບບສົ່ງເອງໃຫ້ກົດ "ສົ່ງແລ້ວ" ຫຼັງທີມງານສົ່ງສິນຄ້າໃຫ້ລູກຄ້າແລ້ວ.</p></div></div>
+
+    <div class="metrics" id="ordMetrics"></div>
+
+    <div class="card">
+      <input class="field" id="ordQ" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ ຫຼືລະຫັດອໍເດີ..." aria-label="ຄົ້ນຫາອໍເດີ" autocomplete="off">
+      <div class="chips" id="ordF" style="margin-top:1.1rem">
+        <button class="cat on" data-f="all">ທັງໝົດ</button>
+        <button class="cat" data-f="wait">ລໍຖ້າສົ່ງ</button>
+        <button class="cat" data-f="done">ສຳເລັດ / ສົ່ງແລ້ວ</button>
+        <button class="cat" data-f="auto">ອັດຕະໂນມັດ</button>
+      </div>
+    </div>
+
+    <div class="card"><p class="hint" id="ordCount" style="margin:0 0 1.2rem"></p><div id="ordList"></div></div>
+  </section>
+
+  <!-- ===== ແຖບ: ລາຍງານ ===== -->
+  <section class="ad-pane" id="ap-reports" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ພາບລວມຍອດຂາຍ: ລາຍຮັບ 7 ມື້ຫຼ້າສຸດ, ສິນຄ້າຂາຍດີທີ່ສຸດ ແລະລາຍຮັບແຍກຕາມໝວດໝູ່ — ໃຊ້ວາງແຜນເຕີມສະຕັອກ ແລະໂປຣໂມຊັ່ນ.</p></div></div>
+
+    <div class="card">
+      <p class="sec-t">ລາຍຮັບ 7 ມື້ຫຼ້າສຸດ</p>
+      <div class="rchart" id="rptChart"></div>
+      <p class="hint" id="rptSum" style="margin-top:1.2rem"></p>
+    </div>
+
+    <div class="card"><p class="sec-t">ສິນຄ້າຂາຍດີທີ່ສຸດ</p><div id="rptTop"></div></div>
+
+    <div class="card"><p class="sec-t">ລາຍຮັບແຍກຕາມໝວດໝູ່</p><div id="rptCats"></div></div>
+  </section>
+
+  <!-- ===== ແຖບ: ເຕີມສະຕັອກ ===== -->
+  <section class="ad-pane" id="ap-restock" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີຢູ່ແລ້ວ ເຮັດ 3 ຂັ້ນຕອນ: ເລືອກສິນຄ້າ, ເລືອກວິທີເຕີມ, ໃສ່ຂໍ້ມູນແລ້ວຢືນຢັນ. ສະຕັອກເພີ່ມທັນທີ ແລະລູກຄ້າເຫັນເລີຍ. ຖ້າຍັງບໍ່ມີສິນຄ້າ ໃຫ້ໄປແຖບ "ສິນຄ້າ" ເພື່ອເພີ່ມກ່ອນ.</p></div></div>
+
+    <div class="card">
+      <div class="step"><i id="st1"><em>1</em><svg><use href="#i-tick"/></svg></i><div><b>ເລືອກສິນຄ້າ</b><small>ຕົວເລກຫຼັງຊື່ຄືສະຕັອກປັດຈຸບັນ</small></div></div>
+      <select class="field" id="rsProd" aria-label="ເລືອກສິນຄ້າທີ່ຈະເຕີມ"></select>
+      <div class="rs-info" id="rsInfo"></div>
+    </div>
+
+    <div class="card">
+      <div class="step"><i id="st2"><em>2</em><svg><use href="#i-tick"/></svg></i><div><b>ເລືອກວິທີເຕີມ</b><small>ເລືອກໃຫ້ຖືກກັບວິທີທີ່ສິນຄ້ານີ້ສົ່ງຫາລູກຄ້າ</small></div></div>
+      <div class="mode">
+        <button class="mopt" id="rsModeKeys" aria-pressed="true" disabled><b>ເພີ່ມລະຫັດ (ສົ່ງອັດຕະໂນມັດ)</b><span>ວາງລະຫັດ 1 ແຖວ = 1 ຊິ້ນ. ລູກຄ້າຊື້ແລ້ວໄດ້ລະຫັດທັນທີ ບໍ່ຕ້ອງລໍທີມງານ. ສະຕັອກນັບຈາກຈຳນວນລະຫັດ.</span></button>
+        <button class="mopt" id="rsModeQty" aria-pressed="false" disabled><b>ເພີ່ມຈຳນວນ (ທີມງານສົ່ງເອງ)</b><span>ໃຊ້ເມື່ອບໍ່ມີລະຫັດ ແລະທີມງານຕ້ອງສົ່ງສິນຄ້າເອງ. ລະບົບຈະເພີ່ມສະເພາະຕົວເລກສະຕັອກ.</span></button>
+      </div>
+      <p class="hint" id="rsLock" hidden>ສິນຄ້ານີ້ຕັ້ງເປັນສົ່ງອັດຕະໂນມັດ ຈຶ່ງເຕີມໄດ້ສະເພາະແບບເພີ່ມລະຫັດ.</p>
+    </div>
+
+    <div class="card">
+      <div class="step"><i id="st3"><em>3</em><svg><use href="#i-tick"/></svg></i><div><b>ໃສ່ຂໍ້ມູນ ແລະຢືນຢັນ</b><small>ກວດຕົວຢ່າງຜົນລັບດ້ານລຸ່ມກ່ອນກົດຢືນຢັນ</small></div></div>
+      <div id="rsKeysBox" hidden>
+        <p class="h3">ວາງລະຫັດທີ່ຈະເພີ່ມ</p>
+        <textarea class="field ta ta-lg" id="rsKeys" placeholder="XXXX-XXXX-XXXX&#10;XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <div class="tools"><button class="cat" id="rsPaste">ວາງຈາກຄລິບບອດ</button><button class="cat" id="rsClear">ລ້າງ</button></div>
+        <div class="cnt" id="rsCnt"></div>
+        <p class="hint">ລະບົບຕັດຊ່ອງວ່າງ ແລະຂ້າມລະຫັດທີ່ຊ້ຳກັບຂອງເກົ່າໃຫ້ເອງ.</p>
+      </div>
+      <div id="rsQtyBox" hidden>
+        <p class="h3">ຈຳນວນທີ່ຈະເພີ່ມ</p>
+        <input class="field" id="rsQty" type="number" inputmode="numeric" min="1" placeholder="0">
+        <div class="qk" id="rsQuick"><button class="cat" data-q="1">+1</button><button class="cat" data-q="5">+5</button><button class="cat" data-q="10">+10</button><button class="cat" data-q="50">+50</button></div>
+      </div>
+      <div class="prev" id="rsPrev"></div>
+      <div class="pbar" id="rsBar" hidden><i class="pb-cur"></i><i class="pb-add"></i></div>
+      <button class="btn b2 wide" id="rsGo" disabled style="margin-top:1.4rem"><svg><use href="#i-boxes"/></svg><span id="rsGoT">ຢືນຢັນເຕີມສະຕັອກ</span></button>
+    </div>
+
+    <div class="card">
+      <p class="sec-t" style="margin-bottom:.4rem">ສິນຄ້າທີ່ຄວນເຕີມ</p>
+      <p class="hint" style="margin:0 0 1.2rem">ສະຕັອກເຫຼືອ <span class="lowN">5</span> ຫຼືນ້ອຍກວ່າ ແລະທີ່ໝົດແລ້ວ. ກົດ "ເຕີມ" ເພື່ອເລືອກສິນຄ້ານັ້ນໃສ່ຂັ້ນຕອນທີ 1 ໃຫ້ເລີຍ.</p>
+      <div id="rsLow"></div>
+    </div>
+
+    <div class="card">
+      <p class="sec-t" style="margin-bottom:.4rem">ປະຫວັດການເຕີມລ່າສຸດ</p>
+      <p class="hint" style="margin:0 0 1.2rem">ບັນທຶກ 30 ຄັ້ງຫຼ້າສຸດ ໄວ້ກວດຄືນວ່າເຕີມ ຫຼືລຶບຫຍັງໄປແລ້ວ.</p>
+      <div id="rsLog"></div>
+    </div>
+  </section>
+
+  <!-- ===== ແຖບ: ສິນຄ້າ ===== -->
+  <section class="ad-pane" id="ap-products" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ສ້າງ, ແກ້ໄຂ ແລະລຶບສິນຄ້າ: ຊື່, ຮູບ, ລາຄາ, ໝວດໝູ່ ແລະລາຍລະອຽດ. ຖ້າຈະເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີແລ້ວ ໃຫ້ກົດ "ເຕີມ" ທີ່ແຖວສິນຄ້າ. ແຕະປ້າຍ "ອັດຕະໂນມັດ" ເພື່ອເບິ່ງ ແລະຈັດການລະຫັດທີ່ເຫຼືອ.</p></div></div>
+    <div class="card">
+      <div class="line"><input class="field" id="aq" placeholder="ຄົ້ນຫາຊື່ ຫຼືລະຫັດສິນຄ້າ..." aria-label="ຄົ້ນຫາສິນຄ້າໃນແອດມິນ" autocomplete="off"><button class="btn b2" id="aNew">+ ເພີ່ມສິນຄ້າໃໝ່</button></div>
+      <div class="chips" id="apF"><button class="cat on" data-f="all">ທັງໝົດ</button><button class="cat" data-f="low">ໃກ້ໝົດ</button><button class="cat" data-f="out">ໝົດແລ້ວ</button><button class="cat" data-f="auto">ອັດຕະໂນມັດ</button><button class="cat" data-f="man">ສົ່ງເອງ</button></div>
+      <div class="line" style="margin-top:1.1rem"><p class="h3" style="margin:0;white-space:nowrap">ຮຽງຕາມ</p><select class="field sm" id="apS" aria-label="ຮຽງສິນຄ້າ"><option value="name">ຊື່ສິນຄ້າ</option><option value="stock">ສະຕັອກນ້ອຍສຸດກ່ອນ</option><option value="price">ລາຄາສູງສຸດກ່ອນ</option></select></div>
+      <details class="legend"><summary>ຄວາມໝາຍຂອງປ້າຍ</summary>
+        <div><span class="bdg ok">ເຫຼືອ</span>ມີສະຕັອກພໍ</div>
+        <div><span class="bdg low">ໃກ້ໝົດ</span>ເຫຼືອ <span class="lowN">5</span> ຫຼືນ້ອຍກວ່າ ຄວນເຕີມ</div>
+        <div><span class="bdg out">ໝົດແລ້ວ</span>ລູກຄ້າຊື້ບໍ່ໄດ້</div>
+        <div><span class="bdg auto">ອັດຕະໂນມັດ · 12</span>ສົ່ງລະຫັດໃຫ້ລູກຄ້າທັນທີ (ຕົວເລກ = ລະຫັດທີ່ເຫຼືອ)</div>
+        <div><span class="bdg man">ສົ່ງເອງ</span>ທີມງານສົ່ງສິນຄ້າເອງ</div>
+        <div><span class="mini-bar"></span>ແຖບສີ = ປະລິມານສະຕັອກທຽບກັບສິນຄ້າອື່ນ</div>
+      </details>
+    </div>
+    <div class="card"><p class="hint" id="apCount" style="margin:0 0 1.2rem"></p><div id="aList"></div></div>
+  </section>
+
+  <!-- ===== ແຖບ: ໝວດໝູ່ ===== -->
+  <section class="ad-pane" id="ap-cats" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໝວດໝູ່ໃຊ້ຈັດກຸ່ມສິນຄ້າ ໃຫ້ລູກຄ້າກອງເບິ່ງງ່າຍ. ຕ້ອງມີໝວດໝູ່ກ່ອນ ຈຶ່ງຈະເພີ່ມສິນຄ້າເຂົ້າໝວດນັ້ນໄດ້. ແກ້ຊື່ໄດ້ (ສິນຄ້າຈະຍ້າຍຕາມ) ແຕ່ລຶບໄດ້ສະເພາະໝວດທີ່ບໍ່ມີສິນຄ້າ.</p></div></div>
+    <div class="card"><p class="sec-t">ໝວດໝູ່ທັງໝົດ</p><div id="aCats"></div></div>
+    <div class="card"><p class="sec-t">ເພີ່ມໝວດໝູ່ໃໝ່</p><div class="line"><input class="field" id="aCatIn" placeholder="ຊື່ໝວດໝູ່ໃໝ່"><button class="btn b2" id="aCatAdd">ເພີ່ມ</button></div><p class="hint">ຕັ້ງຊື່ສັ້ນໆ ທີ່ລູກຄ້າເຂົ້າໃຈງ່າຍ ເຊັ່ນ "ເກມ" ຫຼື "ໂປຣແກຣມ".</p></div>
+  </section>
+
+  <!-- ===== ແຖບ: ເຄຣດິດ ===== -->
+  <section class="ad-pane" id="ap-credit" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເບິ່ງ ແລະປັບຍອດເຄຣດິດ: ເພີ່ມເຄຣດິດ (ເມື່ອລູກຄ້າໂອນເງິນມາ) ຫຼືຫັກເຄຣດິດ (ແກ້ໄຂຜິດ ຫຼືຄືນເງິນ). ທຸກການປັບຖືກບັນທຶກໃນປະຫວັດທຸລະກຳ ພ້ອມຍອດຫຼັງເຮັດລາຍການ. ການສັ່ງຊື້ຂອງລູກຄ້າກໍຫັກອັດຕະໂນມັດ ແລະບັນທຶກທີ່ນີ້ເຊັ່ນກັນ.</p></div></div>
+    <div class="bal"><small>ເຄຣດິດຄົງເຫຼືອ</small><b id="crBal" data-pre="₭">₭0</b><span id="crBalSub"></span></div>
+    <div class="card">
+      <p class="sec-t">ປັບຍອດເຄຣດິດ</p>
+      <div class="seg" id="crSeg"><button class="add" data-m="add" aria-pressed="true"><svg><use href="#i-plus"/></svg>ເພີ່ມເຄຣດິດ</button><button class="sub" data-m="sub" aria-pressed="false"><svg><use href="#i-minus"/></svg>ຫັກເຄຣດິດ</button></div>
+      <p class="h3 sp">ຈຳນວນເງິນ (ກີບ)</p>
+      <input class="field" id="crAmt" type="number" inputmode="numeric" min="1" placeholder="0">
+      <div class="qk" id="crQuick"><button class="cat" data-q="50000">+50,000</button><button class="cat" data-q="100000">+100,000</button><button class="cat" data-q="500000">+500,000</button><button class="cat" data-q="1000000">+1,000,000</button></div>
+      <p class="h3 sp">ໝາຍເຫດ (ບໍ່ບັງຄັບ)</p>
+      <input class="field" id="crNote" placeholder="ເຊັ່ນ: ໂອນຜ່ານ BCEL One ເວລາ 14:30" maxlength="80" autocomplete="off">
+      <div class="prev" id="crPrev"></div>
+      <button class="btn b2 wide" id="crGo" disabled><svg><use href="#i-wallet"/></svg><span id="crGoT">ຢືນຢັນເພີ່ມເຄຣດິດ</span></button>
+    </div>
+    <div class="card">
+      <p class="sec-t" style="margin-bottom:.4rem">ປະຫວັດທຸລະກຳ</p>
+      <p class="hint" style="margin:0 0 1rem">ບັນທຶກ 100 ລາຍການລ່າສຸດ. ຕົວເລກກ້ອງຄືຍອດຄົງເຫຼືອຫຼັງເຮັດລາຍການນັ້ນ.</p>
+      <div class="chips" id="crF" style="margin:0 0 1.2rem"><button class="cat on" data-f="all">ທັງໝົດ</button><button class="cat" data-f="in">ເງິນເຂົ້າ</button><button class="cat" data-f="out">ເງິນອອກ</button></div>
+      <div id="crLog"></div>
+    </div>
+  </section>
+
+  <!-- ===== ແຖບ: ຕັ້ງຄ່າ ===== -->
+  <section class="ad-pane" id="ap-shop" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ຕັ້ງຄ່າທົ່ວໄປຂອງຮ້ານ, ເກນແຈ້ງເຕືອນສະຕັອກ ແລະສຳຮອງຂໍ້ມູນ.</p></div></div>
+    <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ຊື່ຮ້ານ</p><p class="hint" style="margin:0 0 1rem">ສະແດງໃນໜ້າຫຼັກ ແລະຊື່ແຖບຂອງເບຣາວເຊີ.</p><div class="line"><input class="field" id="aName" placeholder="ຊື່ຮ້ານ"><button class="btn b2" id="aNameSave">ບັນທຶກ</button></div></div>
+    <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ເກນແຈ້ງເຕືອນສະຕັອກໃກ້ໝົດ</p><p class="hint" style="margin:0 0 1rem">ເມື່ອສິນຄ້າເຫຼືອ ≤ ຈຳນວນນີ້ ລະບົບຈະຂຶ້ນປ້າຍ "ໃກ້ໝົດ" ແລະແຈ້ງເຕືອນດ້ານເທິງແອດມິນ.</p>
+      <div class="line"><button class="cat step-b" data-step="-1" aria-label="ຫຼຸດ"><svg><use href="#i-minus"/></svg></button><input class="field" id="stLow" type="number" inputmode="numeric" min="1" max="999" style="text-align:center"><button class="cat step-b" data-step="1" aria-label="ເພີ່ມ"><svg><use href="#i-plus"/></svg></button><button class="btn b2" id="stLowSave">ບັນທຶກ</button></div></div>
+    <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ສຳຮອງ ແລະກູ້ຂໍ້ມູນ</p><p class="hint" style="margin:0 0 1.2rem">ກັນຂໍ້ມູນຫາຍ: ສຳເນົາຂໍ້ມູນທັງໝົດເກັບໄວ້ (ເຊັ່ນ ວາງໃສ່ບັນທຶກ) ແລ້ວວາງກັບຄືນເມື່ອຕ້ອງການກູ້ຄືນ ຫຼືຍ້າຍໄປເຄື່ອງອື່ນ. ຂໍ້ມູນສຳຮອງມີລະຫັດສົ່ງອັດຕະໂນມັດ ຄວນເກັບເປັນຄວາມລັບ.</p>
+      <button class="btn b3 wide" id="bkCopy"><svg><use href="#i-copy"/></svg>ສຳເນົາຂໍ້ມູນສຳຮອງ</button>
+      <p class="h3 sp">ກູ້ຄືນຂໍ້ມູນ</p>
+      <textarea class="field ta" id="bkBox" placeholder="ວາງຂໍ້ມູນສຳຮອງທີ່ນີ້ ເພື່ອກູ້ຄືນ" spellcheck="false" autocapitalize="off"></textarea>
+      <button class="btn b2 wide sp" id="bkRestore">ກູ້ຄືນຂໍ້ມູນ</button>
+      <p class="hint">ການກູ້ຄືນຈະແທນທີ່ຂໍ້ມູນປັດຈຸບັນທັງໝົດ.</p></div>
+    <div class="card"><p class="sec-t" style="margin-bottom:.6rem">ບ່ອນເກັບຂໍ້ມູນ</p><p class="note" style="padding:0">ຂໍ້ມູນສິນຄ້າ, ສະຕັອກ, ເຄຣດິດ ແລະປະຫວັດ ເກັບໃນບຼາວເຊີຂອງເຄື່ອງນີ້ເທົ່ານັ້ນ (ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ຖານຂໍ້ມູນກາງ). ຖ້າລ້າງຂໍ້ມູນບຼາວເຊີ ຫຼືເປີດໃນເຄື່ອງ/ບຼາວເຊີອື່ນ (ເຊັ່ນ ເປີດຈາກ Instagram ແລ້ວມາເປີດໃນ Safari) ຈະເຫັນຂໍ້ມູນບໍ່ຕົງກັນ. ຄວນເຕີມຂອງຈາກເຄື່ອງ ແລະບຼາວເຊີດຽວກັນສະເໝີ ແລະສຳຮອງຂໍ້ມູນເປັນໄລຍະ.</p></div>
+  </section>
 </div>
 </main>
 
-<nav class="nav" aria-label="เมนูหลัก">
+<nav class="nav" aria-label="ເມນູຫຼັກ">
   <div class="nav-spot" aria-hidden="true"></div>
-  <button class="item on" data-go="home" data-label="หน้าแรก"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-home"/></svg>หน้าแรก<span class="i-bar"></span></button>
-  <button class="item store" data-go="products" data-label="สินค้า"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-store"/></svg>สินค้า<span class="i-bar"></span></button>
-  <button class="item wallet" data-go="topup" data-label="เติมเงิน"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-wallet"/></svg>เติมเงิน<span class="i-bar"></span></button>
-  <button class="item admin" data-go="admin" data-label="แอดมิน"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-admin"/></svg>แอดมิน<span class="i-bar"></span></button>
-  <button class="item menu" data-go="menu" data-label="เมนู"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-menu"/></svg>เมนู<span class="i-bar"></span></button>
+  <button class="item on" data-go="home" data-label="ໜ້າຫຼັກ"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-home"/></svg>ໜ້າຫຼັກ<span class="i-bar"></span></button>
+  <button class="item store" data-go="products" data-label="ສິນຄ້າ"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-store"/></svg>ສິນຄ້າ<span class="i-bar"></span></button>
+  <button class="item wallet" data-go="topup" data-label="ເຕີມເງິນ"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-wallet"/></svg>ເຕີມເງິນ<span class="i-bar"></span></button>
+  <button class="item admin" data-go="admin" data-label="ແອດມິນ"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-admin"/></svg>ແອດມິນ<span class="i-bar"></span></button>
+  <button class="item menu" data-go="menu" data-label="ເມນູ"><span class="ring"></span><i class="spk"></i><i class="spk"></i><i class="spk"></i><i class="spk"></i><svg><use href="#i-menu"/></svg>ເມນູ<span class="i-bar"></span></button>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 <div class="cine-overlay" id="cineOverlay" aria-hidden="true"><i></i></div>
@@ -470,7 +1034,7 @@ function show(v){
 }
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g) return show(g.dataset.go);
-  const s=e.target.closest('[data-say]'); if(s) say(s.dataset.say+' — ยังไม่ได้เชื่อมระบบ');
+  const s=e.target.closest('[data-say]'); if(s) say(s.dataset.say+' — ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ລະບົບ');
 });
 $$('.nav .item').forEach(b=>b.addEventListener('click',()=>{
   $$('.nav .item').forEach(x=>x.classList.remove('bump'));
@@ -479,32 +1043,38 @@ $$('.nav .item').forEach(b=>b.addEventListener('click',()=>{
 
 /* ===== ข้อมูลตัวอย่าง (แทนที่ด้วยข้อมูลจริง / Supabase ภายหลัง) =====
    แต่ละรายการ = [ชื่อ, หมวด, ราคา, สต๊อก, URL รูป(ไม่ใส่ = ใช้ภาพปกไอคอน)] */
-const DEMO={user:'Reseller #0019',credit:1250};
-const P=[["Video Editor Pro","โปรแกรม",290,12],["Antivirus Plus 1 ปี","ความปลอดภัย",150,40],["Office Suite 2021","ออฟฟิศ",390,8],["VPN Premium 30 วัน","ความปลอดภัย",90,0],["Design Studio License","โปรแกรม",450,5],["Game Booster Key","เกม",60,25],["PDF Toolkit Pro","ออฟฟิศ",120,0],["Cloud Storage 1TB","ออฟฟิศ",190,17],["iOS Signing Cert 1 ปี","IOS",250,10],["iOS App Unlocker","IOS",180,6],["Android Premium Pack","ANDROID",140,22],["Android VPN Pro","ANDROID",90,15]];
-const IC={'โปรแกรม':'i-grid','ออฟฟิศ':'i-boxes','ความปลอดภัย':'i-check','เกม':'i-bolt','IOS':'i-apple','ANDROID':'i-android'};
-const fmt=n=>n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
-$('#credit').textContent=fmt(DEMO.credit); $('#uname').textContent=DEMO.user; $('#ucredit').textContent='฿'+fmt(DEMO.credit);
+const DEMO={user:'ຕົວແທນ #0019',credit:800000};
+const P=[["Video Editor Pro","ໂປຣແກຣມ",190000,12],["Antivirus Plus 1 ປີ","ຄວາມປອດໄພ",100000,40],["Office Suite 2021","ຫ້ອງການ",250000,8],["VPN Premium 30 ມື້","ຄວາມປອດໄພ",60000,0],["Design Studio License","ໂປຣແກຣມ",290000,5],["Game Booster Key","ເກມ",40000,25],["PDF Toolkit Pro","ຫ້ອງການ",80000,0],["Cloud Storage 1TB","ຫ້ອງການ",120000,17],["iOS Signing Cert 1 ປີ","IOS",160000,10],["iOS App Unlocker","IOS",120000,6],["Android Premium Pack","ANDROID",90000,22],["Android VPN Pro","ANDROID",60000,15]];
+const IC={'ໂປຣແກຣມ':'i-grid','ຫ້ອງການ':'i-boxes','ຄວາມປອດໄພ':'i-check','ເກມ':'i-bolt','IOS':'i-apple','ANDROID':'i-android'};
+const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
+$('#credit').textContent=fmt(DEMO.credit); $('#uname').textContent=DEMO.user; $('#ucredit').textContent='₭'+fmt(DEMO.credit);
 
 /* ===== ร้านค้า: ข้อมูลเก็บใน localStorage ของเครื่องนี้ (ต่อฐานข้อมูลกลางภายหลังได้) ===== */
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SK='dekma_store_v1'; let DB;
 try{DB=JSON.parse(localStorage.getItem(SK))}catch(e){}
-if(!DB||!DB.products) DB={name:'DekmaSH Stowe',credit:DEMO.credit,cats:['โปรแกรม','ออฟฟิศ','ความปลอดภัย','เกม','IOS','ANDROID'],seq:P.length+1,
+if(!DB||!DB.products) DB={name:'DekmaSH Stowe',cur:'LAK',credit:DEMO.credit,cats:['ໂປຣແກຣມ','ຫ້ອງການ','ຄວາມປອດໄພ','ເກມ','IOS','ANDROID'],seq:P.length+1,
   products:P.map((p,i)=>({id:i+1,code:'P-'+String(i+1).padStart(4,'0'),name:p[0],cat:p[1],price:p[2],stock:p[3],desc:'',imgs:[],keys:[],auto:false}))};
-function save(){try{localStorage.setItem(SK,JSON.stringify(DB));return true}catch(e){say('บันทึกไม่ได้ (พื้นที่เต็มหรือเบราว์เซอร์ไม่อนุญาต)');return false}}
+/* Migrate older saved data: Thai sample categories/names -> Lao */
+const TH2LO={'โปรแกรม':'ໂປຣແກຣມ','ออฟฟิศ':'ຫ້ອງການ','ความปลอดภัย':'ຄວາມປອດໄພ','เกม':'ເກມ','Antivirus Plus 1 ปี':'Antivirus Plus 1 ປີ','VPN Premium 30 วัน':'VPN Premium 30 ມື້','iOS Signing Cert 1 ปี':'iOS Signing Cert 1 ປີ'};
+DB.cats=(DB.cats||[]).map(c=>TH2LO[c]||c);DB.products.forEach(p=>{p.cat=TH2LO[p.cat]||p.cat;p.name=TH2LO[p.name]||p.name});
+DB.log=DB.log||[];
+function save(){try{localStorage.setItem(SK,JSON.stringify(DB));return true}catch(e){say('ບັນທຶກບໍ່ໄດ້ (ພື້ນທີ່ເຕັມ ຫຼື ບຼາວເຊີບໍ່ອະນຸຍາດ)');return false}}
+/* One-time: convert previously saved baht amounts to kip (approx. 1 THB = 650 LAK, rounded to nearest 1,000) */
+if(DB.cur!=='LAK'){const kp=v=>Math.round((+v||0)*650/1000)*1000;DB.credit=kp(DB.credit);DB.products.forEach(p=>{p.price=kp(p.price)});DB.cur='LAK';save()}
 const sym=p=>IC[p.cat]||'i-grid';
-function paint(){$('#credit').textContent=fmt(DB.credit);$('#ucredit').textContent='฿'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - Reseller Portal';$('#aName').value=DB.name}
-async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say('คัดลอกแล้ว: '+t.slice(0,40))}
+function paint(){setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say('ສຳເນົາແລ້ວ: '+t.slice(0,40))}
 const sheet=$('#sheet'),box=$('#shBox');
 const openSheet=h=>{box.innerHTML=h;sheet.classList.add('on')}, closeSheet=()=>sheet.classList.remove('on');
 
 /* ----- สินค้า (ฝั่งลูกค้า) ----- */
-let cat='ทั้งหมด',only=false,pq='';
-function renderCats(){$('#cats').innerHTML=['ทั้งหมด',...DB.cats].map(c=>`<button class="cat${c===cat?' on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')+`<button class="cat" id="onlyStock" aria-pressed="${only}">มีสต๊อกเท่านั้น</button>`}
+let cat='ທັງໝົດ',only=false,pq='';
+function renderCats(){$('#cats').innerHTML=['ທັງໝົດ',...DB.cats].map(c=>`<button class="cat${c===cat?' on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')+`<button class="cat" id="onlyStock" aria-pressed="${only}">ສະເພາະທີ່ມີສະຕັອກ</button>`}
 function renderP(){
-  const l=DB.products.filter(p=>(cat==='ทั้งหมด'||p.cat===cat)&&(!only||p.stock>0)&&(p.name+p.cat+p.code).toLowerCase().includes(pq));
-  $('#pcount').textContent='แสดง '+l.length+' จาก '+DB.products.length+' รายการ';
-  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span><span class="tag ${p.stock?'':'out'}">${p.stock?'เหลือ '+p.stock:'หมด'}</span></div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">฿${p.price.toLocaleString('th-TH')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'สั่งซื้อ':'สินค้าหมด'}</button></div>`).join('')||'<p class="empty">ไม่พบสินค้าที่ค้นหา</p>';
+  const l=DB.products.filter(p=>(cat==='ທັງໝົດ'||p.cat===cat)&&(!only||p.stock>0)&&(p.name+p.cat+p.code).toLowerCase().includes(pq));
+  $('#pcount').textContent='ສະແດງ '+l.length+' ຈາກ '+DB.products.length+' ລາຍການ';
+  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span><span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span></div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">₭${p.price.toLocaleString('en-US')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'ສັ່ງຊື້':'ສິນຄ້າໝົດ'}</button></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
 }
 $('#cats').addEventListener('click',e=>{
   const c=e.target.closest('.cat'); if(!c) return;
@@ -521,24 +1091,299 @@ $('#plist').addEventListener('click',e=>{ /* แตะรูปปก = สล�
 });
 
 /* ----- สั่งซื้อ + ส่งสินค้าอัตโนมัติ ----- */
+function addOrder(p,k){DB.orders=DB.orders||[];DB.orderSeq=DB.orderSeq||1;
+  DB.orders.unshift({id:DB.orderSeq++,t:Date.now(),code:p.code,cat:p.cat,name:p.name,price:p.price,status:k?'auto':'wait',key:k||''});
+  DB.orders.length=Math.min(DB.orders.length,300)}
 function buy(id){
   const p=DB.products.find(x=>x.id==id); if(!p||p.stock<1) return;
-  if(DB.credit<p.price) return say('เครดิตไม่พอ กรุณาเติมเงินก่อน');
-  DB.credit-=p.price; const k=p.auto&&p.keys.length?p.keys.shift():null;
-  p.stock=p.auto?p.keys.length:p.stock-1; save(); paint(); renderP(); renderAdmin();
-  openSheet(`<h3 class="sh-t">สั่งซื้อสำเร็จ</h3><p class="lb" style="letter-spacing:0">${esc(p.name)} · ฿${p.price.toLocaleString('th-TH')}</p>${k?`<div class="keybox">${esc(k)}</div><button class="btn b2 wide" data-copy="${esc(k)}">คัดลอกคีย์</button>`:`<div class="keybox" style="font-size:1.5rem">ทีมงานจะส่งสินค้าให้ตามช่องทางที่ติดต่อ</div>`}<button class="btn b3 wide" data-close style="margin-top:.9rem">ปิด</button>`);
+  if(DB.credit<p.price) return say('ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ');
+  DB.credit-=p.price;addTx('buy',-p.price,'',p.name); const k=p.auto&&p.keys.length?p.keys.shift():null;
+  p.stock=p.auto?p.keys.length:p.stock-1; addOrder(p,k); save(); paint(); renderP(); renderAdmin();
+  openSheet(`<h3 class="sh-t">ສັ່ງຊື້ສຳເລັດ</h3><p class="lb" style="letter-spacing:0">${esc(p.name)} · ₭${p.price.toLocaleString('en-US')}</p>${k?`<div class="keybox">${esc(k)}</div><button class="btn b2 wide" data-copy="${esc(k)}">ສຳເນົາລະຫັດ</button>`:`<div class="keybox" style="font-size:1.5rem">ທີມງານຈະສົ່ງສິນຄ້າໃຫ້ຕາມຊ່ອງທາງທີ່ຕິດຕໍ່</div>`}<button class="btn b3 wide" data-close style="margin-top:.9rem">ປິດ</button>`);
 }
 
 /* ----- แอดมิน ----- */
-function renderAdmin(){
-  $('#aCats').innerHTML=DB.cats.map(c=>`<span class="tg">${esc(c)}<button data-delcat="${esc(c)}" aria-label="ลบหมวดหมู่">×</button></span>`).join('')||'<span class="lb">ยังไม่มีหมวดหมู่</span>';
-  $('#aList').innerHTML=DB.products.map(p=>`<div class="arow"><div class="th">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:`<svg><use href="#${sym(p)}"/></svg>`}</div><div class="ai"><b>${esc(p.name)}</b><span>${p.code} · ฿${p.price.toLocaleString('th-TH')} · สต๊อก ${p.stock}${p.auto?' · ส่งอัตโนมัติ':''}</span></div><button class="ib" data-copy="${p.code}" aria-label="คัดลอกรหัสสินค้า"><svg><use href="#i-copy"/></svg></button><button class="ib" data-edit="${p.id}">แก้ไข</button></div>`).join('');
+let LOW=5;
+function normDB(){DB.log=DB.log||[];DB.tx=DB.tx||[];DB.cats=DB.cats||[];LOW=Math.max(1,Math.floor(+DB.low||5));
+  if(!DB.orders) DB.orders=DB.tx.filter(x=>x.type==='buy').map(x=>{const p=DB.products.find(pp=>pp.name===x.name);return{id:0,t:x.t,code:p?p.code:'',cat:p?p.cat:'',name:x.name,price:Math.abs(x.n),status:'auto',key:''}});
+  DB.orderSeq=DB.orderSeq||(DB.orders.length?Math.max(1,...DB.orders.map(o=>o.id||0))+1:1);
+  DB.orders.forEach(o=>{if(!o.id)o.id=DB.orderSeq++})}
+normDB();
+let adTab='dash',aq='',af='all',asort='name',cf='all',kmId=null,kmSure=-1,rnOld=null,ordQ='',ordF='all';
+const rs={id:null,mode:'keys'},cr={mode:'add'};
+const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+const K=n=>'₭'+Math.round(n).toLocaleString('en-US');
+const fdate=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+const rsProd=()=>DB.products.find(x=>x.id==rs.id);
+const stKind=p=>p.stock<1?'out':p.stock<=LOW?'low':'ok';
+const stTag=p=>{const k=stKind(p);return [k,k==='out'?'ໝົດແລ້ວ':k==='low'?'ໃກ້ໝົດ '+p.stock:'ເຫຼືອ '+p.stock]};
+const bdg=(c,t)=>`<span class="bdg ${c}">${t}</span>`;
+const dlv=p=>p.auto?`<button class="bdg auto tap" data-keys="${p.id}">ອັດຕະໂນມັດ · ${p.keys.length}</button>`:bdg('man','ສົ່ງເອງ');
+const defMode=p=>p&&!(p.auto||p.keys.length||p.stock<1)?'qty':'keys';
+const parseKeys=t=>t.split('\n').map(x=>x.trim()).filter(Boolean);
+async function copyQ(t,msg){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say(msg)}
+
+/* animated numbers (count-up) */
+function animNum(el,from,to){const pre=el.dataset.pre||'',suf=el.dataset.suf||'',t0=performance.now(),dur=(RM||from===to)?0:800;cancelAnimationFrame(el._raf);
+  const step=now=>{const k=dur?Math.min(1,(now-t0)/dur):1,v=from+(to-from)*(1-Math.pow(1-k,3));el.textContent=pre+Math.round(v).toLocaleString('en-US')+suf;if(k<1)el._raf=requestAnimationFrame(step)};step(t0)}
+function setNum(el,to){if(typeof el==='string')el=$(el);if(!el)return;el.dataset.num=to;animNum(el,el.offsetParent?(el._shown||0):to,to);el._shown=to}
+const replay=pane=>pane&&pane.querySelectorAll('[data-num]').forEach(el=>animNum(el,0,+el.dataset.num));
+
+/* success burst */
+function burst(big,sub,neg){const d=document.createElement('div');d.className='okpop'+(neg?' neg':'');
+  d.innerHTML='<div class="okc"><svg viewBox="0 0 52 52"><circle class="okr" cx="26" cy="26" r="24"/><path class="okt" d="M14 27l8 8 16-17"/></svg>'+Array.from({length:10},(_,i)=>'<u style="--a:'+i*36+'deg"></u>').join('')+'</div><b>'+esc(big)+'</b><span>'+esc(sub)+'</span>';
+  document.body.appendChild(d);setTimeout(()=>d.classList.add('out'),1500);setTimeout(()=>d.remove(),1950)}
+
+/* tabs with sliding indicator */
+function posInd(){const b=$('.ad-tab.on'),i=$('#adInd'),bar=$('#adTabs');if(!b||!i||!b.offsetWidth)return;
+  i.style.width=b.offsetWidth+'px';i.style.transform='translateX('+b.offsetLeft+'px)';
+  bar.scrollTo({left:Math.max(0,b.offsetLeft-(bar.clientWidth-b.offsetWidth)/2),behavior:RM?'auto':'smooth'})}
+function setTab(t){adTab=t;
+  $$('.ad-tab').forEach(b=>{const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  $$('.ad-pane').forEach(x=>x.classList.toggle('on',x.id==='ap-'+t));
+  $('#adAlert').classList.toggle('mute',t==='restock');
+  posInd();replay($('#ap-'+t))}
+
+/* ---- restock ---- */
+function rsCalc(){const p=rsProd(),raw=parseKeys($('#rsKeys').value),have=new Set(p?p.keys:[]),seen=new Set(),add=[];let dup=0;
+  raw.forEach(k=>{if(have.has(k)||seen.has(k))dup++;else{seen.add(k);add.push(k)}});
+  return {tot:raw.length,add,dup,n:Math.max(0,Math.floor(+$('#rsQty').value||0)),after:(p&&p.auto?p.keys.length:0)+add.length}}
+function rsSync(){
+  const p=rsProd(); $('#rsProd').value=p?String(p.id):'';
+  if(p&&p.auto) rs.mode='keys';
+  const kb=$('#rsModeKeys'),qb=$('#rsModeQty');
+  kb.disabled=!p; qb.disabled=!p||!!p.auto;
+  kb.setAttribute('aria-pressed',rs.mode==='keys'); qb.setAttribute('aria-pressed',rs.mode==='qty');
+  $('#rsLock').hidden=!(p&&p.auto);
+  $('#rsKeysBox').hidden=!(p&&rs.mode==='keys'); $('#rsQtyBox').hidden=!(p&&rs.mode==='qty');
+  if(p){const t=stTag(p);$('#rsInfo').innerHTML=`<div class="bg">${bdg('code',esc(p.code))}${bdg(t[0],t[1])}${dlv(p)}</div><p class="hint" style="margin:.8rem 0 0">ສະຕັອກປັດຈຸບັນ: <b>${p.stock}</b> ຊິ້ນ</p>`}else $('#rsInfo').innerHTML='';
+  const go=$('#rsGo'); delete go.dataset.sure; $('#rsGoT').textContent='ຢືນຢັນເຕີມສະຕັອກ';
+  let ok=false,msg='ເລືອກສິນຄ້າໃນຂັ້ນຕອນທີ 1 ກ່ອນ ຈຶ່ງຈະເຫັນຕົວຢ່າງຜົນລັບ',cls='',bar=null,c=rsCalc();
+  if(p){
+    if(rs.mode==='keys'){
+      if(c.add.length){ok=true;cls='ok';msg=`ຈະເພີ່ມ ${c.add.length} ລະຫັດ`+(c.dup?` (ຂ້າມ ${c.dup} ລະຫັດທີ່ຊ້ຳ)`:'')+`\nສະຕັອກ ${p.stock} → ${c.after}`;
+        if(!p.auto&&p.stock>0){cls='warn';msg+=`\nຄຳເຕືອນ: ສິນຄ້ານີ້ຕອນນີ້ເປັນແບບສົ່ງເອງ. ຖ້າເພີ່ມລະຫັດ ຈະປ່ຽນເປັນສົ່ງອັດຕະໂນມັດ ແລະສະຕັອກເດີມ (${p.stock}) ຈະຖືກແທນດ້ວຍຈຳນວນລະຫັດ.`}
+        bar=[p.auto?p.stock:0,c.add.length]}
+      else msg=c.dup?`ລະຫັດທີ່ວາງມາຊ້ຳກັບຂອງເກົ່າທັງໝົດ (${c.dup}) ບໍ່ມີລະຫັດໃໝ່ໃຫ້ເພີ່ມ`:'ວາງລະຫັດໃນຊ່ອງດ້ານເທິງ (1 ແຖວ = 1 ຊິ້ນ)';
+    }else{
+      if(c.n){ok=true;cls='ok';msg=`ຈະເພີ່ມ ${c.n} ຊິ້ນ\nສະຕັອກ ${p.stock} → ${p.stock+c.n}`;bar=[p.stock,c.n]}else msg='ໃສ່ຈຳນວນທີ່ຈະເພີ່ມ';
+    }
+  }
+  $('#rsCnt').innerHTML=(p&&rs.mode==='keys'&&c.tot)?bdg('man','ແຖວທັງໝົດ '+c.tot)+bdg('ok','ໃໝ່ '+c.add.length)+(c.dup?bdg('low','ຊ້ຳ '+c.dup):''):'';
+  const pv=$('#rsPrev'); pv.className='prev '+cls; pv.textContent=msg; go.disabled=!ok;
+  const pb=$('#rsBar'); pb.hidden=!bar; if(bar){const tot=bar[0]+bar[1];pb.style.setProperty('--c',(bar[0]/tot).toFixed(3));pb.style.setProperty('--a',(bar[1]/tot).toFixed(3))}
+  $('#st1').classList.toggle('done',!!p); $('#st2').classList.toggle('done',!!p); $('#st3').classList.toggle('done',ok);
 }
-$('#aNameSave').onclick=()=>{const v=$('#aName').value.trim();if(!v)return say('กรุณาใส่ชื่อร้าน');DB.name=v;save();paint();say('เปลี่ยนชื่อร้านแล้ว')};
-$('#aCatAdd').onclick=()=>{const v=$('#aCatIn').value.trim();if(!v)return;if(DB.cats.includes(v))return say('มีหมวดหมู่นี้แล้ว');DB.cats.push(v);$('#aCatIn').value='';save();renderCats();renderAdmin();say('เพิ่มหมวดหมู่ '+v)};
-$('#aCats').onclick=e=>{const b=e.target.closest('[data-delcat]');if(!b)return;const c=b.dataset.delcat;if(DB.products.some(p=>p.cat===c))return say('มีสินค้าอยู่ในหมวดนี้ ลบไม่ได้');DB.cats=DB.cats.filter(x=>x!==c);if(cat===c)cat='ทั้งหมด';save();renderCats();renderP();renderAdmin()};
+function addLog(p,mode,n){DB.log=DB.log||[];DB.log.unshift({t:Date.now(),code:p.code,name:p.name,mode,n,after:p.stock});DB.log.length=Math.min(DB.log.length,30)}
+function addTx(type,n,note,name){DB.tx=DB.tx||[];DB.tx.unshift({t:Date.now(),type,n,after:DB.credit,note:note||'',name:name||''});DB.tx.length=Math.min(DB.tx.length,100)}
+const txTitle=x=>x.type==='buy'?'ສັ່ງຊື້ · '+x.name:x.type==='add'?'ເພີ່ມເຄຣດິດ':'ຫັກເຄຣດິດ';
+const feedRow=(dir,ttl,sub,val,after)=>`<div class="tx"><span class="tx-i ${dir}"><svg><use href="#i-${dir==='out'?'down':'up'}"/></svg></span><div class="tx-b"><b>${esc(ttl)}</b><span>${esc(sub)}</span></div><div class="tx-a"><b class="${dir==='out'?'neg':'pos'}">${esc(val)}</b>${after?`<span>${esc(after)}</span>`:''}</div></div>`;
+
+/* ---- credit ---- */
+function crSync(){
+  const amt=Math.floor(+$('#crAmt').value||0),add=cr.mode==='add';
+  $$('#crSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===cr.mode));
+  let ok=false,msg='ໃສ່ຈຳນວນເງິນທີ່ຈະ'+(add?'ເພີ່ມ':'ຫັກ'),cls='';
+  if(amt>0){const after=DB.credit+(add?amt:-amt);
+    if(after<0){msg='ຈຳນວນທີ່ຫັກຫຼາຍກວ່າຍອດຄົງເຫຼືອ ('+K(DB.credit)+')';cls='warn'}
+    else{ok=true;cls='ok';msg=(add?'ຈະເພີ່ມ ':'ຈະຫັກ ')+K(amt)+'\nຍອດຄົງເຫຼືອ '+K(DB.credit)+' → '+K(after)}}
+  const pv=$('#crPrev');pv.className='prev '+cls;pv.textContent=msg;$('#crGo').disabled=!ok;
+  $('#crGoT').textContent=add?'ຢືນຢັນເພີ່ມເຄຣດິດ':'ຢືນຢັນຫັກເຄຣດິດ';
+}
+
+/* ---- orders ---- */
+const ordIcon=o=>o.cat&&IC[o.cat]?IC[o.cat]:'i-cart';
+function ordBadge(o){if(o.status==='auto')return bdg('ok','ສຳເລັດ · ອັດຕະໂນມັດ');if(o.status==='wait')return bdg('low','ລໍຖ້າສົ່ງ');return bdg('ok','ສົ່ງແລ້ວ')}
+function renderOrders(){
+  const os=DB.orders||[],tot=os.length,rev=os.reduce((a,o)=>a+o.price,0),wait=os.filter(o=>o.status==='wait').length,avg=tot?Math.round(rev/tot):0;
+  $('#ordMetrics').innerHTML=`<div class="mt"><span class="ico s2"><svg><use href="#i-cart"/></svg></span><small>ອໍເດີທັງໝົດ</small><b>${tot.toLocaleString('en-US')}</b></div>`+
+    `<div class="mt"><span class="ico s4"><svg><use href="#i-wallet"/></svg></span><small>ລາຍຮັບລວມ</small><b>${K(rev)}</b></div>`+
+    `<div class="mt"><span class="ico s3"><svg><use href="#i-alert"/></svg></span><small>ລໍຖ້າສົ່ງ</small><b>${wait.toLocaleString('en-US')}</b></div>`+
+    `<div class="mt"><span class="ico s1"><svg><use href="#i-bolt"/></svg></span><small>ມູນຄ່າສະເລ່ຍ/ອໍເດີ</small><b>${K(avg)}</b></div>`;
+  const q=ordQ.toLowerCase();
+  const fl=os.filter(o=>(o.name+o.code).toLowerCase().includes(q)).filter(o=>ordF==='all'||(ordF==='wait'&&o.status==='wait')||(ordF==='done'&&o.status!=='wait')||(ordF==='auto'&&o.status==='auto'));
+  $$('#ordF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===ordF));
+  $('#ordCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${tot} ອໍເດີ`;
+  $('#ordList').innerHTML=fl.slice(0,100).map(o=>`<div class="prow"><div class="th"><svg><use href="#${ordIcon(o)}"/></svg></div><div class="pi"><b>${esc(o.name)}</b><div class="m">${o.code?esc(o.code)+' · ':''}${K(o.price)} · ${fdate(o.t)}</div><div class="bg">${ordBadge(o)}</div></div>`+
+    (o.status==='wait'?`<div class="pa"><button class="ib go" data-orddone="${o.id}">ສົ່ງແລ້ວ</button></div>`:o.key?`<div class="pa"><button class="ib" data-ordkey="${o.id}"><svg><use href="#i-copy"/></svg></button></div>`:'')+`</div>`).join('')||'<p class="note">ຍັງບໍ່ມີອໍເດີ</p>';
+}
+
+/* ---- reports ---- */
+function renderReports(){
+  const buys=DB.tx.filter(x=>x.type==='buy');
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(6-i));return d});
+  const vals=days.map(d=>{const a=+d,b=a+86400000;return buys.filter(x=>x.t>=a&&x.t<b).reduce((s,x)=>s+Math.abs(x.n),0)});
+  const mx=Math.max(1,...vals);
+  const pad2=n=>String(n).padStart(2,'0');
+  $('#rptChart').innerHTML=days.map((d,i)=>{const v=vals[i],h=v?Math.max(6,Math.round(v/mx*100)):100,today=i===days.length-1;
+    return `<div class="rc-col"><span class="rc-v">${v?K(v):''}</span><div class="rc-track"><div class="rc-bar${v?'':' zero'}${today?' today':''}" style="height:${h}%;animation-delay:${i*70}ms"></div></div><span class="rc-d">${pad2(d.getDate())}/${pad2(d.getMonth()+1)}</span></div>`}).join('');
+  const tot7=vals.reduce((a,b)=>a+b,0);
+  $('#rptSum').textContent=`ລວມ 7 ມື້: ${K(tot7)} · ສະເລ່ຍ/ມື້: ${K(Math.round(tot7/7))}`;
+  const byProd={};buys.forEach(x=>{byProd[x.name]=(byProd[x.name]||0)+Math.abs(x.n)});
+  const top=Object.entries(byProd).sort((a,b)=>b[1]-a[1]).slice(0,5),mxp=Math.max(1,...top.map(x=>x[1]));
+  $('#rptTop').innerHTML=top.length?top.map(([n,v],i)=>`<div class="cb-r"><div class="cb-h"><b>#${i+1} ${esc(n)}</b><span>${K(v)}</span></div><div class="bar"><i class="bar-fill" style="--s:${(v/mxp).toFixed(3)};animation-delay:${i*80}ms"></i></div></div>`).join(''):'<p class="note">ຍັງບໍ່ມີການຂາຍ</p>';
+  const byCat={};buys.forEach(x=>{const p=DB.products.find(pp=>pp.name===x.name);const c=p?p.cat:'ອື່ນໆ';byCat[c]=(byCat[c]||0)+Math.abs(x.n)});
+  const cs2=Object.entries(byCat).sort((a,b)=>b[1]-a[1]),mxc=Math.max(1,...cs2.map(x=>x[1]));
+  $('#rptCats').innerHTML=cs2.length?cs2.map(([c,v],i)=>`<div class="cb-r"><div class="cb-h"><b>${esc(c)}</b><span>${K(v)}</span></div><div class="bar"><i class="bar-fill" style="--s:${(v/mxc).toFixed(3)};animation-delay:${i*80}ms"></i></div></div>`).join(''):'<p class="note">ຍັງບໍ່ມີການຂາຍ</p>';
+}
+
+/* ---- render everything ---- */
+function renderAdmin(){
+  const L=DB.products,N=L.length;
+  const nLow=L.filter(p=>p.stock>0&&p.stock<=LOW).length,nOut=L.filter(p=>p.stock<1).length,nOk=N-nLow-nOut,need=nLow+nOut;
+  const need1=L.filter(p=>p.stock<=LOW).sort((a,b)=>a.stock-b.stock)[0];
+  $$('.lowN').forEach(e=>e.textContent=LOW);
+  if($('#stLow')&&document.activeElement!==$('#stLow')) $('#stLow').value=LOW;
+
+  /* alert bar */
+  $('#adAlert').hidden=!need;
+  if(need) $('#adAlertT').textContent=`ມີ ${need} ສິນຄ້າທີ່ຄວນເຕີມ (ໃກ້ໝົດ ${nLow} · ໝົດແລ້ວ ${nOut})`;
+
+  /* dashboard ring */
+  const C=2*Math.PI*56;let off=0,arcs='';
+  [['ok',nOk],['low',nLow],['out',nOut]].forEach(([k,n])=>{if(!n||!N)return;const part=n/N*C,len=Math.max(1,part-(n<N?4:0));
+    arcs+=`<circle class="rg-arc ${k}" cx="70" cy="70" r="56" style="--l:${len.toFixed(1)};--c:${C.toFixed(1)};stroke-dashoffset:${(-off).toFixed(1)}"/>`;off+=part});
+  $('#rgArcs').innerHTML=arcs;
+  setNum('#rgPct',N?Math.round(nOk/N*100):0);
+  $('#rgLeg').innerHTML=[['ok','ເຫຼືອພໍ',nOk],['low','ໃກ້ໝົດ',nLow],['out','ໝົດແລ້ວ',nOut]].map(r=>`<div class="lg-r"><i class="dt ${r[0]}"></i><span>${r[1]}</span><b>${r[2]}</b></div>`).join('');
+  $('#rgMsg').textContent=!N?'ຍັງບໍ່ມີສິນຄ້າ ໃຫ້ເພີ່ມສິນຄ້າກ່ອນ':need?`ມີ ${need} ລາຍການທີ່ຄວນເຕີມ`:'ສະຕັອກທຸກລາຍການພໍ ບໍ່ຕ້ອງເຕີມຕອນນີ້';
+  $('#rgGo').hidden=!need;
+
+  /* dashboard metrics */
+  setNum('#mtValue',L.reduce((a,p)=>a+p.stock*p.price,0));
+  setNum('#mtKeys',L.reduce((a,p)=>a+(p.auto?p.keys.length:0),0));
+  $('#mtAuto').dataset.suf=' / '+N; setNum('#mtAuto',L.filter(p=>p.auto).length);
+  setNum('#mtCredit',DB.credit); setNum('#crBal',DB.credit);
+  setNum('#mtOrders',(DB.orders||[]).length); setNum('#mtRevenue',DB.tx.filter(x=>x.type==='buy').reduce((a,x)=>a+Math.abs(x.n),0));
+  $('#crBalSub').textContent=`ທຸລະກຳທັງໝົດ ${DB.tx.length} ລາຍການ`;
+
+  /* dashboard: categories */
+  const cs=DB.cats.map(c=>{const ps=L.filter(p=>p.cat===c);return {c,n:ps.length,s:ps.reduce((a,p)=>a+p.stock,0)}}),mx=Math.max(1,...cs.map(x=>x.s));
+  $('#dsCats').innerHTML=cs.map((x,i)=>`<div class="cb-r"><div class="cb-h"><b>${esc(x.c)}</b><span>${x.n} ລາຍການ · ສະຕັອກ ${x.s.toLocaleString('en-US')}</span></div><div class="bar"><i class="bar-fill" style="--s:${(x.s/mx).toFixed(3)};animation-delay:${i*80}ms"></i></div></div>`).join('')||'<p class="note">ຍັງບໍ່ມີໝວດໝູ່</p>';
+
+  /* dashboard: feed */
+  const ev=[...DB.log.map(g=>({t:g.t,dir:g.n<0?'out':'in',ttl:(g.mode==='keys'?'ເພີ່ມລະຫັດ':g.mode==='qty'?'ເພີ່ມຈຳນວນ':'ລຶບລະຫັດ')+' · '+g.name,val:(g.n>0?'+':'−')+Math.abs(g.n)+' ຊິ້ນ',sub:fdate(g.t)+' · ເຫຼືອ '+g.after})),
+    ...DB.tx.map(x=>({t:x.t,dir:x.n<0?'out':'in',ttl:txTitle(x),val:(x.n<0?'−':'+')+K(Math.abs(x.n)),sub:fdate(x.t)+(x.note?' · '+x.note:'')}))].sort((a,b)=>b.t-a.t).slice(0,6);
+  $('#dsFeed').innerHTML=ev.map(e=>feedRow(e.dir,e.ttl,e.sub,e.val)).join('')||'<p class="note">ຍັງບໍ່ມີກິດຈະກຳ ເມື່ອມີການເຕີມສະຕັອກ ຫຼືທຸລະກຳ ຈະສະແດງຢູ່ບ່ອນນີ້</p>';
+
+  /* products */
+  const q=aq.toLowerCase(),ref=Math.max(LOW*3,...L.map(p=>p.stock));
+  const fl=L.filter(p=>(p.name+p.code+p.cat).toLowerCase().includes(q)).filter(p=>af==='all'||(af==='out'&&p.stock<1)||(af==='low'&&p.stock>0&&p.stock<=LOW)||(af==='auto'&&p.auto)||(af==='man'&&!p.auto))
+    .sort(asort==='stock'?(a,b)=>a.stock-b.stock:asort==='price'?(a,b)=>b.price-a.price:(a,b)=>String(a.name).localeCompare(String(b.name)));
+  $$('#apF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===af));
+  $('#apCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${N} ລາຍການ`;
+  $('#aList').innerHTML=fl.map(p=>{const t=stTag(p);return `<div class="prow"><div class="th">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:`<svg><use href="#${sym(p)}"/></svg>`}</div><div class="pi"><b>${esc(p.name)}</b><div class="m">${esc(p.code)} · ${K(p.price)} · ${esc(p.cat)}</div><div class="bg">${bdg(t[0],t[1])}${dlv(p)}</div><div class="bar sm"><i class="bar-fill ${t[0]}" style="--s:${Math.min(1,p.stock/ref).toFixed(3)}"></i></div></div><div class="pa"><button class="ib go" data-restock="${p.id}">ເຕີມ</button><button class="ib" data-edit="${p.id}">ແກ້ໄຂ</button></div></div>`}).join('')||'<p class="note">ບໍ່ພົບສິນຄ້າ</p>';
+
+  /* categories */
+  $('#aCats').innerHTML=DB.cats.map((c,i)=>{const n=L.filter(p=>p.cat===c).length,s=L.filter(p=>p.cat===c).reduce((a,p)=>a+p.stock,0);return `<div class="prow"><span class="ico s${i%4+1}"><svg><use href="#${IC[c]||'i-grid'}"/></svg></span><div class="pi"><b>${esc(c)}</b><div class="m">${n} ລາຍການ · ສະຕັອກ ${s.toLocaleString('en-US')}</div></div><div class="pa row"><button class="ib" data-rncat="${esc(c)}" aria-label="ແກ້ຊື່"><svg><use href="#i-edit"/></svg></button><button class="ib dng" data-delcat="${esc(c)}" aria-label="ລຶບໝວດໝູ່"><svg><use href="#i-trash"/></svg></button></div></div>`}).join('')||'<p class="note">ຍັງບໍ່ມີໝວດໝູ່</p>';
+
+  /* restock select / low / log */
+  $('#rsProd').innerHTML='<option value="">— ເລືອກສິນຄ້າ —</option>'+L.map(p=>`<option value="${p.id}">${esc(p.name)} (${esc(p.code)}) · ເຫຼືອ ${p.stock}</option>`).join('');
+  if(!rsProd()) rs.id=null;
+  $('#rsLow').innerHTML=L.filter(p=>p.stock<=LOW).sort((a,b)=>a.stock-b.stock).map(p=>{const t=stTag(p);return `<div class="prow"><div class="pi"><b>${esc(p.name)}</b><div class="m">${esc(p.code)}</div></div>${bdg(t[0],t[1])}<button class="ib go" data-restock="${p.id}">ເຕີມ</button></div>`}).join('')||'<p class="note">ຕອນນີ້ທຸກສິນຄ້າມີສະຕັອກພໍ</p>';
+  $('#rsLog').innerHTML=DB.log.map(g=>`<div class="hr"><div>${esc(g.name)}<br><span>${fdate(g.t)} · ${g.mode==='keys'?'ເພີ່ມລະຫັດ':g.mode==='qty'?'ເພີ່ມຈຳນວນ':'ລຶບລະຫັດ'} · ເຫຼືອ ${g.after}</span></div><b style="${g.n<0?'color:#f87171':''}">${g.n<0?'−':'+'}${Math.abs(g.n)}</b></div>`).join('')||'<p class="note">ຍັງບໍ່ມີປະຫວັດການເຕີມ</p>';
+
+  /* credit ledger */
+  $$('#crF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===cf));
+  $('#crLog').innerHTML=DB.tx.filter(x=>cf==='all'||(cf==='in'&&x.n>0)||(cf==='out'&&x.n<0)).map(x=>feedRow(x.n<0?'out':'in',txTitle(x),fdate(x.t)+(x.note?' · '+x.note:''),(x.n<0?'−':'+')+K(Math.abs(x.n)),'ຍອດ '+K(x.after))).join('')||'<p class="note">ຍັງບໍ່ມີທຸລະກຳ</p>';
+
+  rsSync();crSync();renderOrders();renderReports();
+}
+
+function goRestock(id){rs.id=id;rs.mode=defMode(rsProd());setTab('restock');rsSync();$('#rsProd').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}
+const firstNeed=()=>DB.products.filter(p=>p.stock<=LOW).sort((a,b)=>a.stock-b.stock)[0];
+
+/* ---- keys manager sheet ---- */
+function kmRender(){const p=DB.products.find(x=>x.id==kmId);if(!p)return closeSheet();
+  $('#kmSub').textContent=p.name+' · '+p.code;
+  $('#kmBody').innerHTML=`<div class="km-s"><div><b>${p.keys.length}</b><span>ລະຫັດພ້ອມສົ່ງ</span></div><div><b>${p.stock}</b><span>ສະຕັອກ</span></div></div>`+(p.keys.length?`<div class="km-l">${p.keys.map((k,i)=>`<div class="krow"><span class="ki">${i+1}</span><code>${esc(k)}</code><button class="ib" data-kcopy="${i}" aria-label="ສຳເນົາ"><svg><use href="#i-copy"/></svg></button><button class="ib dng${kmSure===i?' sure':''}" data-kdel="${i}" aria-label="ລຶບ">${kmSure===i?'ຢືນຢັນ':'<svg><use href="#i-trash"/></svg>'}</button></div>`).join('')}</div><p class="hint">ກົດຖັງຂີ້ເຫຍື້ອ 2 ຄັ້ງເພື່ອລຶບລະຫັດນັ້ນອອກຈາກສະຕັອກ.</p>`:'<p class="note">ບໍ່ມີລະຫັດຄ້າງໃນສະຕັອກ</p>')}
+function openKeys(id){kmId=id;kmSure=-1;openSheet(`<h3 class="sh-t">ຈັດການລະຫັດ</h3><p class="hint" id="kmSub" style="margin:-.8rem 0 0"></p><div id="kmBody"></div><button class="btn b2 wide sp" data-kall>ສຳເນົາລະຫັດທັງໝົດ</button><button class="btn b3 wide" data-krest style="margin-top:.9rem">ເຕີມລະຫັດເພີ່ມ</button><button class="btn b3 wide" data-close style="margin-top:.9rem">ປິດ</button>`);kmRender()}
+function openRename(c){rnOld=c;openSheet(`<h3 class="sh-t">ແກ້ຊື່ໝວດໝູ່</h3><p class="hint" style="margin:-.8rem 0 0">ສິນຄ້າໃນໝວດນີ້ຈະຖືກຍ້າຍໄປຊື່ໃໝ່ໃຫ້ອັດຕະໂນມັດ.</p><p class="h3 sp">ຊື່ໝວດໝູ່</p><input class="field" id="rnIn" value="${esc(c)}"><button class="btn b2 wide sp" data-rnsave>ບັນທຶກ</button><button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`)}
+sheet.addEventListener('click',e=>{const t=e.target,p=DB.products.find(x=>x.id==kmId);
+  if($('#kmBody')&&p){
+    const kc=t.closest('[data-kcopy]'); if(kc) return copyQ(p.keys[+kc.dataset.kcopy],'ສຳເນົາລະຫັດແລ້ວ');
+    const kd=t.closest('[data-kdel]'); if(kd){const i=+kd.dataset.kdel;if(kmSure!==i){kmSure=i;return kmRender()}
+      p.keys.splice(i,1);p.stock=p.keys.length;kmSure=-1;addLog(p,'del',-1);save();renderP();renderAdmin();return kmRender()}
+    if(t.closest('[data-kall]')) return p.keys.length?copyQ(p.keys.join('\n'),'ສຳເນົາ '+p.keys.length+' ລະຫັດແລ້ວ'):say('ບໍ່ມີລະຫັດໃຫ້ສຳເນົາ');
+    if(t.closest('[data-krest]')){closeSheet();return goRestock(kmId)}
+  }
+  if(t.closest('[data-rnsave]')){const v=$('#rnIn').value.trim();if(!v)return say('ກະລຸນາໃສ່ຊື່ໝວດໝູ່');
+    if(v!==rnOld&&DB.cats.includes(v))return say('ມີໝວດໝູ່ນີ້ແລ້ວ');
+    DB.cats=DB.cats.map(c=>c===rnOld?v:c);DB.products.forEach(p=>{if(p.cat===rnOld)p.cat=v});if(cat===rnOld)cat=v;
+    save();renderCats();renderP();renderAdmin();closeSheet();say('ແກ້ຊື່ໝວດໝູ່ແລ້ວ')}
+});
+
+/* ---- events ---- */
+$('#adTabs').addEventListener('click',e=>{const b=e.target.closest('.ad-tab');if(b)setTab(b.dataset.tab)});
+if(window.ResizeObserver) new ResizeObserver(posInd).observe($('#adTabs')); else window.addEventListener('resize',posInd);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(posInd);
+document.addEventListener('click',e=>{if(e.target.closest('[data-go="admin"]'))setTimeout(()=>setTab(adTab),140)});
+$('#rsProd').addEventListener('change',e=>{rs.id=e.target.value||null;rs.mode=defMode(rsProd());rsSync()});
+$('#rsModeKeys').onclick=()=>{rs.mode='keys';rsSync()};
+$('#rsModeQty').onclick=()=>{rs.mode='qty';rsSync()};
+$('#rsKeys').addEventListener('input',rsSync);
+$('#rsQty').addEventListener('input',rsSync);
+$('#rsQuick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;$('#rsQty').value=(+$('#rsQty').value||0)+ +b.dataset.q;rsSync()});
+$('#rsClear').onclick=()=>{$('#rsKeys').value='';rsSync()};
+$('#rsPaste').onclick=async()=>{try{const t=await navigator.clipboard.readText();$('#rsKeys').value=($('#rsKeys').value?$('#rsKeys').value.replace(/\n*$/,'\n'):'')+t;rsSync()}catch(e){say('ບຼາວເຊີບໍ່ອະນຸຍາດໃຫ້ວາງອັດຕະໂນມັດ ກົດຄ້າງໃນຊ່ອງແລ້ວເລືອກ "ວາງ"')}};
+$('#ordQ').addEventListener('input',e=>{ordQ=e.target.value.trim();renderOrders()});
+$('#ordF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){ordF=b.dataset.f;renderOrders()}});
+$('#aq').addEventListener('input',e=>{aq=e.target.value.trim();renderAdmin()});
+$('#apF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){af=b.dataset.f;renderAdmin()}});
+$('#apS').addEventListener('change',e=>{asort=e.target.value;renderAdmin()});
+$('#crF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){cf=b.dataset.f;renderAdmin()}});
+$('#crSeg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){cr.mode=b.dataset.m;crSync()}});
+$('#crAmt').addEventListener('input',crSync);
+$('#crQuick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;$('#crAmt').value=(+$('#crAmt').value||0)+ +b.dataset.q;crSync()});
+$('#rsGo').addEventListener('click',()=>{
+  const p=rsProd(); if(!p) return say('ກະລຸນາເລືອກສິນຄ້າກ່ອນ');
+  const c=rsCalc(),go=$('#rsGo'); let n;
+  if(rs.mode==='keys'){
+    if(!c.add.length) return say('ຍັງບໍ່ມີລະຫັດໃໝ່ທີ່ຈະເພີ່ມ');
+    if(!p.auto&&p.stock>0&&!go.dataset.sure){go.dataset.sure=1;$('#rsGoT').textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນປ່ຽນເປັນສົ່ງອັດຕະໂນມັດ';return}
+    p.keys.push(...c.add);p.auto=true;p.stock=p.keys.length;n=c.add.length;
+  }else{
+    if(p.auto||!c.n) return say('ກະລຸນາໃສ່ຈຳນວນ');
+    p.stock+=c.n;n=c.n;
+  }
+  addLog(p,rs.mode,n);
+  if(!save()) return;
+  $('#rsKeys').value='';$('#rsQty').value='';
+  renderP();renderAdmin();burst('+'+n,p.name+' · ເຫຼືອ '+p.stock);
+});
+$('#crGo').addEventListener('click',()=>{
+  const amt=Math.floor(+$('#crAmt').value||0),add=cr.mode==='add'; if(amt<=0) return;
+  if(!add&&amt>DB.credit) return say('ຫັກເກີນຍອດຄົງເຫຼືອບໍ່ໄດ້');
+  DB.credit+=add?amt:-amt; addTx(add?'add':'sub',add?amt:-amt,$('#crNote').value.trim());
+  if(!save()) return; paint(); $('#crAmt').value='';$('#crNote').value='';renderAdmin();
+  burst((add?'+':'−')+K(amt),'ຍອດຄົງເຫຼືອ '+K(DB.credit),!add);
+});
+$('#adAlertGo').onclick=()=>{const p=firstNeed();p?goRestock(p.id):setTab('restock')};
+$('#rgGo').onclick=()=>{const p=firstNeed();p?goRestock(p.id):setTab('restock')};
+$('#v-admin').addEventListener('click',e=>{
+  const r=e.target.closest('[data-restock]'); if(r) return goRestock(r.dataset.restock);
+  const b=e.target.closest('[data-edit]'); if(b) return openEd(b.dataset.edit);
+  const k=e.target.closest('[data-keys]'); if(k) return openKeys(k.dataset.keys);
+  const qa=e.target.closest('[data-qa]'); if(qa){const a=qa.dataset.qa;if(a==='restock'){const p=firstNeed();return p?goRestock(p.id):setTab('restock')}if(a==='new'){setTab('products');return openEd(null)}return setTab('credit')}
+  const rn=e.target.closest('[data-rncat]'); if(rn) return openRename(rn.dataset.rncat);
+  const dc=e.target.closest('[data-delcat]'); if(dc){const c=dc.dataset.delcat;if(DB.products.some(p=>p.cat===c))return say('ມີສິນຄ້າຢູ່ໃນໝວດນີ້ ລຶບບໍ່ໄດ້');DB.cats=DB.cats.filter(x=>x!==c);if(cat===c)cat='ທັງໝົດ';save();renderCats();renderP();renderAdmin();return say('ລຶບໝວດໝູ່ແລ້ວ')}
+  const st=e.target.closest('[data-step]'); if(st){const i=$('#stLow');i.value=Math.max(1,Math.min(999,(+i.value||LOW)+ +st.dataset.step))}
+  const od=e.target.closest('[data-orddone]'); if(od){const o=(DB.orders||[]).find(x=>x.id==od.dataset.orddone);if(o){o.status='done';save();renderOrders();say('ໝາຍວ່າສົ່ງອໍເດີແລ້ວ')}}
+  const ok=e.target.closest('[data-ordkey]'); if(ok){const o=(DB.orders||[]).find(x=>x.id==ok.dataset.ordkey);if(o&&o.key)copyQ(o.key,'ສຳເນົາລະຫັດແລ້ວ')}
+});
+$('#stLowSave').onclick=()=>{const v=Math.floor(+$('#stLow').value);if(!(v>=1&&v<=999))return say('ໃສ່ຕົວເລກ 1 ຫາ 999');DB.low=v;LOW=v;save();renderAdmin();say('ບັນທຶກເກນແຈ້ງເຕືອນແລ້ວ: ≤ '+v)};
+$('#aNameSave').onclick=()=>{const v=$('#aName').value.trim();if(!v)return say('ກະລຸນາໃສ່ຊື່ຮ້ານ');DB.name=v;save();paint();say('ປ່ຽນຊື່ຮ້ານແລ້ວ')};
+$('#aCatAdd').onclick=()=>{const v=$('#aCatIn').value.trim();if(!v)return;if(DB.cats.includes(v))return say('ມີໝວດໝູ່ນີ້ແລ້ວ');DB.cats.push(v);$('#aCatIn').value='';save();renderCats();renderAdmin();say('ເພີ່ມໝວດໝູ່ '+v)};
 $('#aNew').onclick=()=>openEd(null);
-$('#aList').onclick=e=>{const b=e.target.closest('[data-edit]');if(b)openEd(b.dataset.edit)};
+$('#bkCopy').onclick=async()=>{const t=JSON.stringify(DB);try{await navigator.clipboard.writeText(t);say('ສຳເນົາຂໍ້ມູນສຳຮອງແລ້ວ ('+Math.max(1,Math.round(t.length/1024))+' KB)')}catch(e){$('#bkBox').value=t;$('#bkBox').select();say('ກົດສຳເນົາຈາກຊ່ອງດ້ານລຸ່ມ')}};
+$('#bkBox').addEventListener('input',()=>{const b=$('#bkRestore');delete b.dataset.sure;b.textContent='ກູ້ຄືນຂໍ້ມູນ'});
+$('#bkRestore').onclick=function(){let d;try{d=JSON.parse($('#bkBox').value)}catch(e){return say('ຂໍ້ມູນສຳຮອງບໍ່ຖືກຕ້ອງ')}
+  if(!d||!Array.isArray(d.products)||!Array.isArray(d.cats)) return say('ຂໍ້ມູນສຳຮອງບໍ່ຄົບຖ້ວນ');
+  if(!this.dataset.sure){this.dataset.sure=1;this.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນ (ຂໍ້ມູນປັດຈຸບັນຈະຖືກແທນທີ່)';return}
+  delete this.dataset.sure;this.textContent='ກູ້ຄືນຂໍ້ມູນ';
+  if(d.cur!=='LAK'){const kp=v=>Math.round((+v||0)*650/1000)*1000;d.credit=kp(d.credit);d.products.forEach(p=>{p.price=kp(p.price)});d.cur='LAK'}
+  d.products.forEach(p=>{p.keys=p.keys||[];p.imgs=p.imgs||[]});d.seq=d.seq||d.products.length+1;d.name=d.name||'DekmaSH Stowe';
+  DB=d;normDB();cat='ທັງໝົດ';save();paint();renderCats();renderP();renderAdmin();$('#bkBox').value='';say('ກູ້ຄືນຂໍ້ມູນແລ້ວ')};
 
 let ed=null;
 function openEd(id){
@@ -548,15 +1393,26 @@ function openEd(id){
 }
 function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.stock=Math.max(0,+$('#eStock').value||0);ed.desc=$('#eDesc').value;ed.keys=$('#eKeys').value.split('\n').map(x=>x.trim()).filter(Boolean)}
 function drawEd(){
-  openSheet(`<h3 class="sh-t">${ed.id?'แก้ไขสินค้า':'เพิ่มสินค้าใหม่'}</h3>
-  <p class="h3">รหัสสินค้า</p><div class="line"><div class="code">${ed.code}</div><button class="cat" data-copy="${ed.code}">คัดลอก</button></div>
-  <p class="h3 sp">รูปสินค้า (รูปแรก = รูปปก)</p><div class="thumbs">${ed.imgs.map((s,i)=>`<div class="tb"><img src="${s}" alt=""><button data-rmimg="${i}" aria-label="ลบรูป">×</button></div>`).join('')}<label class="tb add">+<input type="file" id="eImg" accept="image/*" multiple hidden></label></div>
-  <p class="h3 sp">ชื่อสินค้า</p><input class="field" id="eName" value="${esc(ed.name)}">
-  <p class="h3 sp">หมวดหมู่</p><select class="field" id="eCat">${DB.cats.map(c=>`<option${c===ed.cat?' selected':''}>${esc(c)}</option>`).join('')}</select>
-  <div class="grid2 sp"><div><p class="h3">ราคา (บาท)</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price}"></div><div><p class="h3">สต๊อก</p><div class="line"><input class="field" id="eStock" type="number" inputmode="numeric" min="0" value="${ed.stock}"><button class="cat" id="eAdd10">+10</button></div></div></div>
-  <p class="h3 sp">รายละเอียดสินค้า</p><textarea class="field ta" id="eDesc">${esc(ed.desc)}</textarea>
-  <p class="h3 sp">คีย์ที่ส่งอัตโนมัติ (1 บรรทัด = 1 ชิ้น สต๊อกนับจากจำนวนบรรทัด)</p><textarea class="field ta" id="eKeys" placeholder="XXXX-XXXX-XXXX">${esc(ed.keys.join('\n'))}</textarea>
-  <button class="btn b2 wide sp" id="eSave">บันทึก</button>${ed.id?'<button class="del" id="eDel">ลบสินค้านี้</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ยกเลิก</button>`);
+  openSheet(`<h3 class="sh-t">${ed.id?'ແກ້ໄຂສິນຄ້າ':'ເພີ່ມສິນຄ້າໃໝ່'}</h3>
+  <p class="hint" style="margin:-.8rem 0 0">${ed.id?'ແກ້ຂໍ້ມູນສິນຄ້າ ແລ້ວກົດບັນທຶກດ້ານລຸ່ມ. ຖ້າຈະເຕີມຂອງ ໃຫ້ໃຊ້ແຖບ "ເຕີມສະຕັອກ" ຈະປອດໄພກວ່າ.':'ກອກຂໍ້ມູນສິນຄ້າໃໝ່ ແລ້ວກົດບັນທຶກ. ຫຼັງບັນທຶກ ລູກຄ້າຈະເຫັນສິນຄ້ານີ້ທັນທີ.'}</p>
+  <p class="ed-h first">ຂໍ້ມູນສິນຄ້າ</p>
+  <p class="h3">ລະຫັດສິນຄ້າ</p><div class="line"><div class="code">${ed.code}</div><button class="cat" data-copy="${ed.code}">ສຳເນົາ</button></div>
+  <p class="hint">ສ້າງໃຫ້ອັດຕະໂນມັດ ໃຊ້ອ້າງອີງ ແລະຄົ້ນຫາ (ແກ້ບໍ່ໄດ້).</p>
+  <p class="h3 sp">ຮູບສິນຄ້າ (ຮູບທຳອິດ = ຮູບໜ້າປົກ)</p><div class="thumbs">${ed.imgs.map((s,i)=>`<div class="tb"><img src="${s}" alt=""><button data-rmimg="${i}" aria-label="ລຶບຮູບ">×</button></div>`).join('')}<label class="tb add">+<input type="file" id="eImg" accept="image/*" multiple hidden></label></div>
+  <p class="hint">ຮູບທຳອິດເປັນຮູບທີ່ລູກຄ້າເຫັນໃນລາຍການ. ຮູບຖືກຍ່ອຂະໜາດໃຫ້ອັດຕະໂນມັດ. ບໍ່ໃສ່ກໍໄດ້.</p>
+  <p class="h3 sp">ຊື່ສິນຄ້າ</p><input class="field" id="eName" value="${esc(ed.name)}">
+  <p class="hint">ຊື່ທີ່ລູກຄ້າເຫັນ ແລະໃຊ້ຄົ້ນຫາ.</p>
+  <p class="h3 sp">ໝວດໝູ່</p><select class="field" id="eCat">${DB.cats.map(c=>`<option${c===ed.cat?' selected':''}>${esc(c)}</option>`).join('')}</select>
+  <p class="hint">ຢາກໄດ້ໝວດໃໝ່ ໃຫ້ສ້າງໃນແຖບ "ໝວດໝູ່" ກ່ອນ.</p>
+  <p class="h3 sp">ລາຍລະອຽດສິນຄ້າ</p><textarea class="field ta" id="eDesc">${esc(ed.desc)}</textarea>
+  <p class="hint">ສະແດງໃຕ້ຊື່ສິນຄ້າ. ບໍ່ບັງຄັບ.</p>
+  <p class="ed-h">ລາຄາ ແລະສະຕັອກ</p>
+  <div class="grid2"><div><p class="h3">ລາຄາ (ກີບ)</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price}"></div><div><p class="h3">ສະຕັອກ (ສົ່ງເອງ)</p><div class="line"><input class="field" id="eStock" type="number" inputmode="numeric" min="0" value="${ed.stock}"><button class="cat" id="eAdd10">+10</button></div></div></div>
+  <p class="hint">ລາຄາເປັນເງິນກີບ (₭) ຕໍ່ 1 ຊິ້ນ ຫັກຈາກເຄຣດິດຂອງລູກຄ້າ. ຊ່ອງສະຕັອກໃຊ້ສະເພາະສິນຄ້າທີ່ທີມງານສົ່ງເອງ; ຖ້າມີລະຫັດຢູ່ຊ່ອງລຸ່ມ ລະບົບຈະນັບສະຕັອກຈາກຈຳນວນລະຫັດແທນ.</p>
+  <p class="ed-h">ການສົ່ງສິນຄ້າອັດຕະໂນມັດ</p>
+  <p class="h3">ລະຫັດທີ່ສົ່ງອັດຕະໂນມັດ (1 ແຖວ = 1 ຊິ້ນ)</p><textarea class="field ta ta-lg" id="eKeys" placeholder="XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off">${esc(ed.keys.join('\n'))}</textarea>
+  <p class="hint">ນີ້ຄືລະຫັດທັງໝົດທີ່ເຫຼືອ. ຖ້າມີລະຫັດຢູ່ນີ້ ສິນຄ້າຈະສົ່ງອັດຕະໂນມັດ; ຖ້າວ່າງ ຈະເປັນແບບທີມງານສົ່ງເອງ. ຢາກເຕີມລະຫັດເພີ່ມ ໃຫ້ໃຊ້ແຖບ "ເຕີມສະຕັອກ" (ກັນລຶບຂອງເກົ່າ ແລະກັນລະຫັດຊ້ຳ).</p>
+  <button class="btn b2 wide sp" id="eSave">ບັນທຶກ</button>${ed.id?'<button class="del" id="eDel">ລຶບສິນຄ້ານີ້</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`);
 }
 function shrink(f){return new Promise(r=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.82))};im.onerror=()=>r(null);im.src=u})}
 sheet.addEventListener('change',async e=>{if(e.target.id!=='eImg')return;pull();for(const f of e.target.files){const d=await shrink(f);if(d)ed.imgs.push(d)}drawEd()});
@@ -565,12 +1421,12 @@ sheet.addEventListener('click',e=>{
   if(t===sheet||t.closest('[data-close]')) return closeSheet();
   const rm=t.closest('[data-rmimg]'); if(rm){pull();ed.imgs.splice(+rm.dataset.rmimg,1);return drawEd()}
   if(t.closest('#eAdd10')){pull();ed.stock+=10;return drawEd()}
-  if(t.closest('#eDel')){const b=t.closest('#eDel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='แตะอีกครั้งเพื่อยืนยันลบ';return}
-    DB.products=DB.products.filter(p=>p.id!==ed.id);save();renderP();renderAdmin();closeSheet();return say('ลบสินค้าแล้ว')}
-  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('กรุณาใส่ชื่อสินค้า');
+  if(t.closest('#eDel')){const b=t.closest('#eDel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນການລຶບ';return}
+    DB.products=DB.products.filter(p=>p.id!==ed.id);save();renderP();renderAdmin();closeSheet();return say('ລຶບສິນຄ້າແລ້ວ')}
+  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('ກະລຸນາໃສ່ຊື່ສິນຄ້າ');
     ed.auto=ed.keys.length>0; if(ed.auto) ed.stock=ed.keys.length;
     if(ed.id){DB.products[DB.products.findIndex(p=>p.id===ed.id)]=ed}else{ed.id=DB.seq++;DB.products.push(ed)}
-    if(!save())return; renderCats();renderP();renderAdmin();closeSheet();say('บันทึกสินค้าแล้ว')}
+    if(!save())return; renderCats();renderP();renderAdmin();closeSheet();say('ບັນທຶກສິນຄ້າແລ້ວ')}
 });
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-copy]'); if(c) return copy(c.dataset.copy);
@@ -588,23 +1444,29 @@ window.addEventListener('load',()=>{
 });
 
 /* ===== เติมเงิน ===== */
-let amt=500,pm='พร้อมเพย์ (QR)';
-function setAmt(v){amt=Math.max(0,+v||0);$$('.amt').forEach(b=>b.classList.toggle('on',+b.dataset.a===amt));$('#tot').textContent='฿'+amt.toLocaleString('th-TH')}
-$('#amts').addEventListener('click',e=>{const b=e.target.closest('.amt');if(b){$('#amt').value='';setAmt(b.dataset.a)}});
+let amt=200000,pm='BCEL One (LaoQR)';
+function setAmt(v){amt=Math.max(0,+v||0);$$('.tu-chip').forEach(b=>b.classList.toggle('on',+b.dataset.a===amt));setNum('#tot',amt)}
+$('#amts').addEventListener('click',e=>{const b=e.target.closest('.tu-chip');if(b){$('#amt').value='';setAmt(b.dataset.a)}});
 $('#amt').addEventListener('input',e=>setAmt(e.target.value));
-$('#pms').addEventListener('click',e=>{const b=e.target.closest('.pm');if(!b)return;$$('.pm').forEach(x=>x.setAttribute('aria-pressed',x===b));pm=b.firstChild.textContent});
-$('#pay').addEventListener('click',()=>amt>0?say('เติมเงิน ฿'+amt.toLocaleString('th-TH')+' ผ่าน '+pm+' — ยังไม่ได้เชื่อมระบบชำระเงิน'):say('กรุณาระบุจำนวนเงิน'));
-$('#hist').innerHTML=[['เติมเงินผ่านพร้อมเพย์','วันนี้ 09:41','+฿500'],['เติมเงินผ่าน TrueMoney','เมื่อวาน 18:20','+฿300'],['เติมเงินผ่านโอนธนาคาร','3 วันก่อน','+฿1,000']].map(r=>`<div class="hr"><div>${r[0]}<br><span>${r[1]}</span></div><b>${r[2]}</b></div>`).join('');
+$('#pms').addEventListener('click',e=>{const b=e.target.closest('.tu-pm');if(!b)return;$$('.tu-pm').forEach(x=>x.setAttribute('aria-pressed',x===b));pm=b.dataset.pm;$('#tuQr').classList.toggle('on',pm==='BCEL One (LaoQR)')});
+$('#pay').addEventListener('click',()=>amt>0?burst('+'+K(amt),'ຜ່ານ '+pm+' — ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ລະບົບຊຳລະເງິນແທ້'):say('ກະລຸນາລະບຸຈຳນວນເງິນ'));
+$('#hist').innerHTML=[['ເຕີມເງິນຜ່ານ BCEL One','ມື້ນີ້ 09:41',200000],['ເຕີມເງິນຜ່ານ U-Money','ມື້ວານນີ້ 18:20',100000],['ເຕີມເງິນຜ່ານການໂອນທະນາຄານ','3 ມື້ກ່ອນ',500000]].map(r=>feedRow('in',r[0],r[1],'+'+K(r[2]))).join('');
 
-/* ===== สถานะระบบ (ตัวอย่าง) ===== */
-$('#upd').textContent='อัปเดตล่าสุด '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})+' น.';
-$('#bars').innerHTML=Array.from({length:30},(_,i)=>`<i${i==8||i==21?' class="w"':''}></i>`).join('');
-$('#svcs').innerHTML=[['Keygen API','112 ms'],['ระบบชำระเงิน','184 ms'],['ระบบสต๊อกสินค้า','96 ms'],['ระบบสมาชิก (Auth)','74 ms']].map(r=>`<div class="svc"><span class="dot"></span>${r[0]}<em>ปกติ · ${r[1]}</em></div>`).join('');
 
 /* ===== หน้าแรก: ช่องค้นหา + ปุ่มหมวดหมู่ IOS / ANDROID -> เปิดหน้าสินค้าตามหมวด ===== */
 function openCat(c){cat=c;pq='';$('#pq').value='';renderCats();renderP();show('products')}
 $$('.filters .chip').forEach(c=>c.addEventListener('click',()=>openCat(c.dataset.cat)));
-$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){cat='ทั้งหมด';pq=e.target.value.trim().toLowerCase();$('#pq').value=e.target.value;renderCats();renderP();show('products')}});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){cat='ທັງໝົດ';pq=e.target.value.trim().toLowerCase();$('#pq').value=e.target.value;renderCats();renderP();show('products')}});
+
+/* ===== Ripple: อนิเมชันสัมผัสทั่วทั้งแอปเมื่อกดปุ่ม ===== */
+if(!RM) document.addEventListener('pointerdown',e=>{
+  const el=e.target.closest('.btn,.cat,.ib,.chip,.qa button,.mopt,.pm,.row,.buy,.ad-tab,.seg button,.step-b,.back');
+  if(!el||el.disabled) return;
+  const r=el.getBoundingClientRect(),d=Math.max(r.width,r.height)*1.4,rip=document.createElement('i');
+  rip.className='rip';rip.style.width=rip.style.height=d+'px';
+  rip.style.left=(e.clientX-r.left-d/2)+'px';rip.style.top=(e.clientY-r.top-d/2)+'px';
+  el.appendChild(rip);setTimeout(()=>rip.remove(),700);
+});
 </script>
 </body>
 </html>
