@@ -633,6 +633,220 @@ button.bdg:active{transform:scale(.94)}button.bdg:hover{filter:brightness(1.2)}
 .tu-pay{box-shadow:0 0 2.4rem rgba(255,31,66,.4);animation:tuGlow 2.6s ease-in-out infinite}
 @keyframes tuGlow{50%{box-shadow:0 0 3.6rem rgba(255,31,66,.62)}}
 @media (prefers-reduced-motion:reduce){.tu-pay,.tu-qr-scan,.tu-bal-ic,.tu-dot{animation:none}}
+
+/* =====================================================================
+   ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້   (ทุก selector ขึ้นต้นด้วย om- — ไม่แตะ style เดิม)
+   ใช้ token เดิมของเว็บ: --red / --red-bright / --font / --font-display / --glass* / --ease-premium
+   ===================================================================== */
+@property --om-c{syntax:'<color>';inherits:true;initial-value:#ff1f42}
+.om{--om-c:#ff1f42;--om-ease:cubic-bezier(.16,1,.3,1);--om-r:2.6rem;--om-bw:max(1px,.15rem);--om-mute:#a39294;
+  position:fixed;inset:0;z-index:15;display:none;align-items:center;justify-content:center;
+  padding:14px;padding-top:max(14px,env(safe-area-inset-top,0px));padding-bottom:max(14px,env(safe-area-inset-bottom,0px));
+  color:var(--text);transition:--om-c .6s ease}
+.om.on{display:flex}
+.om[data-st=success]{--om-c:#4ade80}
+.om[data-st=error]{--om-c:#f87171}
+html.om-lock,html.om-lock body{overflow:hidden}
+/* ขณะ modal เปิด: หยุด animation วนซ้ำของหน้าเดิมที่อยู่ใต้ฉากเบลอ (กัน re-blur ทุกเฟรมบนมือถือ) */
+html.om-lock .ambient::before,html.om-lock .ambient::after,html.om-lock h1,html.om-lock .live i,
+html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::before{animation-play-state:paused}
+
+/* --- ฉากหลัง: มืดลง + เบลอ (fade ทั้งชั้นเดียว = GPU) --- */
+.om-back{position:absolute;inset:0;background:radial-gradient(90% 75% at 50% 42%,rgba(52,6,14,.58),rgba(0,0,0,.8));
+  -webkit-backdrop-filter:blur(.9rem);backdrop-filter:blur(.9rem);opacity:0;transition:opacity .45s ease}
+.om.show .om-back{opacity:1}
+
+/* --- Ambient glow หลัง card (transform ล้วน ไม่ใช้ filter) --- */
+.om-amb{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .9s ease}
+.om.show .om-amb{opacity:1}
+.om-amb i{position:absolute;width:72vmin;height:72vmin;border-radius:50%;will-change:transform;
+  background:radial-gradient(circle,rgba(255,31,66,.3),transparent 68%);
+  background:radial-gradient(circle,color-mix(in srgb,var(--om-c) 32%,transparent),transparent 68%)}
+.om-amb i:nth-child(1){left:calc(50% - 64vmin);top:calc(50% - 58vmin);animation:omDrift1 15s ease-in-out infinite alternate}
+.om-amb i:nth-child(2){left:calc(50% - 8vmin);top:calc(50% - 14vmin);opacity:.75;animation:omDrift2 19s ease-in-out infinite alternate}
+@keyframes omDrift1{from{transform:translate3d(-4vmin,-2vmin,0) scale(1)}to{transform:translate3d(5vmin,4vmin,0) scale(1.12)}}
+@keyframes omDrift2{from{transform:translate3d(5vmin,3vmin,0) scale(1.05)}to{transform:translate3d(-5vmin,-4vmin,0) scale(.95)}}
+
+/* --- Card หลัก --- */
+.om-card{position:relative;z-index:1;display:flex;flex-direction:column;width:min(48rem,100%);
+  max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  border-radius:var(--om-r);outline:0;
+  background:linear-gradient(162deg,rgba(38,12,18,.84),rgba(10,5,7,.93) 58%,rgba(8,4,5,.95));
+  box-shadow:0 3.2rem 7rem -1.2rem rgba(0,0,0,.72),0 0 5rem rgba(205,0,35,.2),inset 0 .1rem 0 rgba(255,255,255,.07);
+  box-shadow:0 3.2rem 7rem -1.2rem rgba(0,0,0,.72),0 0 5rem color-mix(in srgb,var(--om-c) 22%,transparent),inset 0 .1rem 0 rgba(255,255,255,.07);
+  opacity:0;transform:translate3d(0,1.8rem,0) scale(.92);
+  transition:opacity .46s var(--om-ease),transform .5s var(--om-ease)}
+.om.show .om-card{opacity:1;transform:none}
+.om.closing .om-card{opacity:0;transform:scale(.96);transition:opacity .26s ease,transform .26s ease}
+.om.closing .om-back{opacity:0;transition-duration:.3s}
+.om.closing .om-amb{opacity:0;transition-duration:.25s}
+.om-card.shake{animation:omShake .56s cubic-bezier(.36,.07,.19,.97)}
+@keyframes omShake{10%,90%{transform:translate3d(-.2rem,0,0)}20%,80%{transform:translate3d(.5rem,0,0)}30%,50%,70%{transform:translate3d(-.8rem,0,0)}40%,60%{transform:translate3d(.8rem,0,0)}}
+
+/* ขอบบาง + Border glow + Light sweep วิ่งผ่านขอบเป็นครั้งคราว */
+.om-edge{position:absolute;inset:0;z-index:4;border-radius:inherit;padding:var(--om-bw);pointer-events:none;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,79,106,.55),rgba(255,79,106,.12) 42%,rgba(255,255,255,.08));
+  background:linear-gradient(160deg,color-mix(in srgb,var(--om-c) 58%,transparent),color-mix(in srgb,var(--om-c) 12%,transparent) 42%,rgba(255,255,255,.08));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.om-edge::before{content:"";position:absolute;inset:-60%;opacity:0;will-change:transform,opacity;
+  background:conic-gradient(from 0deg,transparent 0deg 292deg,rgba(255,79,106,.85) 338deg,#fff 357deg,transparent 360deg);
+  background:conic-gradient(from 0deg,transparent 0deg 292deg,color-mix(in srgb,var(--om-c) 85%,transparent) 338deg,#fff 357deg,transparent 360deg);
+  animation:omSweep 9s linear 1.2s infinite}
+@keyframes omSweep{0%{transform:rotate(0);opacity:0}6%{opacity:1}44%{opacity:1}52%{transform:rotate(360deg);opacity:0}100%{transform:rotate(360deg);opacity:0}}
+
+/* Floating particles (จำนวนน้อย · อยู่ในกรอบ card) */
+.om-fx{position:absolute;inset:0;z-index:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+.om-fx i{position:absolute;bottom:-1rem;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;opacity:0;
+  background:var(--om-c);box-shadow:0 0 .8rem var(--om-c);will-change:transform,opacity;animation:omFloat var(--t) linear var(--d) infinite}
+@keyframes omFloat{0%{transform:translate3d(0,0,0);opacity:0}12%{opacity:.7}85%{opacity:.45}100%{transform:translate3d(var(--dx),-70rem,0);opacity:0}}
+
+/* ปุ่ม × */
+.om-x{position:absolute;top:1.4rem;right:1.4rem;z-index:5;display:grid;place-items:center;width:3.8rem;height:3.8rem;padding:0;border-radius:50%;
+  border:max(1px,.12rem) solid transparent;background:transparent;color:#cdbfc1;
+  transition:transform .35s var(--om-ease),background .25s,border-color .25s,box-shadow .25s,color .2s,opacity .2s}
+.om-x::before{content:"";position:absolute;inset:-.8rem}
+.om-x svg{width:1.7rem;height:1.7rem;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.om-x:disabled{opacity:.3;pointer-events:none}
+@media (hover:hover) and (pointer:fine){
+  .om-x:hover{transform:rotate(90deg);background:rgba(255,79,106,.14);border-color:rgba(255,79,106,.42);color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.35)}
+}
+.om-x:active{transform:rotate(90deg) scale(.92)}
+
+/* พื้นที่เลื่อนภายใน + footer ติดล่าง (ปุ่มยืนยันไม่หลุดจอ) */
+.om-scroll{position:relative;z-index:1;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  border-radius:var(--om-r) var(--om-r) 0 0;scrollbar-width:thin;scrollbar-color:rgba(255,79,106,.35) transparent}
+.om-foot{position:relative;z-index:1;flex:none;display:grid;gap:.9rem;padding:1.2rem 2rem 2rem}
+.om-card.swap .om-scroll,.om-card.swap .om-foot{opacity:0;transform:translateY(.5rem);transition:opacity .17s ease,transform .17s ease}
+
+/* จังหวะ fade-in บนลงล่าง */
+@keyframes omIn{from{opacity:0;transform:translate3d(0,1rem,0)}to{opacity:1;transform:none}}
+.om.show .om-in{animation:omIn .5s var(--om-ease) both;animation-delay:calc(var(--i,0)*60ms + 60ms)}
+
+/* --- Header --- */
+.om-head{display:flex;flex-direction:column;align-items:center;text-align:center;padding:3.6rem 2.2rem 0}
+.om-ico{position:relative;display:grid;place-items:center;width:6.6rem;height:6.6rem;border-radius:50%;color:#ff4d6a;
+  background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.16),rgba(255,255,255,.03) 62%),rgba(205,0,35,.16);
+  border:var(--om-bw) solid rgba(255,79,106,.5);border:var(--om-bw) solid color-mix(in srgb,var(--om-c) 50%,transparent);
+  box-shadow:0 0 2.6rem rgba(255,31,66,.38),inset 0 .1rem 0 rgba(255,255,255,.16)}
+.om.show .om-ico{animation:omIco .7s var(--om-ease) .1s both}
+@keyframes omIco{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.om-ico svg{width:3rem;height:3rem;filter:drop-shadow(0 0 .8rem rgba(255,31,66,.6))}
+.om-ico::before,.om-ico::after{content:"";position:absolute;inset:0;border-radius:50%;border:max(1px,.12rem) solid var(--om-c);opacity:0;animation:omRing 2.8s ease-out infinite}
+.om-ico::after{animation-delay:1.4s}
+@keyframes omRing{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.75);opacity:0}}
+.om-title{margin:1.6rem 0 0;font-family:var(--font-display);font-size:2.4rem;line-height:1.55;font-weight:700;letter-spacing:0;text-shadow:0 0 2rem rgba(205,0,35,.4)}
+.om-sub{margin:.4rem 0 0;max-width:34rem;text-wrap:balance;color:var(--om-mute);font-size:1.35rem;line-height:2.2rem}
+
+/* --- Product preview --- */
+.om-body{display:grid;grid-template-columns:minmax(0,1fr);gap:1.2rem;padding:2rem 2rem 1rem}
+.om-prod{display:flex;align-items:center;gap:1.3rem;padding:1.2rem 1.3rem;border-radius:1.9rem;
+  border:max(1px,.15rem) solid var(--glass-line);background:linear-gradient(135deg,var(--glass),var(--glass-2))}
+.om-th{position:relative;flex:none;display:grid;place-items:center;width:5.8rem;height:5.8rem;overflow:hidden;border-radius:1.5rem;
+  background:radial-gradient(circle at 25% 15%,var(--g1),var(--g2) 85%);border:max(1px,.1rem) solid rgba(255,255,255,.1)}
+.om-th svg{position:relative;z-index:1;width:2.8rem;height:2.8rem;color:#fff;filter:drop-shadow(0 .4rem 1rem rgba(0,0,0,.4))}
+.om-th img{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover}
+.om-pi{flex:1;min-width:0}
+.om-pi b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:1.55rem;font-weight:600;line-height:2.3rem;overflow-wrap:anywhere}
+.om-cat{display:inline-block;max-width:100%;margin-top:.4rem;padding:0 .9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:top;border-radius:99rem;
+  border:1px solid var(--card-border);background:rgba(205,0,35,.1);color:#ff8fa3;font-size:1.15rem;font-weight:600;line-height:2rem}
+.om-pr{flex:0 1 auto;min-width:0;text-align:right}
+.om-pr b{display:block;font-family:var(--font-display);font-size:1.6rem;line-height:2.3rem;font-weight:700;overflow-wrap:anywhere}
+.om-pr span{display:block;margin-top:.2rem;color:var(--om-mute);font-size:1.2rem;line-height:1.9rem;white-space:nowrap}
+
+/* --- Price summary --- */
+.om-sum{padding:1.5rem 1.6rem;border-radius:1.9rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(0,0,0,.28)}
+.om-row{display:flex;align-items:baseline;justify-content:space-between;gap:1.2rem;color:var(--om-mute);font-size:1.4rem;line-height:2.7rem}
+.om-row b{min-width:0;color:var(--text);font-family:var(--font-display);font-weight:600;font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+.om-hr{height:1px;margin:1.1rem 0;background:linear-gradient(90deg,transparent,rgba(255,79,106,.55),transparent)}
+.om-total{color:#efe4e5;font-weight:600}
+.om-total b{color:#fff;font-size:2.4rem;line-height:3.4rem;font-weight:700;text-shadow:0 0 1.8rem rgba(255,31,66,.5)}
+.om-bal{display:flex;align-items:baseline;justify-content:space-between;gap:1.2rem;margin-top:1.1rem;padding-top:1.1rem;border-top:1px dashed rgba(255,255,255,.09);
+  color:var(--om-mute);font-size:1.25rem;line-height:2rem}
+.om-bal b{color:var(--text);font-family:var(--font-display);font-weight:600;font-variant-numeric:tabular-nums}
+.om-bal.warn b{color:#f87171}
+.om-warn{display:flex;align-items:flex-start;gap:.8rem;margin-top:1rem;color:#fca5a5;font-size:1.25rem;line-height:2rem}
+.om-warn svg{flex:none;width:1.6rem;height:1.6rem;margin-top:.2rem;color:#f87171;fill:none}
+
+/* --- ปุ่มหลัก --- */
+.om-cta{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:1rem;width:100%;height:5.4rem;padding:0 2rem;
+  border-radius:99rem;border:max(1px,.15rem) solid var(--b2-bd);color:#fff;font-family:var(--font-display);font-size:1.7rem;font-weight:700;line-height:1.6;letter-spacing:0;
+  background:linear-gradient(100deg,var(--red-dim),var(--red) 34%,var(--red-bright) 62%,var(--red) 84%,var(--red-dim));background-size:240% 100%;background-position:0% 50%;
+  box-shadow:0 .8rem 2.4rem -.4rem rgba(205,0,35,.55),inset 0 .1rem 0 rgba(255,255,255,.28),inset 0 -.2rem .6rem rgba(0,0,0,.25);
+  transition:transform .22s var(--om-ease),box-shadow .3s ease,filter .25s ease;touch-action:manipulation}
+.om-cta svg{position:relative;flex:none;width:2rem;height:2rem;color:#fff}
+.om-cta>span{position:relative}
+@media (hover:hover) and (pointer:fine){
+  .om-cta:not(:disabled):hover{transform:translateY(-2px);animation:omFlow 3.2s ease-in-out infinite alternate;
+    box-shadow:0 1.2rem 3.4rem -.2rem rgba(255,31,66,.72),0 0 3rem rgba(255,31,66,.42),inset 0 .1rem 0 rgba(255,255,255,.32),inset 0 -.2rem .6rem rgba(0,0,0,.25)}
+}
+@keyframes omFlow{to{background-position:100% 50%}}
+.om-cta:not(:disabled):active{transform:scale(.97)}
+.om-cta:disabled{cursor:progress}
+.om-cta.is-load{filter:saturate(.85) brightness(.96)}
+.om-cta.is-load::after{content:"";position:absolute;inset:0;background:var(--sheen);transform:translateX(-130%);animation:omSheen 1.4s ease-in-out infinite}
+@keyframes omSheen{to{transform:translateX(130%)}}
+.om-spin{width:2.2rem;height:2.2rem;fill:none;stroke-width:3;stroke-linecap:round;animation:omSpin .8s linear infinite}
+@keyframes omSpin{to{transform:rotate(360deg)}}
+.om-btn2{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:.8rem;width:100%;height:4.6rem;padding:0 1.6rem;border-radius:99rem;
+  border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.04);color:#d9cccd;font-size:1.5rem;font-weight:600;line-height:1.6;
+  transition:transform .2s var(--om-ease),background .25s,border-color .25s}
+.om-btn2 svg{width:1.8rem;height:1.8rem;color:#f4c542}
+@media (hover:hover) and (pointer:fine){.om-btn2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}}
+.om-btn2:active{transform:scale(.97)}
+.om-pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.om :focus-visible{outline:.2rem solid var(--accent);outline-offset:.2rem}
+.om-card:focus-visible{outline:0}
+
+/* --- ผลลัพธ์ (สำเร็จ / ไม่สำเร็จ) --- */
+.om-res{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4.6rem 2.2rem 1rem}
+.om .rs{animation:omIn .55s var(--om-ease) both;animation-delay:calc(.7s + var(--i,0)*80ms)}
+.om .bad .rs,.om .rs.bad,.om-foot.bad .rs{animation-delay:calc(.45s + var(--i,0)*80ms)}
+.om-ln{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.om-res .om-title{font-size:2.6rem;margin-top:1.8rem}
+.om-res .om-sub{margin-top:.2rem}
+.om-ok,.om-er{position:relative;display:grid;place-items:center;width:11rem;height:11rem}
+.om-ok svg,.om-er svg{position:relative;z-index:1;width:100%;height:100%;overflow:visible;fill:none}
+.om-ok .oc,.om-er .oc{stroke-width:2.4;stroke-linecap:round;stroke-dasharray:151;stroke-dashoffset:151;transform-box:fill-box;transform-origin:center;transform:rotate(-90deg);animation:omDraw .7s var(--om-ease) .08s forwards}
+.om-ok .oc{fill:rgba(74,222,128,.1);stroke:#4ade80;filter:drop-shadow(0 0 1.4rem rgba(74,222,128,.55))}
+.om-ok .ot{stroke:#4ade80;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:omDraw .5s var(--om-ease) .55s forwards}
+@keyframes omDraw{to{stroke-dashoffset:0}}
+.om-ok::after{content:"";position:absolute;inset:0;border-radius:50%;border:max(1px,.2rem) solid rgba(74,222,128,.6);animation:omRingOut 1s ease-out .55s both}
+@keyframes omRingOut{from{transform:scale(.8);opacity:.9}to{transform:scale(2.1);opacity:0}}
+.om-ok .glow{position:absolute;inset:-3.2rem;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.5),transparent 65%);opacity:0;animation:omGlow 1.1s ease-out .45s forwards}
+@keyframes omGlow{0%{opacity:0;transform:scale(.5)}35%{opacity:.9}100%{opacity:0;transform:scale(1.6)}}
+.om-ok u{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);border-radius:50%;background:#4ade80;opacity:0;
+  animation:omSpark .95s cubic-bezier(.2,.7,.2,1) calc(.55s + var(--d)) forwards}
+.om-ok u:nth-of-type(3n){background:#fff}
+@keyframes omSpark{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(.3)}}
+.om-oid{display:inline-flex;align-items:center;height:3.6rem;margin-top:1.4rem;padding:0 1.6rem;border-radius:99rem;
+  border:1px solid rgba(74,222,128,.38);background:rgba(74,222,128,.09);color:#d8f8e4;font-family:var(--font-display);font-size:1.5rem;font-weight:700;letter-spacing:.03em}
+.om-line{margin-top:1.1rem;max-width:100%;color:var(--om-mute);font-size:1.3rem;line-height:2.1rem;overflow-wrap:anywhere}
+.om-key{width:100%;margin-top:1.6rem;padding:1.4rem 1.5rem;border-radius:1.7rem;border:max(1px,.15rem) dashed var(--pill-border);background:var(--input-bg);text-align:left}
+.om-kl{display:block;color:var(--om-mute);font-size:1.2rem;line-height:1.9rem}
+.om-key code{display:block;margin:.6rem 0 1.1rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.55rem;font-weight:700;line-height:2.3rem;word-break:break-all;color:#fff}
+.om-cp{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.7rem;height:3.8rem;padding:0 1.5rem;border-radius:99rem;
+  border:max(1px,.15rem) solid var(--b2-bd);background:rgba(205,0,35,.16);color:#ffd3da;font-size:1.35rem;font-weight:700;line-height:1.6;transition:transform .2s var(--om-ease),background .25s}
+.om-cp svg{width:1.6rem;height:1.6rem;color:#fff}
+.om-cp:active{transform:scale(.96)}
+.om-cp.done{border-color:rgba(74,222,128,.6);background:rgba(74,222,128,.14);color:#d8f8e4}
+.om-note{width:100%;margin-top:1.6rem;padding:1.3rem 1.5rem;border-radius:1.7rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(0,0,0,.28);color:#d9cccd;font-size:1.35rem;line-height:2.2rem}
+/* error */
+.om-er svg{animation:omPop .55s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes omPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+.om-er .oc{fill:rgba(248,113,113,.1);stroke:#f87171;filter:drop-shadow(0 0 1.4rem rgba(248,113,113,.55))}
+.om-er .ox{stroke:#f87171;stroke-width:4;stroke-linecap:round;stroke-dasharray:23;stroke-dashoffset:23;animation:omDraw .32s var(--om-ease) .38s forwards}
+.om-er .ox+.ox{animation-delay:.56s}
+.om-msg{display:flex;align-items:flex-start;gap:1rem;width:100%;margin-top:1.6rem;padding:1.3rem 1.4rem;border-radius:1.7rem;text-align:left;
+  border:1px solid rgba(248,113,113,.42);background:rgba(248,113,113,.08);color:#fecaca;font-size:1.4rem;line-height:2.2rem;overflow-wrap:anywhere}
+.om-msg svg{flex:none;width:1.9rem;height:1.9rem;margin-top:.15rem;color:#f87171;fill:none}
+
+@media (prefers-reduced-motion:reduce){
+  .om-ok .oc,.om-ok .ot,.om-er .oc,.om-er .ox{stroke-dashoffset:0!important}
+  .om-ok::after,.om-ok .glow,.om-ok u,.om-fx,.om-amb i:nth-child(2),.om-ico::before,.om-ico::after{display:none}
+  .om-edge::before{animation:none!important;opacity:0}
+  .om-cta.is-load::after{animation:none!important;display:none}
+}
 </style>
 </head>
 <body>
@@ -991,6 +1205,25 @@ button.bdg:active{transform:scale(.94)}button.bdg:hover{filter:brightness(1.2)}
 <div class="cine-overlay" id="cineOverlay" aria-hidden="true"><i></i></div>
 <div class="sheet" id="sheet"><div class="sh-box" id="shBox"></div></div>
 
+<!-- ===== Order confirm modal · ຢືນຢັນຄຳສັ່ງຊື້ (เนื้อหาถูกเติมด้วย JS จากข้อมูลจริงใน DB) ===== -->
+<div class="om" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="omT">
+  <div class="om-back" data-omclose></div>
+  <div class="om-amb" aria-hidden="true"><i></i><i></i></div>
+  <div class="om-card" id="omCard" tabindex="-1">
+    <div class="om-fx" aria-hidden="true">
+      <i style="--x:9%;--s:.4rem;--t:16s;--d:-3s;--dx:1.6rem"></i><i style="--x:24%;--s:.3rem;--t:21s;--d:-11s;--dx:-1.4rem"></i>
+      <i style="--x:38%;--s:.5rem;--t:18s;--d:-7s;--dx:2rem"></i><i style="--x:53%;--s:.3rem;--t:23s;--d:-15s;--dx:-2rem"></i>
+      <i style="--x:67%;--s:.4rem;--t:17s;--d:-1s;--dx:1.2rem"></i><i style="--x:80%;--s:.3rem;--t:20s;--d:-9s;--dx:-1.8rem"></i>
+      <i style="--x:92%;--s:.5rem;--t:19s;--d:-13s;--dx:1rem"></i>
+    </div>
+    <button class="om-x" id="omX" type="button" aria-label="ປິດ" data-omclose><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="om-scroll" id="omScroll"></div>
+    <div class="om-foot" id="omFoot"></div>
+    <div class="om-edge" aria-hidden="true"></div>
+  </div>
+</div>
+
+
 <script>
 /* ===== Router: หน้า = home | products | topup | status | menu ===== */
 const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
@@ -1094,13 +1327,21 @@ $('#plist').addEventListener('click',e=>{ /* แตะรูปปก = สล�
 function addOrder(p,k){DB.orders=DB.orders||[];DB.orderSeq=DB.orderSeq||1;
   DB.orders.unshift({id:DB.orderSeq++,t:Date.now(),code:p.code,cat:p.cat,name:p.name,price:p.price,status:k?'auto':'wait',key:k||''});
   DB.orders.length=Math.min(DB.orders.length,300)}
-function buy(id){
-  const p=DB.products.find(x=>x.id==id); if(!p||p.stock<1) return;
-  if(DB.credit<p.price) return say('ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ');
+/* ระบบออเดอร์เดิม: ตรรกะทุกบรรทัดเหมือนเดิม (เช็กสต็อก → เช็กเครดิต → หักเครดิต → addTx → ดึงคีย์ → ตัดสต็อก → addOrder → save → paint/render)
+   แยกเป็น placeOrder() ที่ "คืนผลลัพธ์" แทนการ toast/เปิด sheet เอง เพื่อให้หน้าต่างยืนยันแสดง Success / Error ได้
+   Flow: ปุ่ม "ສັ່ງຊື້" → buy() → openOrderModal() → กดยืนยัน → placeOrder() → Loading → Success / Error */
+function placeOrder(id){
+  const p=DB.products.find(x=>x.id==id);
+  if(!p) return {ok:false,code:'notfound',msg:'ບໍ່ພົບສິນຄ້ານີ້ໃນລະບົບ'};
+  if(p.stock<1) return {ok:false,code:'stock',msg:'ສິນຄ້ານີ້ໝົດສະຕັອກແລ້ວ'};
+  if(DB.credit<p.price) return {ok:false,code:'credit',msg:'ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ'};
   DB.credit-=p.price;addTx('buy',-p.price,'',p.name); const k=p.auto&&p.keys.length?p.keys.shift():null;
-  p.stock=p.auto?p.keys.length:p.stock-1; addOrder(p,k); save(); paint(); renderP(); renderAdmin();
-  openSheet(`<h3 class="sh-t">ສັ່ງຊື້ສຳເລັດ</h3><p class="lb" style="letter-spacing:0">${esc(p.name)} · ₭${p.price.toLocaleString('en-US')}</p>${k?`<div class="keybox">${esc(k)}</div><button class="btn b2 wide" data-copy="${esc(k)}">ສຳເນົາລະຫັດ</button>`:`<div class="keybox" style="font-size:1.5rem">ທີມງານຈະສົ່ງສິນຄ້າໃຫ້ຕາມຊ່ອງທາງທີ່ຕິດຕໍ່</div>`}<button class="btn b3 wide" data-close style="margin-top:.9rem">ປິດ</button>`);
+  p.stock=p.auto?p.keys.length:p.stock-1; addOrder(p,k); save();
+  const order=DB.orders[0];
+  try{paint();renderP();renderAdmin()}catch(e){console.error(e)} /* ออเดอร์สำเร็จแล้ว — ถ้า render พลาดต้องไม่ทำให้กลายเป็น Error (กันสั่งซ้ำ) */
+  return {ok:true,p,key:k,order};
 }
+function buy(id,trigger){openOrderModal(id,trigger)}
 
 /* ----- แอดมิน ----- */
 let LOW=5;
@@ -1430,7 +1671,7 @@ sheet.addEventListener('click',e=>{
 });
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-copy]'); if(c) return copy(c.dataset.copy);
-  const b=e.target.closest('[data-buy]'); if(b) buy(b.dataset.buy);
+  const b=e.target.closest('[data-buy]'); if(b) buy(b.dataset.buy,b);
 });
 paint();renderCats();renderP();renderAdmin();
 
@@ -1466,6 +1707,181 @@ if(!RM) document.addEventListener('pointerdown',e=>{
   rip.className='rip';rip.style.width=rip.style.height=d+'px';
   rip.style.left=(e.clientX-r.left-d/2)+'px';rip.style.top=(e.clientY-r.top-d/2)+'px';
   el.appendChild(rip);setTimeout(()=>rip.remove(),700);
+});
+
+/* =====================================================================
+   ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້
+   ข้อมูลทั้งหมดมาจาก DB จริง (สินค้า/ราคา/เครดิต) และเรียก placeOrder() เดิม — ไม่มีข้อมูลจำลอง
+   ===================================================================== */
+const om={open:false,busy:false,done:false,pid:null,trigger:null,cv:'c1',timer:0};
+const omEl=$('#orderModal'),omCard=$('#omCard'),omScroll=$('#omScroll'),omFoot=$('#omFoot'),omX=$('#omX');
+const OM_MIN=950; /* ms — ระบบเดิมตอบทันที (localStorage) จึงหน่วงให้เห็น Loading ชัดเจน; ถ้าต่อ API จริงภายหลังจะรอผลจริงตามปกติ */
+const omSleep=ms=>new Promise(r=>setTimeout(r,ms));
+const omPad=n=>String(n).padStart(6,'0');
+const OM_SPIN='<svg class="om-spin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,.3)"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#fff"/></svg>';
+const OM_TICK='<svg aria-hidden="true"><use href="#i-tick"/></svg>';
+
+function omThumb(p){
+  const im=p.imgs&&p.imgs[0];
+  return `<span class="om-th ${om.cv}">${im?`<img src="${esc(im)}" alt="">`:''}<svg aria-hidden="true"><use href="#${sym(p)}"/></svg></span>`;
+}
+
+/* ---- 1) ตรวจสอบสินค้า + ราคา ---- */
+function omReview(p){
+  const disc=0; /* ร้านนี้ยังไม่มีระบบส่วนลด → 0 (ตรงกับที่ระบบเดิมหักจริง) */
+  const total=p.price-disc, short=DB.credit<total;
+  omFoot.className='om-foot';
+  omScroll.innerHTML=`
+    <div class="om-head">
+      <span class="om-ico"><svg aria-hidden="true"><use href="#i-cart"/></svg></span>
+      <h2 class="om-title om-in" id="omT" style="--i:1">ຢືນຢັນຄຳສັ່ງຊື້</h2>
+      <p class="om-sub om-in" style="--i:2">ກວດສອບລາຍລະອຽດສິນຄ້າ ແລະ ຢືນຢັນການສັ່ງຊື້ຂອງທ່ານ</p>
+    </div>
+    <div class="om-body">
+      <div class="om-prod om-in" style="--i:3">
+        ${omThumb(p)}
+        <div class="om-pi"><b>${esc(p.name)}</b><span class="om-cat">${esc(p.cat)}</span></div>
+        <div class="om-pr"><b>${K(p.price)}</b><span>ຈຳນວນ 1 ຊິ້ນ</span></div>
+      </div>
+      <div class="om-sum om-in" style="--i:4">
+        <div class="om-row"><span>ລາຄາສິນຄ້າ</span><b>${K(p.price)}</b></div>
+        <div class="om-row"><span>ສ່ວນຫຼຸດ</span><b>${K(disc)}</b></div>
+        <div class="om-hr"></div>
+        <div class="om-row om-total"><span>ຍອດທີ່ຕ້ອງຊຳລະ</span><b>${K(total)}</b></div>
+        <div class="om-bal${short?' warn':''}"><span>ເຄຣດິດຄົງເຫຼືອ</span><b>${K(DB.credit)}</b></div>
+        ${short?'<div class="om-warn"><svg aria-hidden="true"><use href="#i-alert"/></svg><span>ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ</span></div>':''}
+      </div>
+    </div>`;
+  omFoot.innerHTML=`<div class="om-in" style="--i:5"><button class="om-cta" id="omGo" type="button">${OM_TICK}<span>ຢືນຢັນການສັ່ງຊື້</span></button></div>`;
+}
+
+/* ---- 4) สำเร็จ ---- */
+function omSuccess(res){
+  const p=res.p,k=res.key,o=res.order;
+  const sp=Array.from({length:14},(_,i)=>`<u style="--a:${Math.round(i*360/14+(i%2?6:0))}deg;--r:${i%2?6.4:8.4}rem;--s:${i%3?.55:.85}rem;--d:${(i%4)*.035}s"></u>`).join('');
+  omFoot.className='om-foot';
+  omScroll.innerHTML=`
+    <div class="om-res" role="status">
+      <div class="om-ok" aria-hidden="true"><i class="glow"></i><svg viewBox="0 0 52 52"><circle class="oc" cx="26" cy="26" r="24"/><path class="ot" d="M14 27l8 8 16-17"/></svg>${sp}</div>
+      <h2 class="om-title rs" id="omT" style="--i:0">ສັ່ງຊື້ສຳເລັດ</h2>
+      <p class="om-sub rs" style="--i:1">ຄຳສັ່ງຊື້ຂອງທ່ານຖືກສ້າງຮຽບຮ້ອຍແລ້ວ</p>
+      ${o?`<span class="om-oid rs" style="--i:2">ອໍເດີ #${omPad(o.id)}</span>`:''}
+      <p class="om-line rs" style="--i:3">${esc(p.name)} · ${K(p.price)}</p>
+      ${k?`<div class="om-key rs" style="--i:4"><span class="om-kl">ລະຫັດສິນຄ້າຂອງທ່ານ</span><code>${esc(k)}</code><button class="om-cp" type="button" data-omcopy="${esc(k)}"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>ສຳເນົາລະຫັດ</span></button></div>`
+        :`<div class="om-note rs" style="--i:4">ທີມງານຈະສົ່ງສິນຄ້າໃຫ້ຕາມຊ່ອງທາງທີ່ຕິດຕໍ່</div>`}
+    </div>`;
+  omFoot.innerHTML=`<div class="rs" style="--i:5"><button class="om-cta" id="omView" type="button"><svg aria-hidden="true"><use href="#i-cart"/></svg><span>ເບິ່ງລາຍລະອຽດຄຳສັ່ງຊື້</span></button></div><div class="rs" style="--i:6"><button class="om-btn2" type="button" data-omclose>ປິດ</button></div>`;
+}
+
+/* ---- 5) ไม่สำเร็จ (แสดง error จากระบบจริง) ---- */
+function omError(res){
+  const msg=res.msg||'ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ', credit=res.code==='credit';
+  omFoot.className='om-foot bad';
+  omScroll.innerHTML=`
+    <div class="om-res bad" role="alert">
+      <div class="om-er" aria-hidden="true"><svg viewBox="0 0 52 52"><circle class="oc" cx="26" cy="26" r="24"/><path class="ox" d="M19 19l14 14"/><path class="ox" d="M33 19L19 33"/></svg></div>
+      <h2 class="om-title rs" id="omT" style="--i:0">ບໍ່ສາມາດດຳເນີນການສັ່ງຊື້ໄດ້</h2>
+      <div class="om-msg rs" style="--i:1"><svg aria-hidden="true"><use href="#i-alert"/></svg><span>${esc(msg)}</span></div>
+    </div>`;
+  omFoot.innerHTML=`<div class="rs" style="--i:2"><button class="om-cta" id="omRetry" type="button"><svg class="om-ln" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></svg><span>ລອງອີກຄັ້ງ</span></button></div>`
+    +(credit?`<div class="om-pair rs" style="--i:3"><button class="om-btn2" id="omTopup" type="button"><svg aria-hidden="true"><use href="#i-wallet"/></svg>ເຕີມເງິນເຄຣດິດ</button><button class="om-btn2" type="button" data-omclose>ປິດ</button></div>`
+      :`<div class="rs" style="--i:3"><button class="om-btn2" type="button" data-omclose>ປິດ</button></div>`);
+}
+
+/* ---- เปิด / ปิด ---- */
+function openOrderModal(id,trigger){
+  if(om.open) return;
+  const p=DB.products.find(x=>x.id==id);
+  if(!p) return say('ບໍ່ພົບສິນຄ້ານີ້ໃນລະບົບ');
+  clearTimeout(om.timer);
+  const pc=trigger&&trigger.closest&&trigger.closest('.pcard'), cv=pc&&pc.querySelector('.cv'); /* ใช้สีปกเดียวกับการ์ดสินค้าที่กด */
+  Object.assign(om,{open:true,busy:false,done:false,pid:p.id,trigger:trigger||document.activeElement,cv:(cv&&(cv.className.match(/\bc[1-4]\b/)||[])[0])||'c1'});
+  omEl.dataset.st='review'; omX.disabled=false; omCard.classList.remove('swap','shake');
+  omReview(p); omScroll.scrollTop=0;
+  document.documentElement.classList.add('om-lock');
+  omEl.classList.remove('closing'); omEl.classList.add('on');
+  void omEl.offsetWidth; /* ให้ transition เริ่มจาก state ตั้งต้น (scale .92 / opacity 0) */
+  omEl.classList.add('show');
+  omCard.focus({preventScroll:true});
+}
+function omClose(o){
+  if(!om.open||om.busy) return; /* ห้ามปิดระหว่าง Loading */
+  om.open=false; omEl.classList.add('closing'); clearTimeout(om.timer);
+  om.timer=setTimeout(()=>{
+    omEl.classList.remove('on','show','closing');
+    document.documentElement.classList.remove('om-lock');
+    omScroll.innerHTML=''; omFoot.innerHTML=''; omCard.classList.remove('swap','shake');
+  },300);
+  if(!(o&&o.restore===false)){
+    const t=(om.trigger&&om.trigger.isConnected)?om.trigger:document.querySelector('[data-buy="'+om.pid+'"]');
+    if(t&&!t.disabled) t.focus({preventScroll:true});
+  }
+}
+
+/* ---- 2-3) กดยืนยัน → Loading → เรียกระบบออเดอร์เดิม → Success / Error ---- */
+async function omRun(btn){
+  if(om.busy||om.done||!om.open) return; /* กันกดซ้ำ = กันสร้างออเดอร์หลายรายการ */
+  om.busy=true; omX.disabled=true; omEl.dataset.st='review';
+  btn.disabled=true; btn.classList.add('is-load'); btn.setAttribute('aria-busy','true');
+  btn.innerHTML=OM_SPIN+'<span>ກຳລັງດຳເນີນການ…</span>';
+  omCard.focus({preventScroll:true});
+  const t0=performance.now(); let res;
+  try{res=await placeOrder(om.pid)}catch(e){res={ok:false,msg:(e&&e.message)||''}}
+  if(!res||typeof res!=='object') res={ok:false,msg:''};
+  const rest=OM_MIN-(performance.now()-t0); if(rest>0) await omSleep(rest);
+  omCard.classList.add('swap'); await omSleep(180);
+  omScroll.scrollTop=0;
+  if(res.ok){om.done=true; omEl.dataset.st='success'; omSuccess(res)}
+  else{omEl.dataset.st='error'; omError(res)}
+  omCard.classList.remove('swap');
+  om.busy=false; omX.disabled=false;
+  if(!res.ok){omCard.classList.remove('shake'); void omCard.offsetWidth; omCard.classList.add('shake')}
+  const f=$(res.ok?'#omView':'#omRetry'); if(f) f.focus({preventScroll:true});
+}
+
+/* ---- ปุ่มปลายทางใน modal ---- */
+function omGoOrders(){ /* ดูรายละเอียด: แท็บ "ອໍເດີ" ในแอดมิน (ที่เดียวที่แสดงรายการออเดอร์) */
+  omClose({restore:false});
+  ordQ='';ordF='all';const oq=$('#ordQ');if(oq)oq.value='';
+  show('admin'); setTimeout(()=>{setTab('orders');renderOrders()},140);
+}
+function omGoTopup(){omClose({restore:false});show('topup')}
+
+omEl.addEventListener('click',e=>{
+  const t=e.target;
+  const run=t.closest('#omGo,#omRetry'); if(run) return omRun(run);
+  const cp=t.closest('[data-omcopy]');
+  if(cp){
+    copy(cp.dataset.omcopy);
+    const s=cp.querySelector('span');
+    if(s&&!cp.classList.contains('done')){const o=s.textContent;cp.classList.add('done');s.textContent='ສຳເນົາແລ້ວ';setTimeout(()=>{cp.classList.remove('done');s.textContent=o},1800)}
+    return;
+  }
+  if(t.closest('#omView')) return omGoOrders();
+  if(t.closest('#omTopup')) return omGoTopup();
+  if(t.closest('[data-omclose]')) return omClose();
+});
+
+/* Esc = ปิด · Tab วนอยู่ใน modal (focus trap) */
+document.addEventListener('keydown',e=>{
+  if(!om.open) return;
+  if(e.key==='Escape'){if(!om.busy){e.preventDefault();omClose()}return}
+  if(e.key!=='Tab') return;
+  const f=[...omEl.querySelectorAll('button:not([disabled])')].filter(x=>x.getClientRects().length);
+  if(!f.length){e.preventDefault();omCard.focus();return}
+  const a=document.activeElement,first=f[0],last=f[f.length-1];
+  if(!omEl.contains(a)||a===omCard){e.preventDefault();(e.shiftKey?last:first).focus();return}
+  if(e.shiftKey&&a===first){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&a===last){e.preventDefault();first.focus()}
+});
+
+/* Ripple ของปุ่มใน modal (ใช้ .rip เดิมของเว็บ) */
+if(!RM) omEl.addEventListener('pointerdown',e=>{
+  const b=e.target.closest('.om-cta,.om-btn2,.om-cp'); if(!b||b.disabled) return;
+  const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*1.4,i=document.createElement('i');
+  i.className='rip';i.style.width=i.style.height=d+'px';
+  i.style.left=(e.clientX-r.left-d/2)+'px';i.style.top=(e.clientY-r.top-d/2)+'px';
+  b.appendChild(i);setTimeout(()=>i.remove(),700);
 });
 </script>
 </body>
