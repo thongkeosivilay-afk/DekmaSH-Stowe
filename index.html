@@ -272,6 +272,7 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .buy:hover{filter:brightness(1.12)}.buy:active{transform:scale(.97)}
 .buy:disabled{background:var(--input-bg);border-color:var(--input-border);color:var(--placeholder);cursor:not-allowed;filter:none;transform:none}
 .buy:disabled::after{display:none}
+.pcard.ph .price{display:block;min-height:2.6rem}
 .empty{grid-column:1/-1;padding:4rem 0;text-align:center;color:var(--muted)}
 .pm{display:flex;align-items:center;width:100%;padding:1.3rem 1.4rem;border-radius:1.8rem;border:max(1px,.15rem) solid var(--input-border);background:var(--input-bg);font-size:1.5rem;font-weight:600;text-align:left;transition:border-color .2s,box-shadow .2s}
 .pm i{margin-left:auto;width:2rem;height:2rem;border-radius:50%;border:.2rem solid #4a2a2e;transition:border .2s}
@@ -368,6 +369,9 @@ select.field{padding-right:4rem;background-image:url("data:image/svg+xml;utf8,<s
 .sec-t::before{content:"";flex:none;width:.4rem;height:1.8rem;border-radius:99rem;background:linear-gradient(var(--red-bright),var(--red-dim))}
 
 /* tabs */
+.ad-legacy{display:none!important} /* ส่วนของแอดมินเดิมที่ซ่อนไว้ (ไม่ได้ลบโค้ด เพื่อไม่ให้ระบบพัง) */
+.pfrom{color:var(--muted);font-size:1.1rem;font-weight:600;margin-right:.4rem}
+.dur-r{margin-bottom:.8rem}.dur-r .d-l{flex:1.4}.dur-r .d-p{flex:1}
 .ad-tabs{margin:0 -1.6rem 1.4rem;padding:.2rem 1.6rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .ad-tabs::-webkit-scrollbar{display:none}
 .ad-tabs-in{position:relative;display:flex;gap:.3rem;width:max-content;padding:.5rem;border-radius:2.3rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03)}
@@ -1090,24 +1094,19 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 </div>
 <!-- ===== แอดมิน ===== -->
 <div class="view" id="v-admin">
-  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ແອດມິນ</h2><small>ສູນຄວບຄຸມຮ້ານ: ພາບລວມ ເຕີມສະຕັອກ ສິນຄ້າ ເຄຣດິດ</small></div></div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ແອດມິນ</h2><small>ຈັດການໝວດໝູ່ · ສິນຄ້າ · ຊື່ຮ້ານ</small></div></div>
 
   <div class="ad-tabs" id="adTabs" role="tablist" aria-label="ເມນູແອດມິນ"><div class="ad-tabs-in">
     <i class="ad-ind" id="adInd"></i>
-    <button class="ad-tab on" role="tab" aria-selected="true" data-tab="dash"><svg><use href="#i-grid"/></svg><span>ພາບລວມ</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="orders"><svg><use href="#i-cart"/></svg><span>ອໍເດີ</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="reports"><svg><use href="#i-chart"/></svg><span>ລາຍງານ</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="restock"><svg><use href="#i-boxes"/></svg><span>ເຕີມສະຕັອກ</span></button>
+    <button class="ad-tab on" role="tab" aria-selected="true" data-tab="cats"><svg><use href="#i-menu"/></svg><span>ໝວດໝູ່</span></button>
     <button class="ad-tab" role="tab" aria-selected="false" data-tab="products"><svg><use href="#i-store"/></svg><span>ສິນຄ້າ</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="cats"><svg><use href="#i-menu"/></svg><span>ໝວດໝູ່</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="credit"><svg><use href="#i-wallet"/></svg><span>ເຄຣດິດ</span></button>
-    <button class="ad-tab" role="tab" aria-selected="false" data-tab="shop"><svg><use href="#i-admin"/></svg><span>ຕັ້ງຄ່າ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="shop"><svg><use href="#i-admin"/></svg><span>ຊື່ຮ້ານ</span></button>
   </div></div>
 
-  <div class="ad-alert" id="adAlert" hidden><svg><use href="#i-alert"/></svg><span id="adAlertT"></span><button id="adAlertGo">ເຕີມເລີຍ</button></div>
+  <div class="ad-alert ad-legacy" id="adAlert" hidden><svg><use href="#i-alert"/></svg><span id="adAlertT"></span><button id="adAlertGo">ເຕີມເລີຍ</button></div>
 
   <!-- ===== ແຖບ: ພາບລວມ ===== -->
-  <section class="ad-pane on" id="ap-dash" role="tabpanel">
+  <section class="ad-pane ad-legacy" id="ap-dash" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເບິ່ງຮ້ານທັງໝົດໃນທີ່ດຽວ: ສຸຂະພາບສະຕັອກ, ມູນຄ່າສິນຄ້າ, ລະຫັດທີ່ພ້ອມສົ່ງ, ເຄຣດິດຄົງເຫຼືອ ແລະກິດຈະກຳລ່າສຸດ. ເປີດແອດມິນມາຈະເຫັນໜ້ານີ້ກ່ອນ ເພື່ອຮູ້ວ່າມີສິ່ງໃດຕ້ອງເຮັດ.</p></div></div>
 
     <div class="card ring-card">
@@ -1143,7 +1142,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </section>
 
   <!-- ===== ແຖບ: ອໍເດີ ===== -->
-  <section class="ad-pane" id="ap-orders" role="tabpanel">
+  <section class="ad-pane ad-legacy" id="ap-orders" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເບິ່ງທຸກຄຳສັ່ງຊື້ຂອງລູກຄ້າ: ສິນຄ້າຫຍັງ, ເວລາໃດ, ລາຄາເທົ່າໃດ ແລະສະຖານະການສົ່ງ. ອໍເດີແບບອັດຕະໂນມັດຈະສຳເລັດທັນທີພ້ອມລະຫັດ; ອໍເດີແບບສົ່ງເອງໃຫ້ກົດ "ສົ່ງແລ້ວ" ຫຼັງທີມງານສົ່ງສິນຄ້າໃຫ້ລູກຄ້າແລ້ວ.</p></div></div>
 
     <div class="metrics" id="ordMetrics"></div>
@@ -1162,7 +1161,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </section>
 
   <!-- ===== ແຖບ: ລາຍງານ ===== -->
-  <section class="ad-pane" id="ap-reports" role="tabpanel">
+  <section class="ad-pane ad-legacy" id="ap-reports" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ພາບລວມຍອດຂາຍ: ລາຍຮັບ 7 ມື້ຫຼ້າສຸດ, ສິນຄ້າຂາຍດີທີ່ສຸດ ແລະລາຍຮັບແຍກຕາມໝວດໝູ່ — ໃຊ້ວາງແຜນເຕີມສະຕັອກ ແລະໂປຣໂມຊັ່ນ.</p></div></div>
 
     <div class="card">
@@ -1177,7 +1176,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </section>
 
   <!-- ===== ແຖບ: ເຕີມສະຕັອກ ===== -->
-  <section class="ad-pane" id="ap-restock" role="tabpanel">
+  <section class="ad-pane ad-legacy" id="ap-restock" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີຢູ່ແລ້ວ ເຮັດ 3 ຂັ້ນຕອນ: ເລືອກສິນຄ້າ, ເລືອກວິທີເຕີມ, ໃສ່ຂໍ້ມູນແລ້ວຢືນຢັນ. ສະຕັອກເພີ່ມທັນທີ ແລະລູກຄ້າເຫັນເລີຍ. ຖ້າຍັງບໍ່ມີສິນຄ້າ ໃຫ້ໄປແຖບ "ສິນຄ້າ" ເພື່ອເພີ່ມກ່ອນ.</p></div></div>
 
     <div class="card">
@@ -1229,12 +1228,12 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 
   <!-- ===== ແຖບ: ສິນຄ້າ ===== -->
   <section class="ad-pane" id="ap-products" role="tabpanel">
-    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ສ້າງ, ແກ້ໄຂ ແລະລຶບສິນຄ້າ: ຊື່, ຮູບ, ລາຄາ, ໝວດໝູ່ ແລະລາຍລະອຽດ. ຖ້າຈະເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີແລ້ວ ໃຫ້ກົດ "ເຕີມ" ທີ່ແຖວສິນຄ້າ. ແຕະປ້າຍ "ອັດຕະໂນມັດ" ເພື່ອເບິ່ງ ແລະຈັດການລະຫັດທີ່ເຫຼືອ.</p></div></div>
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເພີ່ມ ແກ້ໄຂ ແລະລຶບສິນຄ້າ: ຊື່, ຮູບ, ລາຄາ, ໝວດໝູ່, ລາຍລະອຽດ ແລະຕົວເລືອກໄລຍະເວລາ (ຕັ້ງຊື່ ແລະລາຄາເອງໄດ້).</p></div></div>
     <div class="card">
       <div class="line"><input class="field" id="aq" placeholder="ຄົ້ນຫາຊື່ ຫຼືລະຫັດສິນຄ້າ..." aria-label="ຄົ້ນຫາສິນຄ້າໃນແອດມິນ" autocomplete="off"><button class="btn b2" id="aNew">+ ເພີ່ມສິນຄ້າໃໝ່</button></div>
-      <div class="chips" id="apF"><button class="cat on" data-f="all">ທັງໝົດ</button><button class="cat" data-f="low">ໃກ້ໝົດ</button><button class="cat" data-f="out">ໝົດແລ້ວ</button><button class="cat" data-f="auto">ອັດຕະໂນມັດ</button><button class="cat" data-f="man">ສົ່ງເອງ</button></div>
-      <div class="line" style="margin-top:1.1rem"><p class="h3" style="margin:0;white-space:nowrap">ຮຽງຕາມ</p><select class="field sm" id="apS" aria-label="ຮຽງສິນຄ້າ"><option value="name">ຊື່ສິນຄ້າ</option><option value="stock">ສະຕັອກນ້ອຍສຸດກ່ອນ</option><option value="price">ລາຄາສູງສຸດກ່ອນ</option></select></div>
-      <details class="legend"><summary>ຄວາມໝາຍຂອງປ້າຍ</summary>
+      <div class="chips ad-legacy" id="apF"><button class="cat on" data-f="all">ທັງໝົດ</button><button class="cat" data-f="low">ໃກ້ໝົດ</button><button class="cat" data-f="out">ໝົດແລ້ວ</button><button class="cat" data-f="auto">ອັດຕະໂນມັດ</button><button class="cat" data-f="man">ສົ່ງເອງ</button></div>
+      <div class="line ad-legacy" style="margin-top:1.1rem"><p class="h3" style="margin:0;white-space:nowrap">ຮຽງຕາມ</p><select class="field sm" id="apS" aria-label="ຮຽງສິນຄ້າ"><option value="name">ຊື່ສິນຄ້າ</option><option value="stock">ສະຕັອກນ້ອຍສຸດກ່ອນ</option><option value="price">ລາຄາສູງສຸດກ່ອນ</option></select></div>
+      <details class="legend ad-legacy"><summary>ຄວາມໝາຍຂອງປ້າຍ</summary>
         <div><span class="bdg ok">ເຫຼືອ</span>ມີສະຕັອກພໍ</div>
         <div><span class="bdg low">ໃກ້ໝົດ</span>ເຫຼືອ <span class="lowN">5</span> ຫຼືນ້ອຍກວ່າ ຄວນເຕີມ</div>
         <div><span class="bdg out">ໝົດແລ້ວ</span>ລູກຄ້າຊື້ບໍ່ໄດ້</div>
@@ -1247,14 +1246,14 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </section>
 
   <!-- ===== ແຖບ: ໝວດໝູ່ ===== -->
-  <section class="ad-pane" id="ap-cats" role="tabpanel">
+  <section class="ad-pane on" id="ap-cats" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໝວດໝູ່ໃຊ້ຈັດກຸ່ມສິນຄ້າ ໃຫ້ລູກຄ້າກອງເບິ່ງງ່າຍ. ຕ້ອງມີໝວດໝູ່ກ່ອນ ຈຶ່ງຈະເພີ່ມສິນຄ້າເຂົ້າໝວດນັ້ນໄດ້. ແກ້ຊື່ໄດ້ (ສິນຄ້າຈະຍ້າຍຕາມ) ແຕ່ລຶບໄດ້ສະເພາະໝວດທີ່ບໍ່ມີສິນຄ້າ.</p></div></div>
     <div class="card"><p class="sec-t">ໝວດໝູ່ທັງໝົດ</p><div id="aCats"></div></div>
     <div class="card"><p class="sec-t">ເພີ່ມໝວດໝູ່ໃໝ່</p><div class="line"><input class="field" id="aCatIn" placeholder="ຊື່ໝວດໝູ່ໃໝ່"><button class="btn b2" id="aCatAdd">ເພີ່ມ</button></div><p class="hint">ຕັ້ງຊື່ສັ້ນໆ ທີ່ລູກຄ້າເຂົ້າໃຈງ່າຍ ເຊັ່ນ "ເກມ" ຫຼື "ໂປຣແກຣມ".</p></div>
   </section>
 
   <!-- ===== ແຖບ: ເຄຣດິດ ===== -->
-  <section class="ad-pane" id="ap-credit" role="tabpanel">
+  <section class="ad-pane ad-legacy" id="ap-credit" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເບິ່ງ ແລະປັບຍອດເຄຣດິດ: ເພີ່ມເຄຣດິດ (ເມື່ອລູກຄ້າໂອນເງິນມາ) ຫຼືຫັກເຄຣດິດ (ແກ້ໄຂຜິດ ຫຼືຄືນເງິນ). ທຸກການປັບຖືກບັນທຶກໃນປະຫວັດທຸລະກຳ ພ້ອມຍອດຫຼັງເຮັດລາຍການ. ການສັ່ງຊື້ຂອງລູກຄ້າກໍຫັກອັດຕະໂນມັດ ແລະບັນທຶກທີ່ນີ້ເຊັ່ນກັນ.</p></div></div>
     <div class="bal"><small>ເຄຣດິດຄົງເຫຼືອ</small><b id="crBal" data-pre="₭">₭0</b><span id="crBalSub"></span></div>
     <div class="card">
@@ -1278,17 +1277,17 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 
   <!-- ===== ແຖບ: ຕັ້ງຄ່າ ===== -->
   <section class="ad-pane" id="ap-shop" role="tabpanel">
-    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ຕັ້ງຄ່າທົ່ວໄປຂອງຮ້ານ, ເກນແຈ້ງເຕືອນສະຕັອກ ແລະສຳຮອງຂໍ້ມູນ.</p></div></div>
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ປ່ຽນຊື່ຮ້ານ.</p></div></div>
     <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ຊື່ຮ້ານ</p><p class="hint" style="margin:0 0 1rem">ສະແດງໃນໜ້າຫຼັກ ແລະຊື່ແຖບຂອງເບຣາວເຊີ.</p><div class="line"><input class="field" id="aName" placeholder="ຊື່ຮ້ານ"><button class="btn b2" id="aNameSave">ບັນທຶກ</button></div></div>
-    <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ເກນແຈ້ງເຕືອນສະຕັອກໃກ້ໝົດ</p><p class="hint" style="margin:0 0 1rem">ເມື່ອສິນຄ້າເຫຼືອ ≤ ຈຳນວນນີ້ ລະບົບຈະຂຶ້ນປ້າຍ "ໃກ້ໝົດ" ແລະແຈ້ງເຕືອນດ້ານເທິງແອດມິນ.</p>
+    <div class="card ad-legacy"><p class="sec-t" style="margin-bottom:.4rem">ເກນແຈ້ງເຕືອນສະຕັອກໃກ້ໝົດ</p><p class="hint" style="margin:0 0 1rem">ເມື່ອສິນຄ້າເຫຼືອ ≤ ຈຳນວນນີ້ ລະບົບຈະຂຶ້ນປ້າຍ "ໃກ້ໝົດ" ແລະແຈ້ງເຕືອນດ້ານເທິງແອດມິນ.</p>
       <div class="line"><button class="cat step-b" data-step="-1" aria-label="ຫຼຸດ"><svg><use href="#i-minus"/></svg></button><input class="field" id="stLow" type="number" inputmode="numeric" min="1" max="999" style="text-align:center"><button class="cat step-b" data-step="1" aria-label="ເພີ່ມ"><svg><use href="#i-plus"/></svg></button><button class="btn b2" id="stLowSave">ບັນທຶກ</button></div></div>
-    <div class="card"><p class="sec-t" style="margin-bottom:.4rem">ສຳຮອງ ແລະກູ້ຂໍ້ມູນ</p><p class="hint" style="margin:0 0 1.2rem">ກັນຂໍ້ມູນຫາຍ: ສຳເນົາຂໍ້ມູນທັງໝົດເກັບໄວ້ (ເຊັ່ນ ວາງໃສ່ບັນທຶກ) ແລ້ວວາງກັບຄືນເມື່ອຕ້ອງການກູ້ຄືນ ຫຼືຍ້າຍໄປເຄື່ອງອື່ນ. ຂໍ້ມູນສຳຮອງມີລະຫັດສົ່ງອັດຕະໂນມັດ ຄວນເກັບເປັນຄວາມລັບ.</p>
+    <div class="card ad-legacy"><p class="sec-t" style="margin-bottom:.4rem">ສຳຮອງ ແລະກູ້ຂໍ້ມູນ</p><p class="hint" style="margin:0 0 1.2rem">ກັນຂໍ້ມູນຫາຍ: ສຳເນົາຂໍ້ມູນທັງໝົດເກັບໄວ້ (ເຊັ່ນ ວາງໃສ່ບັນທຶກ) ແລ້ວວາງກັບຄືນເມື່ອຕ້ອງການກູ້ຄືນ ຫຼືຍ້າຍໄປເຄື່ອງອື່ນ. ຂໍ້ມູນສຳຮອງມີລະຫັດສົ່ງອັດຕະໂນມັດ ຄວນເກັບເປັນຄວາມລັບ.</p>
       <button class="btn b3 wide" id="bkCopy"><svg><use href="#i-copy"/></svg>ສຳເນົາຂໍ້ມູນສຳຮອງ</button>
       <p class="h3 sp">ກູ້ຄືນຂໍ້ມູນ</p>
       <textarea class="field ta" id="bkBox" placeholder="ວາງຂໍ້ມູນສຳຮອງທີ່ນີ້ ເພື່ອກູ້ຄືນ" spellcheck="false" autocapitalize="off"></textarea>
       <button class="btn b2 wide sp" id="bkRestore">ກູ້ຄືນຂໍ້ມູນ</button>
       <p class="hint">ການກູ້ຄືນຈະແທນທີ່ຂໍ້ມູນປັດຈຸບັນທັງໝົດ.</p></div>
-    <div class="card"><p class="sec-t" style="margin-bottom:.6rem">ບ່ອນເກັບຂໍ້ມູນ</p><p class="note" style="padding:0">ຂໍ້ມູນສິນຄ້າ, ສະຕັອກ, ເຄຣດິດ ແລະປະຫວັດ ເກັບໃນບຼາວເຊີຂອງເຄື່ອງນີ້ເທົ່ານັ້ນ (ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ຖານຂໍ້ມູນກາງ). ຖ້າລ້າງຂໍ້ມູນບຼາວເຊີ ຫຼືເປີດໃນເຄື່ອງ/ບຼາວເຊີອື່ນ (ເຊັ່ນ ເປີດຈາກ Instagram ແລ້ວມາເປີດໃນ Safari) ຈະເຫັນຂໍ້ມູນບໍ່ຕົງກັນ. ຄວນເຕີມຂອງຈາກເຄື່ອງ ແລະບຼາວເຊີດຽວກັນສະເໝີ ແລະສຳຮອງຂໍ້ມູນເປັນໄລຍະ.</p></div>
+    <div class="card ad-legacy"><p class="sec-t" style="margin-bottom:.6rem">ບ່ອນເກັບຂໍ້ມູນ</p><p class="note" style="padding:0">ຂໍ້ມູນສິນຄ້າ, ສະຕັອກ, ເຄຣດິດ ແລະປະຫວັດ ເກັບໃນບຼາວເຊີຂອງເຄື່ອງນີ້ເທົ່ານັ້ນ (ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ຖານຂໍ້ມູນກາງ). ຖ້າລ້າງຂໍ້ມູນບຼາວເຊີ ຫຼືເປີດໃນເຄື່ອງ/ບຼາວເຊີອື່ນ (ເຊັ່ນ ເປີດຈາກ Instagram ແລ້ວມາເປີດໃນ Safari) ຈະເຫັນຂໍ້ມູນບໍ່ຕົງກັນ. ຄວນເຕີມຂອງຈາກເຄື່ອງ ແລະບຼາວເຊີດຽວກັນສະເໝີ ແລະສຳຮອງຂໍ້ມູນເປັນໄລຍະ.</p></div>
   </section>
 </div>
 </main>
@@ -1381,7 +1380,8 @@ $$('.nav .item').forEach(b=>b.addEventListener('click',()=>{
 /* ===== ข้อมูลตัวอย่าง (แทนที่ด้วยข้อมูลจริง / Supabase ภายหลัง) =====
    แต่ละรายการ = [ชื่อ, หมวด, ราคา, สต๊อก, URL รูป(ไม่ใส่ = ใช้ภาพปกไอคอน)] */
 const DEMO={user:'ຕົວແທນ #0019',credit:800000};
-const P=[["Video Editor Pro","ໂປຣແກຣມ",190000,12],["Antivirus Plus 1 ປີ","ຄວາມປອດໄພ",100000,40],["Office Suite 2021","ຫ້ອງການ",250000,8],["VPN Premium 30 ມື້","ຄວາມປອດໄພ",60000,0],["Design Studio License","ໂປຣແກຣມ",290000,5],["Game Booster Key","ເກມ",40000,25],["PDF Toolkit Pro","ຫ້ອງການ",80000,0],["Cloud Storage 1TB","ຫ້ອງການ",120000,17],["iOS Signing Cert 1 ປີ","IOS",160000,10],["iOS App Unlocker","IOS",120000,6],["Android Premium Pack","ANDROID",90000,22],["Android VPN Pro","ANDROID",60000,15]];
+const UNL=9999; /* สินค้าที่สร้างใหม่ = ไม่จำกัดจำนวน */
+const P=[]; /* ไม่มีสินค้าตัวอย่างแล้ว — เพิ่มสินค้าจริงผ่านแท็บแอดมิน */
 const IC={'ໂປຣແກຣມ':'i-grid','ຫ້ອງການ':'i-boxes','ຄວາມປອດໄພ':'i-check','ເກມ':'i-bolt','IOS':'i-apple','ANDROID':'i-android'};
 const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
 $('#credit').textContent=fmt(DEMO.credit); $('#uname').textContent=DEMO.user; $('#ucredit').textContent='₭'+fmt(DEMO.credit);
@@ -1397,9 +1397,16 @@ const TH2LO={'โปรแกรม':'ໂປຣແກຣມ','ออฟฟิศ
 DB.cats=(DB.cats||[]).map(c=>TH2LO[c]||c);DB.products.forEach(p=>{p.cat=TH2LO[p.cat]||p.cat;p.name=TH2LO[p.name]||p.name});
 DB.log=DB.log||[];
 function save(){try{localStorage.setItem(SK,JSON.stringify(DB));return true}catch(e){say('ບັນທຶກບໍ່ໄດ້ (ພື້ນທີ່ເຕັມ ຫຼື ບຼາວເຊີບໍ່ອະນຸຍາດ)');return false}}
+/* ลบสินค้าตัวอย่างเดิมที่เคยถูกบันทึกไว้ในเครื่อง (เฉพาะรายการที่ยังเป็นค่าตั้งต้น ไม่มีรูป/คีย์/คำอธิบาย) */
+(function(){const OLD=new Set(["Video Editor Pro","Antivirus Plus 1 ປີ","Office Suite 2021","VPN Premium 30 ມື້","Design Studio License","Game Booster Key","PDF Toolkit Pro","Cloud Storage 1TB","iOS Signing Cert 1 ປີ","iOS App Unlocker","Android Premium Pack","Android VPN Pro"]);const n0=DB.products.length;
+  DB.products=DB.products.filter(p=>!(OLD.has(p.name)&&/^P-00\d\d$/.test(p.code||'')&&!(p.imgs&&p.imgs.length)&&!(p.keys&&p.keys.length)&&!p.desc));
+  if(DB.products.length!==n0) save();})();
 /* One-time: convert previously saved baht amounts to kip (approx. 1 THB = 650 LAK, rounded to nearest 1,000) */
 if(DB.cur!=='LAK'){const kp=v=>Math.round((+v||0)*650/1000)*1000;DB.credit=kp(DB.credit);DB.products.forEach(p=>{p.price=kp(p.price)});DB.cur='LAK';save()}
 const sym=p=>IC[p.cat]||'i-grid';
+const pDurs=p=>(p.durs||[]).filter(d=>d&&String(d.label||'').trim()).map(d=>({label:String(d.label).trim(),price:Math.max(0,+d.price||0)}));
+const pMin=p=>{const a=pDurs(p);return a.length?Math.min(...a.map(d=>d.price)):p.price};
+const pMulti=p=>pDurs(p).length>1;
 function paint(){setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name}
 async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say('ສຳເນົາແລ້ວ: '+t.slice(0,40))}
 const sheet=$('#sheet'),box=$('#shBox');
@@ -1411,7 +1418,11 @@ function renderCats(){$('#cats').innerHTML=['ທັງໝົດ',...DB.cats].map
 function renderP(){
   const l=DB.products.filter(p=>(cat==='ທັງໝົດ'||p.cat===cat)&&(!only||p.stock>0)&&(p.name+p.cat+p.code).toLowerCase().includes(pq));
   $('#pcount').textContent='ສະແດງ '+l.length+' ຈາກ '+DB.products.length+' ລາຍການ';
-  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span><span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span></div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">₭${p.price.toLocaleString('en-US')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'ສັ່ງຊື້':'ສິນຄ້າໝົດ'}</button></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
+  if(!DB.products.length){ /* ยังไม่มีสินค้า = แสดงการ์ดสินค้าเปล่าๆ */
+    $('#plist').innerHTML=Array.from({length:12},(_,i)=>`<div class="card pcard ph" aria-hidden="true"><div class="cv c${i%4+1}"></div><div class="pb"><p class="pn"></p><span class="price"></span></div><button class="buy" type="button" tabindex="-1" disabled></button></div>`).join('');
+    return;
+  }
+  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span>${p.stock<UNL?`<span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span>`:''}</div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">${pMulti(p)?'<small class="pfrom">ເລີ່ມ</small>':''}₭${pMin(p).toLocaleString('en-US')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'ສັ່ງຊື້':'ສິນຄ້າໝົດ'}</button></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
 }
 $('#cats').addEventListener('click',e=>{
   const c=e.target.closest('.cat'); if(!c) return;
@@ -1443,7 +1454,7 @@ function placeOrder(id,amount,durLabel,qty){
   if(DB.credit<total) return {ok:false,code:'credit',msg:'ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ'};
   DB.credit-=total;addTx('buy',-total,durLabel||'',p.name);
   const k=p.auto&&p.keys.length>=n?p.keys.splice(0,n).join('\n'):null;
-  p.stock=p.auto?p.keys.length:p.stock-n; addOrder(p,k,total,durLabel,n); save();
+  p.stock=p.auto?p.keys.length:(p.stock>=UNL?p.stock:p.stock-n); addOrder(p,k,total,durLabel,n); save();
   const order=DB.orders[0];
   try{paint();renderP();renderAdmin()}catch(e){console.error(e)} /* ออเดอร์สำเร็จแล้ว — ถ้า render พลาดต้องไม่ทำให้กลายเป็น Error (กันสั่งซ้ำ) */
   return {ok:true,p,key:k,order,total,qty:n};
@@ -1457,7 +1468,7 @@ function normDB(){DB.log=DB.log||[];DB.tx=DB.tx||[];DB.cats=DB.cats||[];LOW=Math
   DB.orderSeq=DB.orderSeq||(DB.orders.length?Math.max(1,...DB.orders.map(o=>o.id||0))+1:1);
   DB.orders.forEach(o=>{if(!o.id)o.id=DB.orderSeq++})}
 normDB();
-let adTab='dash',aq='',af='all',asort='name',cf='all',kmId=null,kmSure=-1,rnOld=null,ordQ='',ordF='all';
+let adTab='cats',aq='',af='all',asort='name',cf='all',kmId=null,kmSure=-1,rnOld=null,ordQ='',ordF='all';
 const rs={id:null,mode:'keys'},cr={mode:'add'};
 const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
 const K=n=>'₭'+Math.round(n).toLocaleString('en-US');
@@ -1620,10 +1631,10 @@ function renderAdmin(){
     .sort(asort==='stock'?(a,b)=>a.stock-b.stock:asort==='price'?(a,b)=>b.price-a.price:(a,b)=>String(a.name).localeCompare(String(b.name)));
   $$('#apF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===af));
   $('#apCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${N} ລາຍການ`;
-  $('#aList').innerHTML=fl.map(p=>{const t=stTag(p);return `<div class="prow"><div class="th">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:`<svg><use href="#${sym(p)}"/></svg>`}</div><div class="pi"><b>${esc(p.name)}</b><div class="m">${esc(p.code)} · ${K(p.price)} · ${esc(p.cat)}</div><div class="bg">${bdg(t[0],t[1])}${dlv(p)}</div><div class="bar sm"><i class="bar-fill ${t[0]}" style="--s:${Math.min(1,p.stock/ref).toFixed(3)}"></i></div></div><div class="pa"><button class="ib go" data-restock="${p.id}">ເຕີມ</button><button class="ib" data-edit="${p.id}">ແກ້ໄຂ</button></div></div>`}).join('')||'<p class="note">ບໍ່ພົບສິນຄ້າ</p>';
+  $('#aList').innerHTML=fl.map(p=>{const nd=pDurs(p).length;return `<div class="prow"><div class="th">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:`<svg><use href="#${sym(p)}"/></svg>`}</div><div class="pi"><b>${esc(p.name)}</b><div class="m">${pMulti(p)?'ເລີ່ມ ':''}${K(pMin(p))} · ${esc(p.cat)}${nd?' · '+nd+' ຕົວເລືອກ':''}</div></div><div class="pa"><button class="ib" data-edit="${p.id}">ແກ້ໄຂ</button></div></div>`}).join('')||'<p class="note">ຍັງບໍ່ມີສິນຄ້າ ກົດ "+ ເພີ່ມສິນຄ້າໃໝ່" ເພື່ອເລີ່ມ</p>';
 
   /* categories */
-  $('#aCats').innerHTML=DB.cats.map((c,i)=>{const n=L.filter(p=>p.cat===c).length,s=L.filter(p=>p.cat===c).reduce((a,p)=>a+p.stock,0);return `<div class="prow"><span class="ico s${i%4+1}"><svg><use href="#${IC[c]||'i-grid'}"/></svg></span><div class="pi"><b>${esc(c)}</b><div class="m">${n} ລາຍການ · ສະຕັອກ ${s.toLocaleString('en-US')}</div></div><div class="pa row"><button class="ib" data-rncat="${esc(c)}" aria-label="ແກ້ຊື່"><svg><use href="#i-edit"/></svg></button><button class="ib dng" data-delcat="${esc(c)}" aria-label="ລຶບໝວດໝູ່"><svg><use href="#i-trash"/></svg></button></div></div>`}).join('')||'<p class="note">ຍັງບໍ່ມີໝວດໝູ່</p>';
+  $('#aCats').innerHTML=DB.cats.map((c,i)=>{const n=L.filter(p=>p.cat===c).length,s=L.filter(p=>p.cat===c).reduce((a,p)=>a+p.stock,0);return `<div class="prow"><span class="ico s${i%4+1}"><svg><use href="#${IC[c]||'i-grid'}"/></svg></span><div class="pi"><b>${esc(c)}</b><div class="m">${n} ລາຍການ</div></div><div class="pa row"><button class="ib" data-rncat="${esc(c)}" aria-label="ແກ້ຊື່"><svg><use href="#i-edit"/></svg></button><button class="ib dng" data-delcat="${esc(c)}" aria-label="ລຶບໝວດໝູ່"><svg><use href="#i-trash"/></svg></button></div></div>`}).join('')||'<p class="note">ຍັງບໍ່ມີໝວດໝູ່</p>';
 
   /* restock select / low / log */
   $('#rsProd').innerHTML='<option value="">— ເລືອກສິນຄ້າ —</option>'+L.map(p=>`<option value="${p.id}">${esc(p.name)} (${esc(p.code)}) · ເຫຼືອ ${p.stock}</option>`).join('');
@@ -1736,30 +1747,29 @@ $('#bkRestore').onclick=function(){let d;try{d=JSON.parse($('#bkBox').value)}cat
 let ed=null;
 function openEd(id){
   const src=DB.products.find(x=>x.id==id);
-  ed=src?JSON.parse(JSON.stringify(src)):{id:null,code:'P-'+String(DB.seq).padStart(4,'0'),name:'',cat:DB.cats[0]||'',price:0,stock:0,desc:'',imgs:[],keys:[],auto:false};
+  ed=src?JSON.parse(JSON.stringify(src)):{id:null,code:'P-'+String(DB.seq).padStart(4,'0'),name:'',cat:DB.cats[0]||'',price:0,stock:UNL,desc:'',imgs:[],keys:[],auto:false,durs:[]};
+  ed.durs=ed.durs||[];
   drawEd();
 }
-function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.stock=Math.max(0,+$('#eStock').value||0);ed.desc=$('#eDesc').value;ed.keys=$('#eKeys').value.split('\n').map(x=>x.trim()).filter(Boolean)}
+function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.desc=$('#eDesc').value;
+  ed.durs=[...document.querySelectorAll('#eDurs .dur-r')].map(r=>({label:r.querySelector('.d-l').value,price:Math.max(0,+r.querySelector('.d-p').value||0)}))}
 function drawEd(){
   openSheet(`<h3 class="sh-t">${ed.id?'ແກ້ໄຂສິນຄ້າ':'ເພີ່ມສິນຄ້າໃໝ່'}</h3>
-  <p class="hint" style="margin:-.8rem 0 0">${ed.id?'ແກ້ຂໍ້ມູນສິນຄ້າ ແລ້ວກົດບັນທຶກດ້ານລຸ່ມ. ຖ້າຈະເຕີມຂອງ ໃຫ້ໃຊ້ແຖບ "ເຕີມສະຕັອກ" ຈະປອດໄພກວ່າ.':'ກອກຂໍ້ມູນສິນຄ້າໃໝ່ ແລ້ວກົດບັນທຶກ. ຫຼັງບັນທຶກ ລູກຄ້າຈະເຫັນສິນຄ້ານີ້ທັນທີ.'}</p>
   <p class="ed-h first">ຂໍ້ມູນສິນຄ້າ</p>
-  <p class="h3">ລະຫັດສິນຄ້າ</p><div class="line"><div class="code">${ed.code}</div><button class="cat" data-copy="${ed.code}">ສຳເນົາ</button></div>
-  <p class="hint">ສ້າງໃຫ້ອັດຕະໂນມັດ ໃຊ້ອ້າງອີງ ແລະຄົ້ນຫາ (ແກ້ບໍ່ໄດ້).</p>
-  <p class="h3 sp">ຮູບສິນຄ້າ (ຮູບທຳອິດ = ຮູບໜ້າປົກ)</p><div class="thumbs">${ed.imgs.map((s,i)=>`<div class="tb"><img src="${s}" alt=""><button data-rmimg="${i}" aria-label="ລຶບຮູບ">×</button></div>`).join('')}<label class="tb add">+<input type="file" id="eImg" accept="image/*" multiple hidden></label></div>
+  <p class="h3">ຮູບສິນຄ້າ (ຮູບທຳອິດ = ຮູບໜ້າປົກ)</p><div class="thumbs">${ed.imgs.map((s,i)=>`<div class="tb"><img src="${s}" alt=""><button data-rmimg="${i}" aria-label="ລຶບຮູບ">×</button></div>`).join('')}<label class="tb add">+<input type="file" id="eImg" accept="image/*" multiple hidden></label></div>
   <p class="hint">ຮູບທຳອິດເປັນຮູບທີ່ລູກຄ້າເຫັນໃນລາຍການ. ຮູບຖືກຍ່ອຂະໜາດໃຫ້ອັດຕະໂນມັດ. ບໍ່ໃສ່ກໍໄດ້.</p>
   <p class="h3 sp">ຊື່ສິນຄ້າ</p><input class="field" id="eName" value="${esc(ed.name)}">
-  <p class="hint">ຊື່ທີ່ລູກຄ້າເຫັນ ແລະໃຊ້ຄົ້ນຫາ.</p>
   <p class="h3 sp">ໝວດໝູ່</p><select class="field" id="eCat">${DB.cats.map(c=>`<option${c===ed.cat?' selected':''}>${esc(c)}</option>`).join('')}</select>
   <p class="hint">ຢາກໄດ້ໝວດໃໝ່ ໃຫ້ສ້າງໃນແຖບ "ໝວດໝູ່" ກ່ອນ.</p>
   <p class="h3 sp">ລາຍລະອຽດສິນຄ້າ</p><textarea class="field ta" id="eDesc">${esc(ed.desc)}</textarea>
   <p class="hint">ສະແດງໃຕ້ຊື່ສິນຄ້າ. ບໍ່ບັງຄັບ.</p>
-  <p class="ed-h">ລາຄາ ແລະສະຕັອກ</p>
-  <div class="grid2"><div><p class="h3">ລາຄາ (ກີບ)</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price}"></div><div><p class="h3">ສະຕັອກ (ສົ່ງເອງ)</p><div class="line"><input class="field" id="eStock" type="number" inputmode="numeric" min="0" value="${ed.stock}"><button class="cat" id="eAdd10">+10</button></div></div></div>
-  <p class="hint">ລາຄາເປັນເງິນກີບ (₭) ຕໍ່ 1 ຊິ້ນ ຫັກຈາກເຄຣດິດຂອງລູກຄ້າ. ຊ່ອງສະຕັອກໃຊ້ສະເພາະສິນຄ້າທີ່ທີມງານສົ່ງເອງ; ຖ້າມີລະຫັດຢູ່ຊ່ອງລຸ່ມ ລະບົບຈະນັບສະຕັອກຈາກຈຳນວນລະຫັດແທນ.</p>
-  <p class="ed-h">ການສົ່ງສິນຄ້າອັດຕະໂນມັດ</p>
-  <p class="h3">ລະຫັດທີ່ສົ່ງອັດຕະໂນມັດ (1 ແຖວ = 1 ຊິ້ນ)</p><textarea class="field ta ta-lg" id="eKeys" placeholder="XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off">${esc(ed.keys.join('\n'))}</textarea>
-  <p class="hint">ນີ້ຄືລະຫັດທັງໝົດທີ່ເຫຼືອ. ຖ້າມີລະຫັດຢູ່ນີ້ ສິນຄ້າຈະສົ່ງອັດຕະໂນມັດ; ຖ້າວ່າງ ຈະເປັນແບບທີມງານສົ່ງເອງ. ຢາກເຕີມລະຫັດເພີ່ມ ໃຫ້ໃຊ້ແຖບ "ເຕີມສະຕັອກ" (ກັນລຶບຂອງເກົ່າ ແລະກັນລະຫັດຊ້ຳ).</p>
+  <p class="ed-h">ລາຄາ</p>
+  <p class="h3">ລາຄາ (ກີບ)</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price}">
+  <p class="hint">ໃຊ້ເມື່ອບໍ່ມີຕົວເລືອກໄລຍະເວລາ. ຖ້າເພີ່ມຕົວເລືອກດ້ານລຸ່ມ ລາຄາຈະໃຊ້ຕາມແຕ່ລະຕົວເລືອກ.</p>
+  <p class="ed-h">ຕົວເລືອກໄລຍະເວລາ</p>
+  <div id="eDurs">${ed.durs.map((d,i)=>`<div class="line dur-r"><input class="field d-l" placeholder="ເຊັ່ນ 7 ມື້" value="${esc(d.label)}" aria-label="ຊື່ຕົວເລືອກ"><input class="field d-p" type="number" inputmode="numeric" min="0" placeholder="ລາຄາ (ກີບ)" value="${+d.price||0}" aria-label="ລາຄາຕົວເລືອກ"><button class="ib dng" data-rmdur="${i}" aria-label="ລຶບຕົວເລືອກ"><svg><use href="#i-trash"/></svg></button></div>`).join('')}</div>
+  <button class="btn b3 wide" id="eDurAdd" type="button">+ ເພີ່ມຕົວເລືອກໄລຍະເວລາ</button>
+  <p class="hint">ຕັ້ງຊື່ ແລະລາຄາເອງໄດ້ ເຊັ່ນ "7 ມື້" · "30 ມື້" · "ຕະຫຼອດຊີບ". ລູກຄ້າຈະເລືອກໄດ້ຕອນສັ່ງຊື້. ບໍ່ເພີ່ມກໍໄດ້.</p>
   <button class="btn b2 wide sp" id="eSave">ບັນທຶກ</button>${ed.id?'<button class="del" id="eDel">ລຶບສິນຄ້ານີ້</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`);
 }
 function shrink(f){return new Promise(r=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.82))};im.onerror=()=>r(null);im.src=u})}
@@ -1768,10 +1778,11 @@ sheet.addEventListener('click',e=>{
   const t=e.target;
   if(t===sheet||t.closest('[data-close]')) return closeSheet();
   const rm=t.closest('[data-rmimg]'); if(rm){pull();ed.imgs.splice(+rm.dataset.rmimg,1);return drawEd()}
-  if(t.closest('#eAdd10')){pull();ed.stock+=10;return drawEd()}
+  if(t.closest('#eDurAdd')){pull();ed.durs.push({label:'',price:ed.price||0});return drawEd()}
+  const rd=t.closest('[data-rmdur]'); if(rd){pull();ed.durs.splice(+rd.dataset.rmdur,1);return drawEd()}
   if(t.closest('#eDel')){const b=t.closest('#eDel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນການລຶບ';return}
     DB.products=DB.products.filter(p=>p.id!==ed.id);save();renderP();renderAdmin();closeSheet();return say('ລຶບສິນຄ້າແລ້ວ')}
-  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('ກະລຸນາໃສ່ຊື່ສິນຄ້າ');
+  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('ກະລຸນາໃສ່ຊື່ສິນຄ້າ');ed.durs=ed.durs.map(d=>({label:String(d.label).trim(),price:d.price})).filter(d=>d.label);
     ed.auto=ed.keys.length>0; if(ed.auto) ed.stock=ed.keys.length;
     if(ed.id){DB.products[DB.products.findIndex(p=>p.id===ed.id)]=ed}else{ed.id=DB.seq++;DB.products.push(ed)}
     if(!save())return; renderCats();renderP();renderAdmin();closeSheet();say('ບັນທຶກສິນຄ້າແລ້ວ')}
@@ -1820,10 +1831,12 @@ if(!RM) document.addEventListener('pointerdown',e=>{
    ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້
    ข้อมูลทั้งหมดมาจาก DB จริง (สินค้า/ราคา/เครดิต) และเรียก placeOrder() เดิม — ไม่มีข้อมูลจำลอง
    ===================================================================== */
-const om={open:false,busy:false,done:false,pid:null,trigger:null,cv:'c1',timer:0,dur:30,qty:1,total:0};
+const om={open:false,busy:false,done:false,pid:null,trigger:null,cv:'c1',timer:0,dur:0,qty:1,total:0};
 /* ตัวเลือกไລยะเวลา: mul = สัดส่วนราคาเทียบกับราคาสินค้าที่ตั้งไว้ (ถือเป็นราคาแพ็ก 30 ມື້) — ปรับตัวเลขได้ตามต้องการ */
-const OM_DUR=[{d:7,label:'7 ມື້',mul:.42},{d:14,label:'14 ມື້',mul:.72},{d:30,label:'30 ມື້',mul:1}];
-const durPrice=(p,dd)=>Math.max(1000,Math.round(p.price*dd.mul/1000)*1000);
+/* ตัวเลือกไລຍະເວລາ: ດຶງຈາກສິນຄ້າແຕ່ລະຕົວ (p.durs) ທີ່ແອດມິນຕັ້ງເອງ; ຖ້າບໍ່ມີ = ໃຊ້ລາຄາຫຼັກ ບໍ່ສະແດງໂຕເລືອກ */
+const durOpts=p=>{const a=pDurs(p);return a.length?a.map((x,i)=>({d:i,label:x.label,price:x.price})):[{d:0,label:'',price:p.price,solo:true}]};
+const curDur=p=>{const o=durOpts(p);return o.find(x=>x.d===om.dur)||o[0]};
+const durPrice=(p,dd)=>dd.price;
 const omEl=$('#orderModal'),omCard=$('#omCard'),omScroll=$('#omScroll'),omFoot=$('#omFoot'),omX=$('#omX');
 const OM_MIN=950; /* ms — ระบบเดิมตอบทันที (localStorage) จึงหน่วงให้เห็น Loading ชัดเจน; ถ้าต่อ API จริงภายหลังจะรอผลจริงตามปกติ */
 const omSleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -1839,9 +1852,9 @@ function omThumb(p){
 /* ---- 1) ตรวจสอบสินค้า + ราคา ---- */
 function omReview(p){
   const im=p.imgs&&p.imgs[0];
-  const dd=OM_DUR.find(x=>x.d===om.dur)||OM_DUR[OM_DUR.length-1];
+  const dd=curDur(p);
   const disc=0; /* ร้านนี้ยังไม่มีระบบส่วนลด → 0 (ตรงกับที่ระบบเดิมหักจริง) */
-  const maxQ=Math.max(1,p.stock||1); if(om.qty>maxQ) om.qty=maxQ;
+  const maxQ=Math.min(99,Math.max(1,p.stock||1)); if(om.qty>maxQ) om.qty=maxQ;
   const total=durPrice(p,dd)*om.qty-disc, short=DB.credit<total;
   om.total=total;
   omFoot.className='om-foot';
@@ -1858,10 +1871,10 @@ function omReview(p){
         <span class="om-hero-qty" id="omHeroQty">x${om.qty}</span>
         <div class="om-hero-info"><b>${esc(p.name)}</b><span class="om-cat">${esc(p.cat)}</span></div>
       </div>
-      <div class="om-dur om-in" style="--i:4">
+      <div class="om-dur om-in" style="--i:4"${durOpts(p)[0].solo?' hidden':''}>
         <span class="om-dur-lbl"><svg aria-hidden="true"><use href="#i-clock"/></svg>ເລືອກໄລຍະເວລາ</span>
         <div class="om-dur-grid" id="omDurGrid">
-          ${OM_DUR.map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dright"><span class="tag om-rdy">ພ້ອມສົ່ງ</span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></span></button>`).join('')}
+          ${durOpts(p).map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dright"><span class="tag om-rdy">ພ້ອມສົ່ງ</span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></span></button>`).join('')}
         </div>
       </div>
       <div class="om-qty om-in" style="--i:5">
@@ -1901,7 +1914,7 @@ function omAnimNum(el,from,to,dur){
 function omSetDur(d){
   if(!om.open||om.busy||om.done) return;
   const p=DB.products.find(x=>x.id==om.pid); if(!p) return;
-  const dd=OM_DUR.find(x=>x.d===d); if(!dd) return;
+  const dd=durOpts(p).find(x=>x.d===d); if(!dd) return;
   if(d===om.dur) return;
   const prevTotal=om.total;
   om.dur=d;
@@ -1925,11 +1938,11 @@ function omSetDur(d){
 function omSetQty(delta){
   if(!om.open||om.busy||om.done) return;
   const p=DB.products.find(x=>x.id==om.pid); if(!p) return;
-  const maxQ=Math.max(1,p.stock||1);
+  const maxQ=Math.min(99,Math.max(1,p.stock||1));
   const q=Math.min(maxQ,Math.max(1,om.qty+delta));
   if(q===om.qty) return;
   om.qty=q;
-  const dd=OM_DUR.find(x=>x.d===om.dur)||OM_DUR[OM_DUR.length-1];
+  const dd=curDur(p);
   const prevTotal=om.total, total=durPrice(p,dd)*om.qty, short=DB.credit<total;
   om.total=total;
   const qv=$('#omQtyVal'); if(qv){qv.textContent=om.qty;qv.classList.remove('pop');void qv.offsetWidth;qv.classList.add('pop')}
@@ -1983,7 +1996,7 @@ function openOrderModal(id,trigger){
   if(!p) return say('ບໍ່ພົບສິນຄ້ານີ້ໃນລະບົບ');
   clearTimeout(om.timer);
   const pc=trigger&&trigger.closest&&trigger.closest('.pcard'), cv=pc&&pc.querySelector('.cv'); /* ใช้สีปกเดียวกับการ์ดสินค้าที่กด */
-  Object.assign(om,{open:true,busy:false,done:false,pid:p.id,trigger:trigger||document.activeElement,cv:(cv&&(cv.className.match(/\bc[1-4]\b/)||[])[0])||'c1',dur:30,qty:1,total:0});
+  Object.assign(om,{open:true,busy:false,done:false,pid:p.id,trigger:trigger||document.activeElement,cv:(cv&&(cv.className.match(/\bc[1-4]\b/)||[])[0])||'c1',dur:0,qty:1,total:0});
   omEl.dataset.st='review'; omX.disabled=false; omCard.classList.remove('swap','shake');
   omReview(p); omScroll.scrollTop=0;
   document.documentElement.classList.add('om-lock');
@@ -2014,7 +2027,7 @@ async function omRun(btn){
   btn.innerHTML=OM_SPIN+'<span>ກຳລັງດຳເນີນການ…</span>';
   omCard.focus({preventScroll:true});
   const t0=performance.now(); let res;
-  const durLabel=(OM_DUR.find(x=>x.d===om.dur)||{}).label||'';
+  const _op=DB.products.find(x=>x.id==om.pid),durLabel=_op?curDur(_op).label:'';
   try{res=await placeOrder(om.pid,om.total,durLabel,om.qty)}catch(e){res={ok:false,msg:(e&&e.message)||''}}
   if(!res||typeof res!=='object') res={ok:false,msg:''};
   const rest=OM_MIN-(performance.now()-t0); if(rest>0) await omSleep(rest);
@@ -2032,7 +2045,6 @@ async function omRun(btn){
 function omGoOrders(){ /* ดูรายละเอียด: แท็บ "ອໍເດີ" ในแอดมิน (ที่เดียวที่แสดงรายการออเดอร์) */
   omClose({restore:false});
   ordQ='';ordF='all';const oq=$('#ordQ');if(oq)oq.value='';
-  show('admin'); setTimeout(()=>{setTab('orders');renderOrders()},140);
 }
 function omGoTopup(){omClose({restore:false});show('topup')}
 
