@@ -164,40 +164,52 @@ h1{position:relative;margin:1.6rem 0 0;font-size:2.8rem;line-height:3.1rem;font-
 @keyframes sweepL{0%{left:-38%;opacity:0}18%{opacity:.85}82%{opacity:.85}100%{left:100%;opacity:0}}
 @keyframes sweepR{0%{left:100%;opacity:0}18%{opacity:.85}82%{opacity:.85}100%{left:-38%;opacity:0}}
 body.transitioning main,body.transitioning .nav{pointer-events:none}
+/* Kill backdrop-filter repaint cost only while a view is animating — this is the #1 cause of
+   stutter on mobile: every glass panel resamples its blur on every frame the view moves. */
+body.transitioning .hero,body.transitioning .card,body.transitioning .stat,
+body.transitioning .btn.b3,body.transitioning .btn.b4,body.transitioning .badge,
+body.transitioning .live,body.transitioning .cat,body.transitioning .field,
+body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important
+}
 
-/* ===== Page transition + cinematic stagger reveal ===== */
+/* ===== Page transition + cinematic stagger reveal (GPU-only: transform+opacity) ===== */
 .view{display:none;grid-column:1;grid-row:1}
 .view.on{display:block}
-.view.leaving,.view.entering{display:block}
-.view.leaving.dir-fwd{animation:slideOutR .66s var(--ease-premium) both}
-.view.leaving.dir-back{animation:slideOutL .66s var(--ease-premium) both}
-.view.entering.dir-fwd{animation:slideInR .7s var(--ease-premium) both}
-.view.entering.dir-back{animation:slideInL .7s var(--ease-premium) both}
-@keyframes slideOutR{from{transform:translateX(0)}to{transform:translateX(100%)}}
-@keyframes slideOutL{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-@keyframes slideInR{from{transform:translateX(-100%)}to{transform:translateX(0)}}
-@keyframes slideInL{from{transform:translateX(100%)}to{transform:translateX(0)}}
-@keyframes revealUp{from{opacity:0;transform:translateY(2.5rem) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.view.entering>*{animation:revealUp .6s var(--ease-premium) both}
-.view.entering>*:nth-child(1){animation-delay:.14s}
-.view.entering>*:nth-child(2){animation-delay:.24s}
-.view.entering>*:nth-child(3){animation-delay:.34s}
-.view.entering>*:nth-child(4){animation-delay:.44s}
-.view.entering>*:nth-child(5){animation-delay:.54s}
-.view.entering .hero .badge{animation:revealUp .55s var(--ease-premium) .2s both}
-.view.entering .hero h1{animation:revealUp .6s var(--ease-premium) .28s both}
-.view.entering .hero .actions{animation:revealUp .6s var(--ease-premium) .36s both}
-.view.entering .stats .stat{animation:revealUp .6s var(--ease-premium) both}
-.view.entering .stats .stat:nth-child(1){animation-delay:.32s}
-.view.entering .stats .stat:nth-child(2){animation-delay:.4s}
-.view.entering .stats .stat:nth-child(3){animation-delay:.48s}
-.view.entering .stats .stat:nth-child(4){animation-delay:.56s}
-.view.entering .stack>*{animation:revealUp .55s var(--ease-premium) both}
-.view.entering .stack>*:nth-child(1){animation-delay:.32s}
-.view.entering .stack>*:nth-child(2){animation-delay:.39s}
-.view.entering .stack>*:nth-child(3){animation-delay:.46s}
-.view.entering .stack>*:nth-child(4){animation-delay:.53s}
-.view.entering .stack>*:nth-child(5){animation-delay:.6s}
+.view.leaving,.view.entering{display:block;backface-visibility:hidden;will-change:transform,opacity}
+.view.leaving{pointer-events:none}
+.view.leaving.dir-fwd{animation:viewOutFwd .32s var(--ease-premium) both}
+.view.leaving.dir-back{animation:viewOutBack .32s var(--ease-premium) both}
+.view.entering.dir-fwd{animation:viewInFwd .4s var(--ease-premium) both}
+.view.entering.dir-back{animation:viewInBack .4s var(--ease-premium) both}
+@keyframes viewOutFwd{to{opacity:0;transform:translate3d(-2.2rem,0,0) scale(.98)}}
+@keyframes viewOutBack{to{opacity:0;transform:translate3d(2.2rem,0,0) scale(.98)}}
+@keyframes viewInFwd{from{opacity:0;transform:translate3d(2.6rem,0,0) scale(.97)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes viewInBack{from{opacity:0;transform:translate3d(-2.6rem,0,0) scale(.97)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes revealUp{from{opacity:0;transform:translate3d(0,1.4rem,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+.view.entering>*{will-change:transform,opacity;animation:revealUp .34s var(--ease-premium) both}
+.view.entering>*:nth-child(1){animation-delay:.05s}
+.view.entering>*:nth-child(2){animation-delay:.1s}
+.view.entering>*:nth-child(3){animation-delay:.15s}
+.view.entering>*:nth-child(4){animation-delay:.2s}
+.view.entering>*:nth-child(5){animation-delay:.25s}
+.view.entering .hero .badge{animation:revealUp .32s var(--ease-premium) .08s both}
+.view.entering .hero h1{animation:revealUp .34s var(--ease-premium) .12s both}
+.view.entering .hero .actions{animation:revealUp .34s var(--ease-premium) .16s both}
+.view.entering .stats .stat{animation:revealUp .34s var(--ease-premium) both}
+.view.entering .stats .stat:nth-child(1){animation-delay:.14s}
+.view.entering .stats .stat:nth-child(2){animation-delay:.18s}
+.view.entering .stats .stat:nth-child(3){animation-delay:.22s}
+.view.entering .stats .stat:nth-child(4){animation-delay:.26s}
+.view.entering .stack>*{animation:revealUp .32s var(--ease-premium) both}
+.view.entering .stack>*:nth-child(1){animation-delay:.14s}
+.view.entering .stack>*:nth-child(2){animation-delay:.18s}
+.view.entering .stack>*:nth-child(3){animation-delay:.22s}
+.view.entering .stack>*:nth-child(4){animation-delay:.26s}
+.view.entering .stack>*:nth-child(5){animation-delay:.3s}
+@media (prefers-reduced-motion:reduce){
+  .view.leaving,.view.entering,.view.entering>*,.view.entering .hero *,.view.entering .stats .stat,.view.entering .stack>*{animation:none!important}
+}
 .pg{display:flex;align-items:center;gap:1.4rem;margin:.4rem 0 2rem}
 .pg h2{margin:0;font-size:2.4rem;line-height:3rem;font-weight:700;letter-spacing:-.02em;text-shadow:0 0 2rem rgba(205,0,35,.3)}
 .pg small{display:block;color:var(--muted);font-size:1.3rem;font-weight:500;line-height:1.8rem}
@@ -454,7 +466,7 @@ function show(v){
     cur.classList.remove('leaving','dir-fwd','dir-back');
     target.classList.remove('entering','dir-fwd','dir-back');
     document.body.classList.remove('transitioning');
-  },700);
+  },620);
 }
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g) return show(g.dataset.go);
