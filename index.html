@@ -756,13 +756,12 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 @keyframes omFloat{0%{transform:translate3d(0,0,0);opacity:0}12%{opacity:.7}85%{opacity:.45}100%{transform:translate3d(var(--dx),-70rem,0);opacity:0}}
 
 /* ปุ่ม × */
-.om-x{position:absolute;top:1.4rem;right:1.4rem;z-index:5;display:grid;place-items:center;width:3.8rem;height:3.8rem;padding:0;border-radius:50%;
-  border:max(1px,.12rem) solid transparent;background:transparent;color:#cdbfc1;
+.om-x{position:absolute;top:1.4rem;right:1.4rem;z-index:5;display:grid;place-items:center;width:4rem;height:4rem;padding:0;border-radius:50%;
+  border:max(1px,.12rem) solid rgba(255,255,255,.16);background:rgba(22,9,12,.78);color:#e6d9db;touch-action:manipulation;
   transition:transform .35s var(--om-ease),background .25s,border-color .25s,box-shadow .25s,color .2s,opacity .2s}
 .om-x::before{content:"";position:absolute;inset:-.8rem}
 .om-x svg{width:1.7rem;height:1.7rem;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 .om-x:disabled{opacity:.3;pointer-events:none}
-.om-x{display:none}
 @media (hover:hover) and (pointer:fine){
   .om-x:hover{transform:rotate(90deg);background:rgba(255,79,106,.14);border-color:rgba(255,79,106,.42);color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.35)}
 }
@@ -993,6 +992,313 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   .om-edge::before{animation:none!important;opacity:0}
   .om-cta.is-load::after{animation:none!important;display:none}
 }
+/* =====================================================================
+   ORDER CONFIRM MODAL · ปุ่มปิด × + ปรับขนาดให้พอดีจอมือถือ
+   - × ขวาบนแสดงตลอด (ล็อกเฉพาะตอนกำลัง Loading — กันปิดกลางคัน)
+   - card สูงไม่เกินพื้นที่จอจริง (dvh) · เนื้อหาเลื่อนภายในได้ · ปุ่มยืนยันติดล่างเสมอ
+   ===================================================================== */
+@supports (height:100dvh){.om{bottom:auto;height:100dvh}}
+.om-head{padding:1.6rem 2.2rem 0}
+.om-head .om-title{margin:0;padding:0 3.6rem}
+
+@media (max-width:600px){
+  .om{padding:max(10px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+  .om-card{--om-r:2.2rem;width:100%;
+    max-height:calc(100vh - 20px);
+    max-height:calc(100dvh - max(10px,env(safe-area-inset-top,0px)) - max(10px,env(safe-area-inset-bottom,0px)))}
+  .om-x{top:1.2rem;right:1.2rem}
+  .om-head{padding:1.6rem 1.8rem 0}
+  .om-head .om-title{font-size:2.2rem;line-height:3.6rem;padding:0 3.8rem}
+  .om-sub{margin-top:.2rem;font-size:1.25rem;line-height:1.9rem}
+  .om-body{gap:1rem;padding:1.4rem 1.6rem .8rem}
+  .om-hero{aspect-ratio:auto;height:15rem;height:clamp(10rem,19dvh,17rem);border-radius:1.8rem}
+  .om-hero-info{left:1.3rem;right:1.3rem;bottom:1.1rem}
+  .om-hero-info b{font-size:1.6rem;line-height:2.1rem}
+  .om-hero-qty{top:.9rem;right:.9rem}
+  .om-dur-lbl{margin-bottom:.7rem}
+  .om-dchip{height:5.2rem;padding:0 1.4rem;border-radius:1.5rem}
+  .om-qty-btn{width:4.2rem;height:4.2rem}
+  .om-sum{padding:1.2rem 1.4rem;border-radius:1.7rem}
+  .om-row{line-height:2.4rem}
+  .om-hr{margin:.8rem 0}
+  .om-bal{margin-top:.8rem;padding-top:.8rem}
+  .om-total b{font-size:2.2rem;line-height:3rem}
+  .om-foot{gap:.7rem;padding:.9rem 1.6rem 1.4rem}
+  .om-cta{height:5rem}
+  .om-btn2{height:4.2rem}
+  /* หน้าผลลัพธ์ (สำเร็จ / ไม่สำเร็จ) */
+  .om-res{padding:3.6rem 1.8rem .6rem}
+  .om-ok,.om-er{width:9rem;height:9rem}
+  .om-res .om-title{margin-top:1.4rem;font-size:2.3rem;line-height:3.4rem}
+  .om-key{margin-top:1.2rem;padding:1.2rem 1.3rem}
+  .om-note,.om-msg{margin-top:1.2rem}
+}
+/* จอเตี้ย (มือถือที่มีแถบเบราว์เซอร์กินที่ / iPhone SE / แนวนอน) */
+@media (max-height:600px){
+  .om-sub{display:none}
+  .om-hero{height:9rem;height:clamp(8rem,17dvh,12rem)}
+  .om-dchip{height:4.6rem}
+  .om-body{padding-top:1rem}
+  .om-ok,.om-er{width:7.6rem;height:7.6rem}
+  .om-res{padding-top:3.2rem}
+}
+
+/* =====================================================================
+   PRODUCT CARD FX · "แสงตามนิ้ว"  (เฉพาะ #plist — ไม่กระทบส่วนอื่น)
+   จุดเด่น: การ์ดเอียง 3D ตามนิ้ว/เมาส์ + แสงสปอตไลต์วิ่งตาม + ขอบเรืองแสงวิ่งรอบการ์ด
+   รอง: เข้าฉากแบบพลิกขึ้น · รูปซูมช้าๆ · ไอคอนลอย · ประกายลอยขึ้น · เงาวูบผ่านรูป · ราคานับขึ้น
+        ปุ่มสั่งซื้อมีแสงวูบ · ใกล้หมด = จุดกะพริบ · หมด = ตราประทับ
+   ทุก animation วนซ้ำจะหยุดอัตโนมัติเมื่อการ์ดอยู่นอกจอ (.vis) → ประหยัดแบต/ไม่กระตุก
+   ===================================================================== */
+#plist .pcard{position:relative;isolation:isolate;touch-action:pan-y;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(160deg,rgba(40,12,19,.74),rgba(11,5,8,.93) 62%);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:0 1.2rem 2.4rem -1.4rem rgba(0,0,0,.8),inset 0 .1rem 0 var(--glass-hi);
+  transform:perspective(70rem) translate3d(0,0,0) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,1));
+  transition:transform .7s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,border-color .4s ease;
+  animation:pcIn .85s var(--ease-premium) calc(var(--n,0)*70ms) backwards}
+#plist .pcard.tilt{transition:transform .12s linear,box-shadow .4s ease,border-color .4s ease;will-change:transform}
+#plist .pcard.hot{border-color:rgba(255,79,106,.38);
+  box-shadow:0 1.6rem 3.2rem -1.2rem rgba(0,0,0,.85),0 0 2.6rem -.4rem rgba(205,0,35,.42),inset 0 .1rem 0 var(--glass-hi)}
+@keyframes pcIn{
+  0%{opacity:0;transform:perspective(70rem) translate3d(0,3.4rem,-5rem) rotateX(16deg) rotateY(0deg) scale(.94);filter:blur(5px)}
+  55%{filter:blur(0)}
+  100%{opacity:1;transform:perspective(70rem) translate3d(0,0,0) rotateX(0deg) rotateY(0deg) scale(1);filter:blur(0)}}
+
+/* สปอตไลต์วิ่งตามนิ้ว */
+#plist .pcard::before{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(16rem circle at var(--mx,50%) var(--my,28%),rgba(255,79,106,.2),transparent 62%);
+  opacity:0;transition:opacity .4s ease}
+#plist .pcard.hot::before{opacity:1}
+
+/* ขอบเรืองแสง: วิ่งรอบ 1 รอบตอนการ์ดเลื่อนเข้าจอ · วิ่งต่อเนื่องตอนแตะ/ชี้ */
+.pc-edge{position:absolute;inset:0;z-index:7;border-radius:inherit;padding:max(1px,.14rem);pointer-events:none;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,79,106,.32),rgba(255,79,106,.05) 46%,rgba(255,255,255,.07));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.pc-edge::before{content:"";position:absolute;inset:-70%;opacity:0;will-change:transform,opacity;
+  background:conic-gradient(from 0deg,transparent 0 296deg,rgba(255,79,106,.9) 338deg,#fff 357deg,transparent 360deg)}
+#plist .pcard.lit .pc-edge::before{animation:pcSweep 1.7s ease-out calc(var(--n,0)*70ms + .35s) 1 both}
+#plist .pcard.hot .pc-edge::before{animation:pcSpin 2.6s linear infinite}
+@keyframes pcSweep{0%{transform:rotate(0);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:rotate(360deg);opacity:0}}
+@keyframes pcSpin{from{transform:rotate(0);opacity:1}to{transform:rotate(360deg);opacity:1}}
+
+/* รูปปก */
+#plist .cv img{animation:pcKen 16s ease-in-out calc(var(--n,0)*-1.3s) infinite alternate;
+  translate:calc(var(--px,0)*.6rem) calc(var(--py,0)*.6rem);transition:translate .15s linear}
+@keyframes pcKen{from{transform:scale(1.07)}to{transform:scale(1.16) translate3d(-.4rem,-.3rem,0)}}
+#plist .cv .g{animation:pcFloat 3.8s ease-in-out calc(var(--n,0)*-.5s) infinite;
+  translate:calc(var(--px,0)*-1.4rem) calc(var(--py,0)*-1.4rem);transition:translate .15s linear}
+@keyframes pcFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-.6rem) rotate(3deg)}}
+#plist .cv::before{animation:pcDrift 9s ease-in-out calc(var(--n,0)*-1s) infinite alternate}
+@keyframes pcDrift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-1.2rem,-1rem,0) scale(1.14)}}
+/* เงาวูบผ่านรูปเป็นระยะ (เดิมเป็นวงกลมเล็ก → เปลี่ยนเป็นแสงเฉียงเต็มรูป) */
+#plist .cv::after{inset:0;width:auto;height:auto;border:0;border-radius:0;transition:none;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.26) 50%,transparent 62%);
+  transform:translateX(-150%) skewX(-16deg);
+  animation:pcShine 6.8s ease-in-out calc(var(--n,0)*.55s + 1.4s) infinite}
+@keyframes pcShine{0%,58%{transform:translateX(-150%) skewX(-16deg)}80%,100%{transform:translateX(150%) skewX(-16deg)}}
+.pc-glare{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:radial-gradient(9rem circle at var(--gx,50%) var(--gy,40%),rgba(255,255,255,.3),transparent 66%);
+  opacity:0;transition:opacity .35s ease}
+#plist .pcard.hot .pc-glare{opacity:1}
+/* ประกายลอยขึ้น */
+.pc-orb{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;
+  translate:calc(var(--px,0)*1rem) calc(var(--py,0)*1rem);transition:translate .15s linear}
+.pc-orb i{position:absolute;bottom:-.6rem;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:0;
+  box-shadow:0 0 .7rem var(--g1),0 0 .2rem #fff;animation:pcRise var(--t) linear var(--d) infinite}
+.pc-orb i:nth-child(1){--x:14%;--s:.35rem;--t:5.4s;--d:-1s;--dx:1rem}
+.pc-orb i:nth-child(2){--x:38%;--s:.25rem;--t:6.8s;--d:-3.4s;--dx:-1.2rem}
+.pc-orb i:nth-child(3){--x:63%;--s:.4rem;--t:5.9s;--d:-2.2s;--dx:1.4rem}
+.pc-orb i:nth-child(4){--x:86%;--s:.3rem;--t:7.4s;--d:-5s;--dx:-.8rem}
+@keyframes pcRise{0%{transform:translate3d(0,0,0);opacity:0}15%{opacity:.85}80%{opacity:.5}100%{transform:translate3d(var(--dx,1rem),-13rem,0);opacity:0}}
+/* จุดบอกจำนวนรูป (แตะรูปเพื่อสลับ) */
+.pc-dots{position:absolute;z-index:5;left:0;right:0;bottom:.6rem;display:flex;justify-content:center;gap:.4rem;pointer-events:none}
+.pc-dots i{width:.5rem;height:.5rem;border-radius:99rem;background:rgba(255,255,255,.42);box-shadow:0 0 .4rem rgba(0,0,0,.5);transition:width .3s var(--ease-premium),background .3s}
+.pc-dots i.on{width:1.5rem;background:#fff}
+#plist .cv.pc-swap{animation:pcCvPop .5s var(--ease-premium)}
+@keyframes pcCvPop{0%{transform:scale(.965);filter:brightness(1.6) saturate(1.3)}100%{transform:none;filter:none}}
+
+/* ใกล้หมด = จุดกะพริบ · หมด = ตราประทับ */
+#plist .pcard.low .cv .tag{color:#ffc46b;border-color:rgba(255,196,107,.5);background:rgba(58,30,6,.72)}
+#plist .pcard.low .cv .tag::before{content:"";display:inline-block;width:.5rem;height:.5rem;margin-right:.4rem;border-radius:50%;vertical-align:.1rem;
+  background:#ffb454;box-shadow:0 0 .6rem #ffb454;animation:pcBlink 1.1s ease-in-out infinite}
+@keyframes pcBlink{50%{opacity:.25;transform:scale(.7)}}
+#plist .pcard.soldout .cv img,#plist .pcard.soldout .cv .g{filter:grayscale(1) brightness(.5);animation:none}
+#plist .pcard.soldout .cv::after,#plist .pcard.soldout .pc-orb{display:none}
+.pc-sold{position:absolute;z-index:5;left:50%;top:50%;padding:.2rem 1.2rem;border:.2rem solid #f87171;border-radius:.6rem;
+  background:rgba(20,5,7,.55);color:#f87171;font-size:1.5rem;font-weight:800;line-height:2.2rem;white-space:nowrap;
+  transform:translate(-50%,-50%) rotate(-14deg);animation:pcStamp .55s var(--ease-premium) calc(var(--n,0)*70ms + .5s) both}
+@keyframes pcStamp{from{opacity:0;transform:translate(-50%,-50%) rotate(-14deg) scale(2.4)}to{opacity:1;transform:translate(-50%,-50%) rotate(-14deg) scale(1)}}
+
+/* ราคา: นับขึ้น (JS) + แสงวิ่งผ่านตัวเลขครั้งเดียว */
+#plist .price{display:inline-block;font-variant-numeric:tabular-nums}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  #plist .pcard.lit .price{background:linear-gradient(100deg,#fff 30%,#ff9db0 47%,#fff 64%);background-size:260% 100%;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:pcPrice 1.5s ease-out calc(var(--n,0)*70ms + .55s) 1 both}
+  #plist .pcard.lit .price .pfrom{-webkit-text-fill-color:var(--muted)}
+}
+@keyframes pcPrice{from{background-position:120% 0}to{background-position:-20% 0}}
+
+/* ปุ่มสั่งซื้อ */
+#plist .buy{display:flex;align-items:center;justify-content:center;gap:.6rem}
+#plist .buy svg{flex:none;width:1.6rem;height:1.6rem;fill:currentColor;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+#plist .buy:not(:disabled){box-shadow:0 .5rem 1.6rem -.6rem rgba(205,0,35,.7),inset 0 .1rem 0 rgba(255,255,255,.22)}
+#plist .buy:not(:disabled)::after{transition:none;animation:pcBtnShine 4.6s ease-in-out calc(var(--n,0)*.4s + 1.8s) infinite}
+@keyframes pcBtnShine{0%,55%{transform:translateX(-130%)}75%,100%{transform:translateX(130%)}}
+#plist .pcard.hot .buy:not(:disabled) svg{animation:pcCart .9s ease-in-out infinite}
+@keyframes pcCart{0%,100%{transform:translateX(0)}50%{transform:translateX(.25rem) rotate(-8deg)}}
+
+/* หยุด animation วนซ้ำเมื่อการ์ดอยู่นอกจอ */
+#plist .pcard:not(.vis) .cv img,#plist .pcard:not(.vis) .cv .g,#plist .pcard:not(.vis) .cv::before,#plist .pcard:not(.vis) .cv::after,
+#plist .pcard:not(.vis) .pc-orb i,#plist .pcard:not(.vis) .buy::after,#plist .pcard:not(.vis).low .cv .tag::before{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){#plist .pcard{transform:none}#plist .pcard.lit .price{animation:none}}
+/* =====================================================================
+   ORDER MODAL FX · ตัวเลือกสินค้า + ทั้งหน้าต่าง
+   ต่อจาก "แสงตามนิ้ว" ของการ์ดสินค้า:
+   · ตัวเลือก: แผ่นแสงเลื่อนตามตัวที่เลือก (มีแสงวิ่งรอบขอบ) · สปอตไลต์ตามนิ้ว · ประกายตอนเลือก · จุดกะพริบ "พ້ອມສົ່ງ"
+   · จำนวน: ตัวเลขกลิ้งขึ้น/ลง · ปุ่มยุบตอนกด · ป้าย x# เด้ง
+   · ทั้งหน้าต่าง: เปิดแบบพลิกขึ้น · สปอตไลต์ตามนิ้วทั้งการ์ด · รูปสินค้าขยับตามนิ้ว · แถวราคาไล่ขึ้นทีละแถว
+                   ปุ่มยืนยันมีแสงวูบ · ระหว่างโหลดมีแถบสแกน · สำเร็จมีกระดาษสี + รหัสไล่เผยทีละตัว
+   ===================================================================== */
+/* --- เปิดหน้าต่าง: พลิกขึ้น + เด้งเล็กน้อย --- */
+.om-card{transform:perspective(90rem) translate3d(0,3.2rem,0) rotateX(9deg) scale(.94);transform-origin:50% 100%;
+  transition:opacity .46s var(--om-ease),transform .68s cubic-bezier(.2,1.25,.35,1)}
+.om.show .om-card{transform:none}
+
+/* --- สปอตไลต์ตามนิ้วทั้งการ์ด + แถบสแกนตอนกำลังดำเนินการ --- */
+.om-card::before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(22rem circle at var(--mx,50%) var(--my,22%),rgba(255,79,106,.2),transparent 62%);
+  background:radial-gradient(22rem circle at var(--mx,50%) var(--my,22%),color-mix(in srgb,var(--om-c) 22%,transparent),transparent 62%);
+  opacity:0;transition:opacity .45s ease}
+.om-card.om-lit::before{opacity:1}
+.om-card::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:linear-gradient(180deg,transparent 35%,rgba(255,79,106,.3) 50%,transparent 65%);
+  background:linear-gradient(180deg,transparent 35%,color-mix(in srgb,var(--om-c) 30%,transparent) 50%,transparent 65%);
+  background-size:100% 260%;background-position:0 100%}
+.om-card.om-busy::after{opacity:1;animation:omScan 1.3s linear infinite}
+@keyframes omScan{from{background-position:0 100%}to{background-position:0 0}}
+.om-card.om-busy .om-edge::before{animation:pcSpin 1.6s linear infinite}
+.om-card.om-busy .om-body{opacity:.55;filter:saturate(.6);pointer-events:none;transition:opacity .35s,filter .35s}
+
+/* --- ปุ่ม × เด้งเข้า (ใช้ property เดี่ยว ไม่ชน hover เดิม) --- */
+.om.show .om-x{animation:omXIn .6s var(--om-ease) .35s backwards}
+@keyframes omXIn{from{opacity:0;scale:.4;rotate:-120deg}to{opacity:1;scale:1;rotate:0deg}}
+
+/* --- หัวข้อ: เส้นแสงวาดใต้ชื่อ --- */
+.om-head{position:relative}
+.om-head::after{content:"";position:absolute;left:22%;right:22%;bottom:-.7rem;height:.2rem;border-radius:99rem;transform:scaleX(0);opacity:0;
+  background:linear-gradient(90deg,transparent,#ff4d6a,transparent);box-shadow:0 0 1rem rgba(255,79,106,.7);
+  background:linear-gradient(90deg,transparent,var(--om-c),transparent);box-shadow:0 0 1rem var(--om-c)}
+.om.show .om-head::after{animation:omLine 1.1s var(--om-ease) .45s forwards}
+@keyframes omLine{0%{transform:scaleX(0);opacity:0}40%{opacity:1}100%{transform:scaleX(1);opacity:.85}}
+
+/* --- รูปสินค้า: ขยับตามนิ้ว + แสงสะท้อน --- */
+.om-hero img,.om-hero .om-hero-ico{translate:calc(var(--px,0)*-.9rem) calc(var(--py,0)*-.9rem);transition:translate .18s linear}
+.om-hero::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(11rem circle at var(--hx,50%) var(--hy,30%),rgba(255,255,255,.24),transparent 66%);
+  opacity:var(--hg,0);transition:opacity .3s}
+.om-hero-qty{transition:scale .45s cubic-bezier(.34,1.56,.64,1)}
+
+/* =================== ตัวเลือกไລยะเวลา =================== */
+.om-dur-grid{position:relative}
+/* แผ่นแสงที่เลื่อนไปหาตัวที่เลือก */
+.om-dsel{position:absolute;left:0;right:0;top:0;height:6.4rem;z-index:0;border-radius:1.7rem;pointer-events:none;will-change:transform;
+  background:linear-gradient(100deg,rgba(255,31,66,.22),rgba(255,31,66,.04));
+  background:linear-gradient(100deg,color-mix(in srgb,var(--om-c) 22%,transparent),color-mix(in srgb,var(--om-c) 4%,transparent));
+  box-shadow:0 0 2.4rem rgba(255,31,66,.4),0 0 .6rem rgba(255,31,66,.3);
+  box-shadow:0 0 2.4rem color-mix(in srgb,var(--om-c) 40%,transparent),0 0 .6rem color-mix(in srgb,var(--om-c) 30%,transparent);
+  transition:transform .55s cubic-bezier(.34,1.32,.64,1),height .4s var(--om-ease);
+  animation:omSelIn .6s ease .75s backwards}
+@keyframes omSelIn{from{opacity:0}to{opacity:1}}
+.om-dsel-ring{position:absolute;inset:0;border-radius:inherit;padding:max(1px,.16rem);overflow:hidden;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  background:rgba(255,79,106,.55);background:color-mix(in srgb,var(--om-c) 55%,transparent)}
+.om-dsel-ring::before{content:"";position:absolute;left:50%;top:50%;width:60rem;height:60rem;margin:-30rem 0 0 -30rem;will-change:transform;
+  background:conic-gradient(from 0deg,transparent 0deg 300deg,rgba(255,79,106,.95) 336deg,#fff 356deg,transparent 360deg);
+  background:conic-gradient(from 0deg,transparent 0deg 300deg,color-mix(in srgb,var(--om-c) 95%,transparent) 336deg,#fff 356deg,transparent 360deg);
+  animation:pcSpin 3.2s linear infinite}
+.om-dsel.flare .om-dsel-ring{animation:omFlare .65s ease-out}
+@keyframes omFlare{0%{filter:brightness(2.6) drop-shadow(0 0 1rem #fff)}100%{filter:none}}
+/* พอแผ่นแสงมาแล้ว ให้ตัวเลือกที่เลือกโปร่งใส (แผ่นแสงทำหน้าที่แทน) */
+.om-dur-grid.has-sel .om-dchip.on{background:transparent;box-shadow:none;border-color:transparent}
+
+/* ตัวเลือกแต่ละอัน */
+.om-dchip{transition:transform .25s var(--om-ease),border-color .35s,background .35s,box-shadow .4s,scale .25s var(--om-ease),translate .3s var(--om-ease)}
+.om-dchip:active{scale:.97}
+@media (hover:hover) and (pointer:fine){.om-dchip:not(.on):hover{translate:.3rem 0}}
+.om-spot{position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(9rem circle at var(--cx,50%) var(--cy,50%),rgba(255,255,255,.13),transparent 70%)}
+.om-dchip.lit .om-spot{opacity:1}
+@keyframes omDurIn{
+  0%{opacity:0;filter:blur(5px);transform:translate3d(2.6rem,0,0) scale(.92) skewX(-8deg)}
+  60%{opacity:1;filter:blur(0);transform:translate3d(-.3rem,0,0) scale(1.01) skewX(1.5deg)}
+  100%{opacity:1;filter:blur(0);transform:none}}
+.om-dchip.pick .om-dtxt{animation:omPickTxt .55s var(--om-ease)}
+@keyframes omPickTxt{0%{transform:translateX(0)}30%{transform:translateX(.7rem)}100%{transform:none}}
+.om-rdy::before{content:"";display:inline-block;width:.5rem;height:.5rem;margin-right:.5rem;border-radius:50%;vertical-align:.1rem;
+  background:var(--green);box-shadow:0 0 .6rem var(--green);animation:pcBlink 1.6s ease-in-out infinite}
+.om-dcheck .om-pt{position:absolute;left:50%;top:50%;width:.5rem;height:.5rem;margin:-.25rem 0 0 -.25rem;border-radius:50%;background:#fff;pointer-events:none;
+  box-shadow:0 0 .6rem rgba(255,79,106,.9);box-shadow:0 0 .6rem var(--om-c);animation:omPt .7s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes omPt{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--r)*-1)) scale(.3)}}
+
+/* =================== จำนวน =================== */
+.om-qty-btn{position:relative;overflow:hidden;touch-action:manipulation;transition:background .25s,color .25s,opacity .25s,scale .2s var(--om-ease)}
+.om-qty-btn:not(:disabled):active{scale:.84}
+.om-qty-val{position:relative;overflow:hidden;display:grid;place-items:center}
+.om-qty-val.pop{animation:none}
+.om-roll{display:block}
+.om-roll.up{animation:omRollUp .42s var(--om-ease)}
+.om-roll.down{animation:omRollDown .42s var(--om-ease)}
+@keyframes omRollUp{from{opacity:0;transform:translateY(105%);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes omRollDown{from{opacity:0;transform:translateY(-105%);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
+
+/* =================== สรุปราคา =================== */
+.om.show .om-sum>.om-row,.om.show .om-sum>.om-bal{animation:omIn .5s var(--om-ease) both}
+.om.show .om-sum>:nth-child(1){animation-delay:.6s}
+.om.show .om-sum>:nth-child(2){animation-delay:.68s}
+.om.show .om-sum>:nth-child(4){animation-delay:.9s}
+.om.show .om-sum>:nth-child(5){animation-delay:1s}
+.om.show .om-hr{animation:omHrDraw .8s var(--om-ease) .78s both}
+@keyframes omHrDraw{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+.om-warn:not([hidden]){animation:omWarnIn .5s var(--om-ease) both}
+@keyframes omWarnIn{from{opacity:0;transform:translateY(-.6rem) scale(.98)}to{opacity:1;transform:none}}
+.om-warn:not([hidden]) svg{animation:omWiggle 2.4s ease-in-out .5s infinite}
+@keyframes omWiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-14deg)}94%{transform:rotate(11deg)}98%{transform:rotate(-5deg)}}
+
+/* =================== ปุ่มยืนยัน / ปุ่มหลัก =================== */
+.om-cta:not(:disabled):not(.is-load)::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--sheen);
+  transform:translateX(-130%);animation:omCtaShine 4.4s ease-in-out 1.8s infinite}
+@keyframes omCtaShine{0%,58%{transform:translateX(-130%)}80%,100%{transform:translateX(130%)}}
+.om-cta svg{transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.om-cta:not(:disabled):active svg{transform:scale(1.25) rotate(-10deg)}
+
+/* =================== สำเร็จ: กระดาษสี + รหัสไล่เผย =================== */
+.om-conf{position:absolute;inset:0;z-index:6;border-radius:inherit;overflow:hidden;pointer-events:none}
+.om-conf i{position:absolute;top:-1.4rem;left:var(--x);width:var(--w);height:calc(var(--w)*1.7);background:var(--c);border-radius:.15rem;opacity:0;
+  animation:omConf var(--t) cubic-bezier(.25,.6,.4,1) var(--d) forwards}
+@keyframes omConf{0%{opacity:1;transform:translate3d(0,0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate3d(var(--dx),64vh,0) rotate(var(--r))}}
+.om-key code{animation:omKeyReveal .9s steps(22,end) 1.25s both}
+@keyframes omKeyReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+
+/* =====================================================================
+   GLOBAL OPTION FX · ตัวเลือกสินค้าทั่วทั้งแอป (นอกเหนือจาก order modal)
+   ครอบคลุม: .chip (ໝວດໝູ່ IOS/ANDROID) · .cat (ຕົວກອງ/ตัวเลือกต่างๆ)
+             .mopt (โหมดเพิ่มสต๊อก) · .pm/.tu-pm (ວິທີຊຳລະ) · .tu-chip (ยอดเติมเงิน)
+   หลักการ: ขยับเฉพาะ transform/opacity (GPU) ไม่แตะ layout → ลื่น ไม่กระตุก
+   ===================================================================== */
+.chip,.cat,.mopt,.pm,.tu-pm,.tu-chip{transition:transform .24s var(--ease-premium),border-color .32s var(--ease-premium),background .32s var(--ease-premium),box-shadow .4s var(--ease-premium),color .28s}
+.tu-chip,.tu-pm{position:relative;overflow:hidden;isolation:isolate}
+.chip{will-change:transform}
+.chip.on{background:linear-gradient(90deg,var(--b2-a),var(--b2-b));border-color:var(--b2-bd);color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.32)}
+@keyframes gpPick{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.gp-pick{animation:gpPick .5s var(--ease-premium)}
+.gp-pt{position:absolute;left:50%;top:50%;width:.5rem;height:.5rem;margin:-.25rem 0 0 -.25rem;border-radius:50%;background:var(--c,var(--accent));pointer-events:none;z-index:5;
+  transform:translate(0,0) rotate(var(--a,0deg)) translateY(0);opacity:1;animation:gpFly .62s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes gpFly{to{transform:rotate(var(--a,0deg)) translateY(calc(var(--r,2.4rem)*-1));opacity:0}}
+@media (prefers-reduced-motion:reduce){.gp-pick,.gp-pt{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1471,7 +1777,7 @@ function renderP(){
     $('#plist').innerHTML='';
     return;
   }
-  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span>${p.stock<UNL?`<span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span>`:''}</div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">${pMulti(p)?'<small class="pfrom">ເລີ່ມ</small>':''}₭${pMin(p).toLocaleString('en-US')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'ສັ່ງຊື້':'ສິນຄ້າໝົດ'}</button></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
+  $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard${p.stock?'':' soldout'}${p.stock>0&&p.stock<=5&&p.stock<UNL?' low':''}" style="--n:${Math.min(i,9)}"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="pc-orb" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="pc-glare" aria-hidden="true"></span><span class="cb">${esc(p.cat)}</span>${p.stock<UNL?`<span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span>`:''}${p.imgs.length>1?`<span class="pc-dots" aria-hidden="true">${p.imgs.map((_,k)=>`<i${k?'':' class="on"'}></i>`).join('')}</span>`:''}${p.stock?'':'<span class="pc-sold" aria-hidden="true">ໝົດແລ້ວ</span>'}</div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">${pMulti(p)?'<small class="pfrom">ເລີ່ມ</small>':''}₭<span class="pv" data-v="${pMin(p)}">${pMin(p).toLocaleString('en-US')}</span></span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'<svg aria-hidden="true"><use href="#i-cart"/></svg><span>ສັ່ງຊື້</span>':'<span>ສິນຄ້າໝົດ</span>'}</button><span class="pc-edge" aria-hidden="true"></span></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
 }
 $('#cats').addEventListener('click',e=>{
   const c=e.target.closest('.cat'); if(!c) return;
@@ -2128,6 +2434,41 @@ if(!RM) document.addEventListener('pointerdown',e=>{
   el.appendChild(rip);setTimeout(()=>rip.remove(),700);
 });
 
+/* ===== Global Option FX: เด้ง + ประกาย เวลาเลือกตัวเลือกสินค้า (ทั้งแอป) =====
+   .chip  = เด้งทุกครั้งที่แตะ (ใช้เปิดหมวดหมู่ ไม่มีสถานะ on ถาวร)
+   .cat/.mopt/.pm/.tu-pm/.tu-chip = เด้ง+ประกาย เฉพาะตอนกลายเป็นตัวที่ถูกเลือก */
+if(!RM) (function(){
+  const GP_TAP='.chip';
+  const GP_TOGGLE='.cat,.mopt,.pm,.tu-pm,.tu-chip';
+  function gpSpark(el,n){
+    n=n||6;
+    for(let i=0;i<n;i++){
+      const p=document.createElement('i');
+      p.className='gp-pt';
+      p.style.setProperty('--a',(i*(360/n)+Math.random()*18).toFixed(0)+'deg');
+      p.style.setProperty('--r',(1.8+Math.random()*1.6).toFixed(2)+'rem');
+      el.appendChild(p);
+      setTimeout(()=>p.remove(),640);
+    }
+  }
+  function gpPick(el){
+    el.classList.remove('gp-pick');void el.offsetWidth;el.classList.add('gp-pick');
+    setTimeout(()=>el.classList.remove('gp-pick'),520);
+    gpSpark(el);
+    try{navigator.vibrate&&navigator.vibrate(5)}catch(_){}
+  }
+  document.addEventListener('click',e=>{
+    const tapEl=e.target.closest(GP_TAP);
+    if(tapEl&&!tapEl.disabled){gpPick(tapEl);return}
+    const el=e.target.closest(GP_TOGGLE);
+    if(!el||el.disabled) return;
+    requestAnimationFrame(()=>{
+      const on=el.classList.contains('on')||el.getAttribute('aria-pressed')==='true';
+      if(on) gpPick(el);
+    });
+  },{passive:true});
+})();
+
 /* =====================================================================
    ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້
    ข้อมูลทั้งหมดมาจาก DB จริง (สินค้า/ราคา/เครดิต) และเรียก placeOrder() เดิม — ไม่มีข้อมูลจำลอง
@@ -2175,7 +2516,7 @@ function omReview(p){
       <div class="om-dur om-in" style="--i:4"${durOpts(p)[0].solo?' hidden':''}>
         <span class="om-dur-lbl"><svg aria-hidden="true"><use href="#i-clock"/></svg>ເລືອກໄລຍະເວລາ</span>
         <div class="om-dur-grid" id="omDurGrid">
-          ${durOpts(p).map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dright"><span class="tag om-rdy">ພ້ອມສົ່ງ</span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></span></button>`).join('')}
+          ${durOpts(p).map((x,i)=>`<button type="button" class="om-dchip${x.d===om.dur?' on':''}" style="--k:${i}" data-d="${x.d}" aria-pressed="${x.d===om.dur}"><i class="om-spot" aria-hidden="true"></i><span class="om-dtxt"><b>${esc(x.label)}</b><span>${K(durPrice(p,x))}</span></span><span class="om-dright"><span class="tag om-rdy">ພ້ອມສົ່ງ</span><span class="om-dcheck" aria-hidden="true"><svg><use href="#i-tick"/></svg></span></span></button>`).join('')}
         </div>
       </div>
       <div class="om-qty om-in" style="--i:5">
@@ -2388,6 +2729,238 @@ if(!RM) omEl.addEventListener('pointerdown',e=>{
   i.style.left=(e.clientX-r.left-d/2)+'px';i.style.top=(e.clientY-r.top-d/2)+'px';
   b.appendChild(i);setTimeout(()=>i.remove(),700);
 });
+
+/* =====================================================================
+   PRODUCT CARD FX · เอียง 3D + สปอตไลต์ตามนิ้ว + นับราคา + ตรวจว่าการ์ดอยู่ในจอ
+   ===================================================================== */
+(function(){
+  const list=$('#plist'); if(!list) return;
+  const fine=!!(window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches);
+  const MAX=fine?9:6; /* องศาเอียงสูงสุด */
+  let cur=null,raf=0,ev=null,rect=null,crect=null;
+
+  /* --- อยู่ในจอ = เล่น animation วนซ้ำ + เล่นเอฟเฟกต์เข้าฉาก/นับราคา 1 ครั้ง --- */
+  function countUp(c){
+    if(RM) return;
+    const n=+(c.style.getPropertyValue('--n')||0);
+    c.querySelectorAll('.pv').forEach(el=>{
+      const v=+el.dataset.v; if(!(v>0)) return;
+      const t0=performance.now()+n*70+320, dur=800;
+      el.textContent='0';
+      const step=now=>{
+        if(!el.isConnected) return;
+        const k=Math.min(1,Math.max(0,(now-t0)/dur)), e=1-Math.pow(1-k,3);
+        el.textContent=Math.round(v*e).toLocaleString('en-US');
+        if(k<1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  const io=('IntersectionObserver' in window)?new IntersectionObserver(es=>{
+    es.forEach(en=>{
+      const c=en.target;
+      if(en.isIntersecting){c.classList.add('vis'); if(!c.classList.contains('lit')){c.classList.add('lit');countUp(c)}}
+      else c.classList.remove('vis');
+    });
+  },{threshold:.25}):null;
+  function scan(){
+    const cards=list.querySelectorAll('.pcard');
+    if(io){io.disconnect();cards.forEach(c=>io.observe(c))}
+    else cards.forEach(c=>c.classList.add('vis','lit'));
+  }
+  new MutationObserver(scan).observe(list,{childList:true});
+  scan();
+
+  /* --- เอียง + สปอตไลต์ (เมาส์/นิ้ว/ปากกา) --- */
+  if(!RM){
+    const apply=()=>{
+      raf=0; if(!cur||!ev) return;
+      if(!rect){rect=cur.getBoundingClientRect();const cv=cur.querySelector('.cv');crect=cv?cv.getBoundingClientRect():rect}
+      if(!rect.width) return;
+      const x=ev.clientX-rect.left, y=ev.clientY-rect.top;
+      const nx=Math.max(-.5,Math.min(.5,x/rect.width-.5)), ny=Math.max(-.5,Math.min(.5,y/rect.height-.5));
+      const st=cur.style;
+      st.setProperty('--ry',(nx*MAX*2).toFixed(2)+'deg');
+      st.setProperty('--rx',(-ny*MAX*2).toFixed(2)+'deg');
+      st.setProperty('--px',nx.toFixed(3)); st.setProperty('--py',ny.toFixed(3));
+      st.setProperty('--mx',x.toFixed(1)+'px'); st.setProperty('--my',y.toFixed(1)+'px');
+      st.setProperty('--gx',(ev.clientX-crect.left).toFixed(1)+'px'); st.setProperty('--gy',(ev.clientY-crect.top).toFixed(1)+'px');
+    };
+    const leave=()=>{
+      if(!cur) return;
+      const c=cur; cur=null; rect=crect=null;
+      c.classList.remove('hot','tilt');
+      ['--rx','--ry','--px','--py','--sc'].forEach(k=>c.style.removeProperty(k));
+    };
+    const start=(c,e)=>{
+      if(c!==cur){leave();cur=c;rect=crect=null;c.classList.add('hot','tilt')}
+      ev=e; if(!raf) raf=requestAnimationFrame(apply);
+    };
+    list.addEventListener('pointerover',e=>{
+      if(e.pointerType==='touch') return;
+      const c=e.target.closest('.pcard'); if(c) start(c,e);
+    });
+    list.addEventListener('pointerdown',e=>{
+      const c=e.target.closest('.pcard'); if(!c) return;
+      start(c,e); c.style.setProperty('--sc','.978');
+    });
+    list.addEventListener('pointermove',e=>{
+      if(!cur) return; ev=e; if(!raf) raf=requestAnimationFrame(apply);
+    },{passive:true});
+    list.addEventListener('pointerout',e=>{
+      if(!cur||e.pointerType==='touch') return;
+      if(e.relatedTarget&&cur.contains(e.relatedTarget)) return;
+      leave();
+    });
+    const release=e=>{
+      if(!cur) return;
+      if(e.pointerType==='touch'||e.type==='pointercancel'){const c=cur;setTimeout(()=>{if(cur===c)leave()},e.type==='pointercancel'?0:180)}
+      else cur.style.removeProperty('--sc');
+    };
+    list.addEventListener('pointerup',release);
+    list.addEventListener('pointercancel',release);
+    window.addEventListener('scroll',()=>{rect=crect=null},{passive:true});
+    window.addEventListener('blur',leave);
+  }
+
+  /* --- แตะรูปปก: อัปเดตจุดบอกรูป + วูบเล็กน้อย (ตัวสลับรูปจริงอยู่ที่ handler เดิม) --- */
+  list.addEventListener('click',e=>{
+    const cv=e.target.closest('.cv'); if(!cv) return;
+    const d=cv.querySelector('.pc-dots'); if(!d) return;
+    const k=+cv.dataset.i||0;
+    d.querySelectorAll('i').forEach((el,j)=>el.classList.toggle('on',j===k));
+    cv.classList.remove('pc-swap'); void cv.offsetWidth; cv.classList.add('pc-swap');
+  });
+
+  /* --- สั่นเบาๆ ตอนกดสั่งซื้อ (Android) --- */
+  list.addEventListener('pointerdown',e=>{
+    if(RM||e.pointerType!=='touch') return;
+    const b=e.target.closest('[data-buy]');
+    if(b&&!b.disabled&&navigator.vibrate) try{navigator.vibrate(8)}catch(_){}
+  });
+})();
+
+/* =====================================================================
+   ORDER MODAL FX · แผ่นแสงตัวเลือก + สปอตไลต์ตามนิ้ว + ตัวเลขกลิ้ง + สแกนตอนโหลด + กระดาษสีตอนสำเร็จ
+   (ไม่แตะ logic สั่งซื้อเดิม — ฟังเหตุการณ์/DOM ที่มีอยู่แล้วเท่านั้น)
+   ===================================================================== */
+(function(){
+  const grid=()=>document.getElementById('omDurGrid');
+  let sel=null,lastD=null,lastQ=null,readyT=0;
+
+  /* --- แผ่นแสงเลื่อนตามตัวเลือกที่เลือก --- */
+  function pick(chip){
+    chip.classList.remove('pick'); void chip.offsetWidth; chip.classList.add('pick'); setTimeout(()=>chip.classList.remove('pick'),600);
+    if(sel){sel.classList.remove('flare');void sel.offsetWidth;sel.classList.add('flare')}
+    const ck=chip.querySelector('.om-dcheck');
+    if(ck) for(let i=0;i<9;i++){
+      const d=document.createElement('i'); d.className='om-pt';
+      d.style.setProperty('--a',(i*40+Math.random()*16).toFixed(0)+'deg');
+      d.style.setProperty('--r',(2.6+Math.random()*2.2).toFixed(2)+'rem');
+      ck.appendChild(d); setTimeout(()=>d.remove(),760);
+    }
+    try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}
+  }
+  function sync(){
+    const g=grid();
+    if(!g){sel=null;lastD=null;lastQ=null;return}
+    const on=g.querySelector('.om-dchip.on'); if(!on) return;
+    const d=+on.dataset.d, fresh=!sel||sel.parentNode!==g;
+    if(fresh){
+      sel=document.createElement('i'); sel.className='om-dsel'; sel.setAttribute('aria-hidden','true');
+      sel.innerHTML='<i class="om-dsel-ring"></i>'; sel.style.transition='none';
+      g.prepend(sel); lastQ=om.qty;
+      clearTimeout(readyT); readyT=setTimeout(()=>g.classList.add('has-sel'),820);
+    }
+    const changed=!fresh&&lastD!==d; lastD=d;
+    sel.style.height=on.offsetHeight+'px';
+    sel.style.transform='translate3d(0,'+on.offsetTop+'px,0)';
+    if(fresh){void sel.offsetWidth; sel.style.transition=''}
+    if(changed&&!RM) pick(on);
+  }
+
+  /* --- ตัวเลขจำนวนกลิ้งขึ้น/ลง --- */
+  function roll(dir){
+    if(RM) return;
+    const qv=document.getElementById('omQtyVal'); if(!qv) return;
+    qv.innerHTML='<span class="om-roll '+(dir>0?'up':'down')+'">'+om.qty+'</span>';
+    const hq=document.getElementById('omHeroQty');
+    if(hq){hq.style.scale='1.28';requestAnimationFrame(()=>requestAnimationFrame(()=>{hq.style.scale=''}))}
+  }
+
+  /* --- กระดาษสีตอนสั่งซื้อสำเร็จ --- */
+  function confetti(){
+    if(RM||omCard.querySelector('.om-conf')) return;
+    const cols=['#4ade80','#ffffff','#f4c542','#86efac','#ff8fa3'], box=document.createElement('div');
+    box.className='om-conf'; box.setAttribute('aria-hidden','true');
+    for(let i=0;i<26;i++){
+      const s=document.createElement('i');
+      s.style.cssText='--x:'+(Math.random()*100).toFixed(1)+'%;--w:'+(.5+Math.random()*.5).toFixed(2)+'rem;--c:'+cols[i%cols.length]+
+        ';--dx:'+((Math.random()-.5)*14).toFixed(1)+'rem;--r:'+Math.round((Math.random()-.5)*1080)+'deg;--t:'+(1.6+Math.random()*1.4).toFixed(2)+
+        's;--d:'+(.5+Math.random()*.5).toFixed(2)+'s';
+      box.appendChild(s);
+    }
+    omCard.appendChild(box); setTimeout(()=>box.remove(),3600);
+  }
+
+  /* --- ดูการเปลี่ยนเนื้อหา modal --- */
+  new MutationObserver(()=>{
+    sync();
+    if(omScroll.querySelector('.om-ok')) confetti();
+    else omCard.querySelectorAll('.om-conf').forEach(x=>x.remove());
+  }).observe(omScroll,{childList:true});
+  /* ระหว่างกำลังดำเนินการ = แถบสแกน + หรี่ตัวเลือก */
+  new MutationObserver(()=>omCard.classList.toggle('om-busy',!!omFoot.querySelector('.is-load')))
+    .observe(omFoot,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+
+  /* handler เดิมทำงานก่อน (ลงทะเบียนไว้ก่อน) → ตรงนี้อ่านผลลัพธ์แล้วเติมอนิเมชั่น */
+  omEl.addEventListener('click',e=>{
+    if(!om.open) return;
+    if(e.target.closest('.om-dchip')) sync();
+    if(e.target.closest('#omQtyMinus,#omQtyPlus')&&lastQ!==null&&om.qty!==lastQ){const dir=om.qty>lastQ?1:-1;lastQ=om.qty;roll(dir)}
+  });
+  window.addEventListener('resize',()=>{if(sel)sync()});
+
+  if(RM) return;
+  /* ริปเปิลปุ่มจำนวน */
+  omEl.addEventListener('pointerdown',e=>{
+    const b=e.target.closest('.om-qty-btn'); if(!b||b.disabled) return;
+    const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*1.4,i=document.createElement('i');
+    i.className='rip';i.style.width=i.style.height=d+'px';
+    i.style.left=(e.clientX-r.left-d/2)+'px';i.style.top=(e.clientY-r.top-d/2)+'px';
+    b.appendChild(i);setTimeout(()=>i.remove(),700);
+  });
+
+  /* --- แสงตามนิ้ว: ทั้งการ์ด + รูปสินค้า + ตัวเลือก --- */
+  let raf=0,pe=null;
+  const upd=()=>{
+    raf=0; if(!pe) return;
+    const e=pe, cr=omCard.getBoundingClientRect();
+    omCard.style.setProperty('--mx',(e.clientX-cr.left).toFixed(1)+'px');
+    omCard.style.setProperty('--my',(e.clientY-cr.top).toFixed(1)+'px');
+    const h=omCard.querySelector('.om-hero');
+    if(h){
+      const r=h.getBoundingClientRect(), nx=(e.clientX-r.left)/r.width-.5, ny=(e.clientY-r.top)/r.height-.5;
+      h.style.setProperty('--hx',(e.clientX-r.left).toFixed(1)+'px'); h.style.setProperty('--hy',(e.clientY-r.top).toFixed(1)+'px');
+      h.style.setProperty('--px',Math.max(-.5,Math.min(.5,nx)).toFixed(3)); h.style.setProperty('--py',Math.max(-.5,Math.min(.5,ny)).toFixed(3));
+      h.style.setProperty('--hg',(Math.abs(nx)<=.5&&Math.abs(ny)<=.5)?1:0);
+    }
+    const c=e.target.closest&&e.target.closest('.om-dchip');
+    omEl.querySelectorAll('.om-dchip.lit').forEach(x=>{if(x!==c)x.classList.remove('lit')});
+    if(c){const r=c.getBoundingClientRect();c.style.setProperty('--cx',(e.clientX-r.left).toFixed(1)+'px');c.style.setProperty('--cy',(e.clientY-r.top).toFixed(1)+'px');c.classList.add('lit')}
+  };
+  const move=e=>{pe=e;omCard.classList.add('om-lit');if(!raf)raf=requestAnimationFrame(upd)};
+  const off=()=>{
+    omCard.classList.remove('om-lit');
+    const h=omCard.querySelector('.om-hero'); if(h){h.style.setProperty('--hg',0);h.style.setProperty('--px',0);h.style.setProperty('--py',0)}
+    omEl.querySelectorAll('.om-dchip.lit').forEach(x=>x.classList.remove('lit'));
+  };
+  omCard.addEventListener('pointermove',move,{passive:true});
+  omCard.addEventListener('pointerdown',move,{passive:true});
+  omCard.addEventListener('pointerleave',off);
+  omCard.addEventListener('pointercancel',off);
+  omCard.addEventListener('pointerup',e=>{if(e.pointerType==='touch')setTimeout(off,260)});
+})();
 </script>
 </body>
 </html>
