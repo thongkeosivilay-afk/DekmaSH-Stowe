@@ -6,9 +6,9 @@
 <meta name="color-scheme" content="dark">
 <title>DekmaSH Stowe - ລະບົບຕົວແທນຈຳໜ່າຍ</title>
 <script>
-/* ===== Login gate: ต้องเข้าสู่ระบบผ่าน login.html ก่อนถึงจะเข้าหน้านี้ได้ (ตรวจสอบฝั่งไคลเอ็นต์ผ่าน sessionStorage) ===== */
+/* ===== Login gate: ต้องมี token จาก login.html (เก็บใน localStorage = ไม่หลุดเมื่อปิด/เปิดแอป) · เซิร์ฟเวอร์ตรวจสอบจริงอีกชั้นใน authCheck() ===== */
 (function(){
-  try{ if(sessionStorage.getItem('dekma_session')!=='1'){ location.replace('login.html'); } }
+  try{ if(!localStorage.getItem('dekma_token')){ location.replace('login.html'); } }
   catch(e){}
 })();
 </script>
@@ -272,7 +272,6 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .buy:hover{filter:brightness(1.12)}.buy:active{transform:scale(.97)}
 .buy:disabled{background:var(--input-bg);border-color:var(--input-border);color:var(--placeholder);cursor:not-allowed;filter:none;transform:none}
 .buy:disabled::after{display:none}
-.pcard.ph .price{display:block;min-height:2.6rem}
 .empty{grid-column:1/-1;padding:4rem 0;text-align:center;color:var(--muted)}
 .pm{display:flex;align-items:center;width:100%;padding:1.3rem 1.4rem;border-radius:1.8rem;border:max(1px,.15rem) solid var(--input-border);background:var(--input-bg);font-size:1.5rem;font-weight:600;text-align:left;transition:border-color .2s,box-shadow .2s}
 .pm i{margin-left:auto;width:2rem;height:2rem;border-radius:50%;border:.2rem solid #4a2a2e;transition:border .2s}
@@ -371,6 +370,47 @@ select.field{padding-right:4rem;background-image:url("data:image/svg+xml;utf8,<s
 /* tabs */
 .ad-legacy{display:none!important} /* ส่วนของแอดมินเดิมที่ซ่อนไว้ (ไม่ได้ลบโค้ด เพื่อไม่ให้ระบบพัง) */
 .pfrom{color:var(--muted);font-size:1.1rem;font-weight:600;margin-right:.4rem}
+.ac-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.2rem}
+.ac-st{padding:1.1rem .4rem;border-radius:1.8rem;border:max(1px,.15rem) solid var(--glass-line);background:linear-gradient(160deg,var(--glass),var(--glass-2));text-align:center;box-shadow:inset 0 .1rem 0 var(--glass-hi)}
+.ac-st b{display:block;font-family:var(--font-display);font-size:2.3rem;font-weight:700;line-height:2.7rem}
+.ac-st span{display:block;margin-top:.3rem;color:var(--muted);font-size:1.05rem;font-weight:600;white-space:nowrap}
+.ac-st.g b{color:var(--green)}.ac-st.y b{color:#f5b731}.ac-st.r b{color:#ff4d6a}
+.ac{position:relative;overflow:hidden;margin-bottom:1.2rem;padding:1.5rem;border-radius:2.4rem;border:max(1px,.15rem) solid rgba(255,79,106,.32);background:linear-gradient(160deg,rgba(30,10,13,.9),rgba(8,4,4,.95));box-shadow:0 .6rem 2.6rem rgba(205,0,35,.16),inset 0 .1rem 0 var(--glass-hi)}
+.ac::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 70% at 100% -12%,rgba(255,31,66,.26),transparent 70%);pointer-events:none}
+.ac>*{position:relative}
+.ac.low{border-color:rgba(245,183,49,.5)}
+.ac.out{border-color:rgba(248,113,113,.4);box-shadow:none}
+.ac.off{border-color:rgba(255,255,255,.12);box-shadow:none}.ac.off .ac-av{filter:grayscale(1);box-shadow:none}.ac.off .ac-cd{opacity:.45}
+.ac-h{display:flex;align-items:center;gap:1.2rem}
+.ac-av{flex:none;display:grid;place-items:center;width:4.8rem;height:4.8rem;border-radius:50%;border:.2rem solid #ff4d6a;background:linear-gradient(145deg,#ff1f42,#7a0016);box-shadow:0 0 1.8rem rgba(205,0,35,.5);font-size:2rem;font-weight:700;color:#fff;text-transform:uppercase}
+.ac-n{min-width:0;flex:1}.ac-n b{display:block;font-size:1.75rem;font-weight:700;line-height:2.3rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ac-n small{display:block;color:var(--muted);font-size:1.15rem;line-height:1.8rem}
+.ac-pill{display:inline-flex;align-items:center;height:2.4rem;padding:0 1.1rem;border-radius:99rem;border:1px solid;font-size:1.15rem;font-weight:700;white-space:nowrap}
+.ac-pill i{width:.6rem;height:.6rem;margin-right:.6rem;border-radius:50%;background:currentColor;animation:pulse 1.6s ease-in-out infinite}
+.ac-pill.ok{color:var(--green);background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.35)}
+.ac-pill.low{color:#f5b731;background:rgba(245,183,49,.1);border-color:rgba(245,183,49,.4)}
+.ac-pill.out{color:#f87171;background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.35)}
+.ac-pill.off{color:#cdbfc1;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16)}
+.ac-pill.inf{color:#7cc4f5;background:rgba(74,168,232,.1);border-color:rgba(74,168,232,.35)}
+.ac-pill.wait{color:#c9a3ff;background:rgba(160,110,255,.1);border-color:rgba(160,110,255,.4)}
+.ac-cd{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:1.5rem}
+.ac-u{padding:1rem 0 .8rem;border-radius:1.6rem;border:max(1px,.1rem) solid rgba(255,79,106,.32);background:rgba(0,0,0,.4);text-align:center}
+.ac-u b{display:block;font-family:var(--font-display);font-size:2.7rem;font-weight:700;line-height:3.1rem;color:#fff;text-shadow:0 0 1.4rem rgba(255,31,66,.65);font-variant-numeric:tabular-nums}
+.ac-u span{display:block;margin-top:.3rem;color:var(--muted);font-size:1.05rem;font-weight:600}
+.ac.low .ac-u{border-color:rgba(245,183,49,.45)}.ac.low .ac-u b{text-shadow:0 0 1.4rem rgba(245,183,49,.55)}
+.ac.out .ac-u b{color:#f87171;text-shadow:none}
+.ac-inf{margin-top:1.5rem;padding:1.3rem;border-radius:1.6rem;border:max(1px,.1rem) solid rgba(74,168,232,.32);background:rgba(0,0,0,.4);text-align:center;color:#7cc4f5;font-size:1.5rem;font-weight:700}.ac-inf b{font-size:2.6rem;vertical-align:-.3rem;margin-right:.6rem}
+.ac-bar{height:.7rem;margin-top:1.3rem;border-radius:99rem;background:rgba(255,255,255,.07);overflow:hidden}
+.ac-bar i{display:block;height:100%;width:0;border-radius:99rem;background:linear-gradient(90deg,var(--red),var(--red-bright));box-shadow:0 0 1rem rgba(255,31,66,.6);transition:width 1s linear}
+.ac.low .ac-bar i{background:linear-gradient(90deg,#b7791f,#f5b731);box-shadow:0 0 1rem rgba(245,183,49,.5)}
+.ac.off .ac-bar i,.ac.out .ac-bar i{background:#4a3a3c;box-shadow:none}
+.ac-ex{display:flex;justify-content:space-between;gap:1rem;margin-top:.9rem;color:var(--muted);font-size:1.2rem;line-height:1.8rem}
+.ac-a{display:flex;gap:.7rem;margin-top:1.3rem}
+.ac-b{flex:1;min-width:0;height:3.8rem;padding:0 .6rem;border-radius:1.4rem;border:max(1px,.15rem) solid var(--card-border);background:var(--input-bg);color:#e8dcdd;font-size:1.25rem;font-weight:700;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.ac-b svg{width:1.5rem;height:1.5rem}.ac-b:active{transform:scale(.96)}
+.ac-b.ext{color:#ffb8c2;border-color:rgba(255,79,106,.4);background:rgba(205,0,35,.12)}
+.ac-b.dng{color:#f87171;border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.08)}
+.ac-b.go{color:var(--green);border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.08)}
+.ac-cp{height:3.2rem;min-width:3.2rem;padding:0;border-radius:1.1rem}.ac-cp svg{width:1.5rem;height:1.5rem}
 .dur-r{margin-bottom:.8rem}.dur-r .d-l{flex:1.4}.dur-r .d-p{flex:1}
 .ad-tabs{margin:0 -1.6rem 1.4rem;padding:.2rem 1.6rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .ad-tabs::-webkit-scrollbar{display:none}
@@ -1094,12 +1134,13 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 </div>
 <!-- ===== แอดมิน ===== -->
 <div class="view" id="v-admin">
-  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ແອດມິນ</h2><small>ຈັດການໝວດໝູ່ · ສິນຄ້າ · ຊື່ຮ້ານ</small></div></div>
+  <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ແອດມິນ</h2><small>ຈັດການໝວດໝູ່ · ສິນຄ້າ · ບັນຊີລູກຄ້າ · ຊື່ຮ້ານ</small></div></div>
 
   <div class="ad-tabs" id="adTabs" role="tablist" aria-label="ເມນູແອດມິນ"><div class="ad-tabs-in">
     <i class="ad-ind" id="adInd"></i>
     <button class="ad-tab on" role="tab" aria-selected="true" data-tab="cats"><svg><use href="#i-menu"/></svg><span>ໝວດໝູ່</span></button>
     <button class="ad-tab" role="tab" aria-selected="false" data-tab="products"><svg><use href="#i-store"/></svg><span>ສິນຄ້າ</span></button>
+    <button class="ad-tab" role="tab" aria-selected="false" data-tab="accounts"><svg><use href="#i-users"/></svg><span>ບັນຊີ</span></button>
     <button class="ad-tab" role="tab" aria-selected="false" data-tab="shop"><svg><use href="#i-admin"/></svg><span>ຊື່ຮ້ານ</span></button>
   </div></div>
 
@@ -1252,6 +1293,14 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
     <div class="card"><p class="sec-t">ເພີ່ມໝວດໝູ່ໃໝ່</p><div class="line"><input class="field" id="aCatIn" placeholder="ຊື່ໝວດໝູ່ໃໝ່"><button class="btn b2" id="aCatAdd">ເພີ່ມ</button></div><p class="hint">ຕັ້ງຊື່ສັ້ນໆ ທີ່ລູກຄ້າເຂົ້າໃຈງ່າຍ ເຊັ່ນ "ເກມ" ຫຼື "ໂປຣແກຣມ".</p></div>
   </section>
 
+  <!-- ===== ແຖບ: ບັນຊີລູກຄ້າ ===== -->
+  <section class="ad-pane" id="ap-accounts" role="tabpanel">
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ສ້າງບັນຊີໃຫ້ລູກຄ້າ: ຕັ້ງຊື່, ລະຫັດຜ່ານ ແລະກຳນົດວ່າໃຫ້ໃຊ້ງານໄດ້ກີ່ວັນ (ປັບເອງໄດ້ຕາມໃຈ). ຄົບກຳນົດແລ້ວບັນຊີຈະໝົດອາຍຸອັດຕະໂນມັດ.</p></div></div>
+    <div class="card"><div class="line"><input class="field" id="acQ" placeholder="ຄົ້ນຫາຊື່ບັນຊີ..." aria-label="ຄົ້ນຫາບັນຊີ" autocomplete="off"><button class="btn b2" id="acNew">+ ເພີ່ມບັນຊີ</button></div></div>
+    <div class="ac-stats" id="acStats"></div>
+    <p class="hint" id="acCount" style="margin:0 0 1rem"></p><div id="acList"></div>
+  </section>
+
   <!-- ===== ແຖບ: ເຄຣດິດ ===== -->
   <section class="ad-pane ad-legacy" id="ap-credit" role="tabpanel">
     <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເບິ່ງ ແລະປັບຍອດເຄຣດິດ: ເພີ່ມເຄຣດິດ (ເມື່ອລູກຄ້າໂອນເງິນມາ) ຫຼືຫັກເຄຣດິດ (ແກ້ໄຂຜິດ ຫຼືຄືນເງິນ). ທຸກການປັບຖືກບັນທຶກໃນປະຫວັດທຸລະກຳ ພ້ອມຍອດຫຼັງເຮັດລາຍການ. ການສັ່ງຊື້ຂອງລູກຄ້າກໍຫັກອັດຕະໂນມັດ ແລະບັນທຶກທີ່ນີ້ເຊັ່ນກັນ.</p></div></div>
@@ -1368,10 +1417,7 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g) return show(g.dataset.go);
   const s=e.target.closest('[data-say]'); if(s) say(s.dataset.say+' — ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ລະບົບ');
 });
-$('#btnLogout')?.addEventListener('click',()=>{
-  try{sessionStorage.removeItem('dekma_session')}catch(e){}
-  location.href='login.html';
-});
+$('#btnLogout')?.addEventListener('click',()=>authLogout());
 $$('.nav .item').forEach(b=>b.addEventListener('click',()=>{
   $$('.nav .item').forEach(x=>x.classList.remove('bump'));
   requestAnimationFrame(()=>b.classList.add('bump'));
@@ -1418,8 +1464,8 @@ function renderCats(){$('#cats').innerHTML=['ທັງໝົດ',...DB.cats].map
 function renderP(){
   const l=DB.products.filter(p=>(cat==='ທັງໝົດ'||p.cat===cat)&&(!only||p.stock>0)&&(p.name+p.cat+p.code).toLowerCase().includes(pq));
   $('#pcount').textContent='ສະແດງ '+l.length+' ຈາກ '+DB.products.length+' ລາຍການ';
-  if(!DB.products.length){ /* ยังไม่มีสินค้า = แสดงการ์ดสินค้าเปล่าๆ */
-    $('#plist').innerHTML=Array.from({length:12},(_,i)=>`<div class="card pcard ph" aria-hidden="true"><div class="cv c${i%4+1}"></div><div class="pb"><p class="pn"></p><span class="price"></span></div><button class="buy" type="button" tabindex="-1" disabled></button></div>`).join('');
+  if(!DB.products.length){ /* ยังไม่มีสินค้า = ไม่แสดงการ์ดใดๆ (แอดมินเพิ่มเอง) */
+    $('#plist').innerHTML='';
     return;
   }
   $('#plist').innerHTML=l.map((p,i)=>`<div class="card pcard"><div class="cv c${i%4+1}" data-pid="${p.id}" data-i="0">${p.imgs[0]?`<img src="${p.imgs[0]}" alt="">`:''}<svg class="g"><use href="#${sym(p)}"/></svg><span class="cb">${esc(p.cat)}</span>${p.stock<UNL?`<span class="tag ${p.stock?'':'out'}">${p.stock?'ເຫຼືອ '+p.stock:'ໝົດ'}</span>`:''}</div><div class="pb"><p class="pn">${esc(p.name)}</p>${p.desc?`<p class="pd">${esc(p.desc)}</p>`:''}<span class="price">${pMulti(p)?'<small class="pfrom">ເລີ່ມ</small>':''}₭${pMin(p).toLocaleString('en-US')}</span></div><button class="buy" data-buy="${p.id}" ${p.stock?'':'disabled'}>${p.stock?'ສັ່ງຊື້':'ສິນຄ້າໝົດ'}</button></div>`).join('')||'<p class="empty">ບໍ່ພົບສິນຄ້າທີ່ຄົ້ນຫາ</p>';
@@ -1463,7 +1509,7 @@ function buy(id,trigger){openOrderModal(id,trigger)}
 
 /* ----- แอดมิน ----- */
 let LOW=5;
-function normDB(){DB.log=DB.log||[];DB.tx=DB.tx||[];DB.cats=DB.cats||[];LOW=Math.max(1,Math.floor(+DB.low||5));
+function normDB(){DB.accounts=DB.accounts||[];DB.log=DB.log||[];DB.tx=DB.tx||[];DB.cats=DB.cats||[];LOW=Math.max(1,Math.floor(+DB.low||5));
   if(!DB.orders) DB.orders=DB.tx.filter(x=>x.type==='buy').map(x=>{const p=DB.products.find(pp=>pp.name===x.name);return{id:0,t:x.t,code:p?p.code:'',cat:p?p.cat:'',name:x.name,price:Math.abs(x.n),status:'auto',key:''}});
   DB.orderSeq=DB.orderSeq||(DB.orders.length?Math.max(1,...DB.orders.map(o=>o.id||0))+1:1);
   DB.orders.forEach(o=>{if(!o.id)o.id=DB.orderSeq++})}
@@ -1501,7 +1547,7 @@ function setTab(t){adTab=t;
   $$('.ad-tab').forEach(b=>{const on=b.dataset.tab===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
   $$('.ad-pane').forEach(x=>x.classList.toggle('on',x.id==='ap-'+t));
   $('#adAlert').classList.toggle('mute',t==='restock');
-  posInd();replay($('#ap-'+t))}
+  posInd();replay($('#ap-'+t));if(t==='accounts'&&typeof accLoad==='function')accLoad()}
 
 /* ---- restock ---- */
 function rsCalc(){const p=rsProd(),raw=parseKeys($('#rsKeys').value),have=new Set(p?p.keys:[]),seen=new Set(),add=[];let dup=0;
@@ -1646,7 +1692,7 @@ function renderAdmin(){
   $$('#crF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===cf));
   $('#crLog').innerHTML=DB.tx.filter(x=>cf==='all'||(cf==='in'&&x.n>0)||(cf==='out'&&x.n<0)).map(x=>feedRow(x.n<0?'out':'in',txTitle(x),fdate(x.t)+(x.note?' · '+x.note:''),(x.n<0?'−':'+')+K(Math.abs(x.n)),'ຍອດ '+K(x.after))).join('')||'<p class="note">ຍັງບໍ່ມີທຸລະກຳ</p>';
 
-  rsSync();crSync();renderOrders();renderReports();
+  rsSync();crSync();renderOrders();renderReports();renderAcc();
 }
 
 function goRestock(id){rs.id=id;rs.mode=defMode(rsProd());setTab('restock');rsSync();$('#rsProd').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}
@@ -1791,6 +1837,258 @@ document.addEventListener('click',e=>{
   const c=e.target.closest('[data-copy]'); if(c) return copy(c.dataset.copy);
   const b=e.target.closest('[data-buy]'); if(b) buy(b.dataset.buy,b);
 });
+/* ===== ບັນຊີລູກຄ້າ (ສ້າງໂດຍແອດມິນ) · ຊື່ + ລະຫັດຜ່ານ + ກຳນົດເວລາ (ວັນ) =====
+   ລະຫັດຜ່ານເກັບເປັນ SHA-256 + salt (ບໍ່ເກັບຕົວຈິງ). a.exp = timestamp ໝົດອາຍຸ (0 = ບໍ່ຈຳກັດ)
+   ໜ້າ login.html ຄວນເຊັກ: ຊື່/ລະຫັດ, a.exp, ແລ້ວຕັ້ງ sessionStorage 'dekma_session'='1' ແລະ 'dekma_user'=ຊື່ບັນຊີ */
+const DAY=864e5;
+const fdt=t=>new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'});
+async function hashPw(salt,pw){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+pw));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+const rndHex=n=>[...crypto.getRandomValues(new Uint8Array(n))].map(x=>x.toString(16).padStart(2,'0')).join('');
+const genPass=()=>{const c='abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';return [...crypto.getRandomValues(new Uint8Array(10))].map(x=>c[x%c.length]).join('')};
+const pad2=n=>String(n).padStart(2,'0');
+const fdtm=t=>fdt(t)+' '+new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+const accLeft=(a,now=Date.now())=>a.pending?a.dur:!a.exp?Infinity:Math.max(0,a.off?(a.left||0):a.exp-now);
+const accTotal=a=>a.pending?Math.max(1,a.dur):a.off?Math.max(1,a.total||1):Math.max(1,a.exp-(a.start||a.created||0));
+const accPct=(a,now=Date.now())=>Math.max(0,Math.min(100,accLeft(a,now)/accTotal(a)*100));
+function accInfo(a,now=Date.now()){
+  if(a.off) return {k:'off',t:'ປິດໃຊ້ງານ'};
+  if(a.pending) return {k:'wait',t:'ລໍຖ້າເຂົ້າໃຊ້'};
+  if(!a.exp) return {k:'inf',t:'ບໍ່ຈຳກັດເວລາ'};
+  const l=a.exp-now; if(l<=0) return {k:'out',t:'ໝົດອາຍຸແລ້ວ'};
+  return l<=3*DAY?{k:'low',t:'ໃກ້ໝົດ'}:{k:'ok',t:'ໃຊ້ງານ'};
+}
+function cdParts(ms){const t=Math.floor(Math.max(0,ms)/1000);return {d:Math.floor(t/86400),h:Math.floor(t%86400/3600),m:Math.floor(t%3600/60),s:t%60}}
+function acCard(a,now){
+  const st=accInfo(a,now),live=st.k==='ok'||st.k==='low',limited=!!a.exp||!!a.pending;
+  const c=cdParts(accLeft(a,now)),U=[['d','ມື້'],['h','ຊົ່ວໂມງ'],['m','ນາທີ'],['s','ວິນາທີ']];
+  const cd=limited?`<div class="ac-cd">${U.map(([u,l])=>`<div class="ac-u"><b data-u="${u}">${pad2(c[u])}</b><span>${l}</span></div>`).join('')}</div>
+    <div class="ac-bar"><i style="width:${accPct(a,now).toFixed(2)}%"></i></div>
+    <div class="ac-ex"><span>${st.k==='wait'?'ເລີ່ມນັບເມື່ອເຂົ້າຄັ້ງທຳອິດ':st.k==='off'?'ຢຸດນັບເວລາຊົ່ວຄາວ':st.k==='out'?'ໝົດອາຍຸເມື່ອ '+fdtm(a.exp):'ໝົດອາຍຸ '+fdtm(a.exp)}</span><span>${st.k==='out'?'':Math.round(accPct(a,now))+'%'}</span></div>`
+    :`<div class="ac-inf"><b>∞</b>ບໍ່ຈຳກັດເວລາ</div>`;
+  return `<div class="ac ${st.k}" data-id="${a.id}" data-st="${st.k}">
+    <div class="ac-h"><span class="ac-av">${esc(a.user.charAt(0))}</span>
+      <div class="ac-n"><b>${esc(a.user)}</b><small>ສ້າງເມື່ອ ${fdt(a.created)}${a.online?' · <span style="color:var(--green)">● ກຳລັງໃຊ້ງານ</span>':''}</small></div>
+      <button class="ib ac-cp" data-copy="${esc(a.user)}" aria-label="ສຳເນົາຊື່ບັນຊີ"><svg><use href="#i-copy"/></svg></button>
+      <span class="ac-pill ${st.k}">${live?'<i></i>':''}${st.t}</span></div>
+    ${cd}
+    <div class="ac-a">
+      ${limited?`<button class="ac-b ext" data-acext="${a.id}:7" type="button">+7 ມື້</button><button class="ac-b ext" data-acext="${a.id}:30" type="button">+30 ມື້</button>`:''}
+      <button class="ac-b" data-acedit="${a.id}" type="button"><svg><use href="#i-edit"/></svg>ແກ້ໄຂ</button>
+      <button class="ac-b ${a.off?'go':'dng'}" data-actoggle="${a.id}" type="button">${a.off?'ເປີດບັນຊີ':'ປິດບັນຊີ'}</button>
+    </div></div>`;
+}
+function renderAcc(){
+  const L=DB.accounts||[],now=Date.now(),q=(($('#acQ')||{}).value||'').trim().toLowerCase();
+  const K2=L.map(a=>accInfo(a,now).k),n=k=>K2.filter(x=>x===k).length;
+  $('#acStats').innerHTML=[['',L.length,'ທັງໝົດ'],['g',n('ok')+n('low')+n('inf')+n('wait'),'ໃຊ້ງານ'],['y',n('low'),'ໃກ້ໝົດ'],['r',n('out')+n('off'),'ໝົດ/ປິດ']].map(x=>`<div class="ac-st ${x[0]}"><b>${x[1]}</b><span>${x[2]}</span></div>`).join('');
+  const fl=L.filter(a=>a.user.toLowerCase().includes(q)).sort((a,b)=>b.created-a.created);
+  $('#acCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${L.length} ບັນຊີ`;
+  $('#acList').innerHTML=fl.map(a=>acCard(a,now)).join('')||'<div class="card"><p class="note">ຍັງບໍ່ມີບັນຊີ ກົດ "+ ເພີ່ມບັນຊີ" ເພື່ອສ້າງ</p></div>';
+}
+/* ນັບຖອຍຫຼັງສົດ: ຄິດຈາກ Date.now() ທຸກຄັ້ງ (ບໍ່ນັບເອງ) ຈຶ່ງບໍ່ຄ້າງ/ບໍ່ເລື່ອນ ແລະອັບເດດທັນທີເມື່ອກັບມາຈາກແຖບອື່ນ */
+function accTick(){
+  const pane=$('#ap-accounts'); if(!pane||!pane.classList.contains('on')||!pane.offsetParent) return;
+  const now=Date.now(); let redo=false;
+  pane.querySelectorAll('.ac[data-id]').forEach(el=>{
+    const a=DB.accounts.find(x=>x.id==el.dataset.id); if(!a){redo=true;return}
+    const k=accInfo(a,now).k; if(k!==el.dataset.st){redo=true;return}
+    if(k==='ok'||k==='low'){
+      const c=cdParts(a.exp-now);
+      for(const u of ['d','h','m','s']){const nd=el.querySelector('[data-u="'+u+'"]'),v=pad2(c[u]);if(nd&&nd.textContent!==v)nd.textContent=v}
+      const bar=el.querySelector('.ac-bar i'); if(bar) bar.style.width=accPct(a,now).toFixed(2)+'%';
+      const pc=el.querySelector('.ac-ex span:last-child'); if(pc) pc.textContent=Math.round(accPct(a,now))+'%';
+    }
+  });
+  if(redo) renderAcc();
+}
+setInterval(accTick,250); document.addEventListener('visibilitychange',accTick);
+let acEd=null;
+function openAcc(id){
+  const a=(DB.accounts||[]).find(x=>x.id==id);
+  let d0=30; if(a){const l=accLeft(a);d0=a.pending?Math.ceil(a.dur/DAY):!a.exp?0:(l>0?Math.ceil(l/DAY):null)}
+  acEd={id:a?a.id:null,d0,pending:!!(a&&a.pending),exp:a?(a.off?Date.now()+(a.left||0):a.exp):0};
+  const dv=a?(d0===null?'':d0):30;
+  openSheet(`<h3 class="sh-t">${a?'ແກ້ໄຂບັນຊີ':'ເພີ່ມບັນຊີໃໝ່'}</h3>
+  <p class="ed-h first">ຂໍ້ມູນບັນຊີ</p>
+  <p class="h3">ຊື່ບັນຊີ</p><input class="field" id="acUser" value="${a?esc(a.user):''}" ${a?'readonly':''} placeholder="ຕັ້ງຊື່ບັນຊີ" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <p class="hint">${a?'ຊື່ບັນຊີແກ້ບໍ່ໄດ້.':'ໃຊ້ຕົວອັກສອນ ຫຼືຕົວເລກ ບໍ່ມີຍະຫວ່າງ. ຊື່ຕ້ອງບໍ່ຊ້ຳກັບບັນຊີອື່ນ.'}</p>
+  <p class="h3 sp">ລະຫັດຜ່ານ</p><div class="line"><input class="field" id="acPass" placeholder="${a?'ປ່ອຍວ່າງ = ບໍ່ປ່ຽນລະຫັດ':'ຕັ້ງລະຫັດຜ່ານ'}" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="cat" id="acGen" type="button">ສຸ່ມ</button></div>
+  <p class="hint">ຢ່າງໜ້ອຍ 4 ຕົວ. ລະຫັດຖືກເຂົ້າລະຫັດເກັບໄວ້ ເບິ່ງຄືນບໍ່ໄດ້ ຈຶ່ງຄວນສຳເນົາໃຫ້ລູກຄ້າຕອນສ້າງ.</p>
+  <p class="ed-h">ກຳນົດເວລາໃຊ້ງານ</p>
+  <p class="h3">ໃຊ້ງານໄດ້ກີ່ວັນ</p>
+  <div class="chips" id="acChips">${[7,30,90,365].map(n=>`<button class="cat" type="button" data-acd="${n}">${n} ມື້</button>`).join('')}<button class="cat" type="button" data-acd="0">ບໍ່ຈຳກັດ</button></div>
+  <input class="field" id="acDays" type="number" inputmode="numeric" min="0" max="3650" value="${dv}" placeholder="${a?'ປ່ອຍວ່າງ = ບໍ່ປ່ຽນ':'ຈຳນວນມື້'}" style="margin-top:1rem">
+  <p class="hint" id="acPrev"></p>
+  <p class="hint">ພິມຈຳນວນມື້ເອງໄດ້ຕາມໃຈ ${a&&!a.pending?'(ນັບຈາກມື້ນີ້)':'(ເລີ່ມນັບເມື່ອລູກຄ້າເຂົ້າຄັ້ງທຳອິດ)'} · 0 = ບໍ່ຈຳກັດເວລາ.${a&&d0===null?' ບັນຊີນີ້ໝົດອາຍຸແລ້ວ — ໃສ່ຈຳນວນມື້ໃໝ່ເພື່ອຕໍ່ອາຍຸ.':''}</p>
+  <button class="btn b2 wide sp" id="acSave" type="button">ບັນທຶກ</button>${a?'<button class="del" id="acDel" type="button">ລຶບບັນຊີນີ້</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`);
+  acSync();
+}
+function acSync(){
+  const inp=$('#acDays'); if(!inp||!acEd) return;
+  const raw=inp.value.trim(),n=Math.floor(+raw);
+  $$('#acChips .cat').forEach(b=>b.classList.toggle('on',raw!==''&&+b.dataset.acd===n));
+  let t='';
+  if(raw===''){t=acEd.id?'ບໍ່ປ່ຽນວັນໝົດອາຍຸເດີມ':''}
+  else if(!(n>=0)){t=''}
+  else if(n===0){t='ບໍ່ຈຳກັດເວລາ'}
+  else if(!acEd.id||acEd.pending){t='ໃຊ້ໄດ້ '+n+' ມື້ — ເລີ່ມນັບເມື່ອລູກຄ້າເຂົ້າຄັ້ງທຳອິດ'}
+  else if(acEd.id&&acEd.d0!==null&&n===acEd.d0){t='ໝົດອາຍຸ '+fdt(acEd.exp)+' (ເຫຼືອ '+n+' ມື້)'}
+  else{t='ຈະໝົດອາຍຸ '+fdt(Date.now()+n*DAY)+' (ໃຊ້ໄດ້ '+n+' ມື້ນັບຈາກມື້ນີ້)'}
+  $('#acPrev').textContent=t;
+}
+function accDone(a,pw){
+  const t2=a.pending?'ໃຊ້ໄດ້ '+Math.ceil(a.dur/DAY)+' ມື້ (ເລີ່ມນັບເມື່ອເຂົ້າຄັ້ງທຳອິດ)':a.exp?'ໝົດອາຍຸ '+fdt(a.exp):'ບໍ່ຈຳກັດເວລາ',txt='ຊື່ບັນຊີ: '+a.user+'\nລະຫັດຜ່ານ: '+pw+'\n'+t2;
+  openSheet(`<h3 class="sh-t">ບັນທຶກບັນຊີແລ້ວ</h3>
+  <p class="h3">ຊື່ບັນຊີ</p><div class="code">${esc(a.user)}</div>
+  <p class="h3 sp">ລະຫັດຜ່ານ</p><div class="code">${esc(pw)}</div>
+  <p class="h3 sp">ກຳນົດເວລາ</p><div class="code">${esc(t2)}</div>
+  <p class="hint">ສຳເນົາໄວ້ຕອນນີ້ ແລ້ວສົ່ງໃຫ້ລູກຄ້າ — ລະຫັດຜ່ານເບິ່ງຄືນບໍ່ໄດ້ (ລືມແລ້ວຕ້ອງຕັ້ງລະຫັດໃໝ່).</p>
+  <button class="btn b2 wide sp" data-copy="${esc(txt)}" type="button">ສຳເນົາຂໍ້ມູນ</button><button class="btn b3 wide" data-close style="margin-top:.9rem" type="button">ປິດ</button>`);
+}
+$('#acNew').onclick=()=>openAcc(null);
+$('#acQ').addEventListener('input',renderAcc);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-acedit]'); if(b) return openAcc(b.dataset.acedit);
+  const x=e.target.closest('[data-acext]'); if(x){
+    const [id,d]=x.dataset.acext.split(':'); accCall('extend',{id:+id,days:+d},'ຕໍ່ອາຍຸ +'+d+' ມື້ແລ້ວ'); return}
+  const t=e.target.closest('[data-actoggle]'); if(t){
+    const a=DB.accounts.find(v=>v.id==t.dataset.actoggle); if(!a) return;
+    if(!a.off&&!t.dataset.sure){t.dataset.sure=1;const o=t.innerHTML;t.textContent='ແຕະອີກຄັ້ງເພື່ອປິດ';setTimeout(()=>{if(t.isConnected&&t.dataset.sure){delete t.dataset.sure;t.innerHTML=o}},3000);return}
+    accCall('toggle',{id:a.id},a.off?'ເປີດບັນຊີແລ້ວ':'ປິດບັນຊີແລ້ວ'); return}
+});
+sheet.addEventListener('input',e=>{if(e.target.id==='acDays')acSync()});
+sheet.addEventListener('click',async e=>{
+  const t=e.target;
+  const ch=t.closest('[data-acd]'); if(ch){$('#acDays').value=ch.dataset.acd;return acSync()}
+  if(t.closest('#acGen')){$('#acPass').value=genPass();return}
+  if(t.closest('#admKeyGo')){
+    const v=($('#admKey').value||'').trim(); if(!v) return;
+    ADMK=v; try{sessionStorage.setItem('dekma_admkey',v)}catch(e){}
+    closeSheet(); accLoad(); return}
+  const del=t.closest('#acDel'); if(del){
+    if(!del.dataset.sure){del.dataset.sure=1;del.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນການລຶບ';return}
+    if(await accCall('delete',{id:acEd.id})){closeSheet();say('ລຶບບັນຊີແລ້ວ')} return}
+  const sv=t.closest('#acSave'); if(!sv||sv.disabled) return;
+  const isNew=!acEd.id,user=$('#acUser').value.trim(),pw=$('#acPass').value,raw=$('#acDays').value.trim();
+  if(isNew){
+    if(!user) return say('ກະລຸນາໃສ່ຊື່ບັນຊີ');
+    if(/\s/.test(user)) return say('ຊື່ບັນຊີຫ້າມມີຍະຫວ່າງ');
+  }
+  if((isNew||pw)&&pw.length<4) return say('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວ');
+  if(raw===''&&isNew) return say('ກະລຸນາໃສ່ຈຳນວນມື້ທີ່ໃຫ້ໃຊ້ງານ (0 = ບໍ່ຈຳກັດ)');
+  const n=Math.floor(+raw); if(raw!==''&&!(n>=0&&n<=3650)) return say('ຈຳນວນມື້ຕ້ອງຢູ່ລະຫວ່າງ 0 ຫາ 3650');
+  sv.disabled=true;
+  const fail=r=>{say(ACC_ERR[r&&r.code]||'ບັນທຶກບໍ່ສຳເລັດ');if(r&&r.code==='key')askKey();return false};
+  try{
+    let r;
+    if(isNew){
+      r=await adm('create',{user,pass:pw,days:n}); if(!r||!r.ok) return fail(r);
+    }else{
+      if(pw){r=await adm('setpass',{id:acEd.id,pass:pw}); if(!r||!r.ok) return fail(r)}
+      if(raw!==''&&!(acEd.d0!==null&&n===acEd.d0)){r=await adm('setdays',{id:acEd.id,days:n}); if(!r||!r.ok) return fail(r)}
+    }
+    await accLoad(true);
+    const a=DB.accounts.find(x=>isNew?x.user.toLowerCase()===user.toLowerCase():x.id===acEd.id);
+    if(a&&(isNew||pw)) accDone(a,pw); else {closeSheet();say('ບັນທຶກບັນຊີແລ້ວ')}
+  }catch(err){console.error(err);say('ເຊື່ອມຕໍ່ບໍ່ໄດ້ ບັນທຶກບໍ່ສຳເລັດ')}
+  finally{sv.disabled=false}
+});
+
+/* ============================================================
+   ເຊີບເວີ (Supabase): ບັນຊີ + ເວລານັບຖອຍຫຼັງ + session ທັງໝົດຢູ່ຝັ່ງເຊີບເວີ (SQL: dk_accounts.sql)
+   ============================================================ */
+const SB_URL='https://ebmambgqghyzrenknkeb.supabase.co';
+const SB_KEY='sb_publishable__t5g88mepIjky1Kq-BQUtg_zMjaNHlH';
+async function rpc(fn,args){
+  const r=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});
+  if(!r.ok) throw new Error('http '+r.status);
+  return r.json();
+}
+
+/* ---- Session ຂອງລູກຄ້າ: token ຢູ່ localStorage (ບໍ່ຫຼຸດເອງ) · ຍິງ heartbeat ທຸກ 30 ວິ ---- */
+let authExp=0, authOff=0, authChk=0;
+function authKick(code){
+  try{localStorage.removeItem('dekma_token');localStorage.removeItem('dekma_user')}catch(e){}
+  location.replace('login.html?r='+encodeURIComponent(code||'none'));
+}
+async function authCheck(){
+  let tk=null; try{tk=localStorage.getItem('dekma_token')}catch(e){}
+  if(!tk) return authKick('none');
+  try{
+    const r=await rpc('dk_check',{p_token:tk});
+    if(r&&r.ok){authExp=r.exp||0;authOff=r.now-Date.now();const un=$('#uname');if(un)un.textContent=r.user;return}
+    if(r&&r.code) authKick(r.code); /* ເຕະອອກສະເພາະເມື່ອເຊີບເວີບອກຊັດເຈນ */
+  }catch(e){
+    /* ເນັດຫຼຸດ/ເຊີບເວີຊ້າ = ຫ້າມເຕະອອກ · ຍົກເວັ້ນ offline ຫຼັງໝົດເວລາແລ້ວ >60 ວິ */
+    if(authExp&&Date.now()+authOff>authExp+60000) authKick('expired');
+  }
+}
+function authLogout(){
+  let tk=null; try{tk=localStorage.getItem('dekma_token')}catch(e){}
+  try{localStorage.removeItem('dekma_token');localStorage.removeItem('dekma_user')}catch(e){}
+  const go=()=>{location.href='login.html'};
+  if(!tk) return go();
+  Promise.race([rpc('dk_logout',{p_token:tk}).catch(()=>{}),new Promise(r=>setTimeout(r,1500))]).then(go);
+}
+setInterval(authCheck,30000);
+setInterval(()=>{ /* ຮອດເວລາໝົດອາຍຸ (ຕາມເວລາເຊີບເວີ) → ຖາມເຊີບເວີທັນທີ (ອາດຖືກຕໍ່ອາຍຸໄປແລ້ວ) */
+  if(authExp&&Date.now()+authOff>=authExp&&Date.now()-authChk>5000){authChk=Date.now();authCheck()}
+},1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)authCheck()});
+window.addEventListener('online',authCheck);
+window.addEventListener('focus',authCheck);
+window.addEventListener('pageshow',e=>{if(e.persisted)authCheck()});
+authCheck();
+
+/* ---- ແອດມິນ: ຈັດການບັນຊີ (ຕ້ອງໃສ່ລະຫັດແອດມິນ) ---- */
+const ACC_ERR={key:'ລະຫັດແອດມິນບໍ່ຖືກຕ້ອງ',user:'ຊື່ບັນຊີບໍ່ຖືກຕ້ອງ',pass:'ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວ',days:'ຈຳນວນມື້ບໍ່ຖືກຕ້ອງ',dup:'ຊື່ບັນຊີນີ້ມີແລ້ວ',nf:'ບໍ່ພົບບັນຊີນີ້'};
+let ADMK=''; try{ADMK=sessionStorage.getItem('dekma_admkey')||''}catch(e){}
+if(DB.accounts&&DB.accounts.length&&!DB.accountsOld) DB.accountsOld=DB.accounts; /* ບັນຊີເກົ່າໃນເຄື່ອງ (ໃຊ້ບໍ່ໄດ້ແລ້ວ) ເກັບສຳຮອງໄວ້ */
+DB.accounts=[];
+async function adm(action,p){
+  const r=await rpc('dk_admin_call',{p_key:ADMK,p_action:action,p:p||{}});
+  if(r&&r.code==='key'){ADMK='';try{sessionStorage.removeItem('dekma_admkey')}catch(e){}}
+  return r;
+}
+function askKey(){
+  openSheet(`<h3 class="sh-t">ລະຫັດແອດມິນ</h3>
+  <p class="hint first">ໃສ່ລະຫັດແອດມິນເພື່ອຈັດການບັນຊີລູກຄ້າ (ຈື່ໄວ້ຈົນກວ່າຈະປິດແອັບ)</p>
+  <input class="field" id="admKey" type="password" placeholder="ລະຫັດແອດມິນ" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <button class="btn b2 wide sp" id="admKeyGo" type="button">ຢືນຢັນ</button><button class="btn b3 wide" data-close style="margin-top:.9rem" type="button">ຍົກເລີກ</button>`);
+  setTimeout(()=>{const i=$('#admKey');if(i)i.focus()},60);
+}
+sheet.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='admKey'){e.preventDefault();$('#admKeyGo').click()}});
+function mapAcc(x,off){ /* ແປງເວລາເຊີບເວີ → ເວລາໃນເຄື່ອງນີ້ (ກັນນາຬິກາເຄື່ອງເລື່ອນ) */
+  return {id:x.id,user:x.user,created:x.created-off,dur:x.dur||0,pending:!x.first&&x.dur>0,online:!!x.online,
+    exp:x.exp?x.exp-off:0,start:(x.first||x.created)-off,off:!!x.off,left:x.left||0,total:Math.max(1,x.dur||1)};
+}
+let accSeq=0;
+async function accLoad(quiet){
+  if(!ADMK){if(!quiet)askKey();return}
+  const my=++accSeq;
+  try{
+    const r=await adm('list');
+    if(my!==accSeq) return;
+    if(!r||!r.ok){ if(r&&r.code==='key'){if(!quiet){say(ACC_ERR.key);askKey()}} else if(!quiet) say('ໂຫຼດບັນຊີບໍ່ໄດ້'); return }
+    const off=r.now-Date.now();
+    DB.accounts=r.items.map(x=>mapAcc(x,off));
+    renderAcc();
+  }catch(e){ if(!quiet) say('ເຊື່ອມຕໍ່ບໍ່ໄດ້ ກະລຸນາລອງໃໝ່') }
+}
+async function accCall(action,p,okMsg){
+  try{
+    const r=await adm(action,p);
+    if(!r||!r.ok){say(ACC_ERR[r&&r.code]||'ບໍ່ສຳເລັດ');if(r&&r.code==='key')askKey();return false}
+    await accLoad(true); if(okMsg) say(okMsg); return true;
+  }catch(e){say('ເຊື່ອມຕໍ່ບໍ່ໄດ້ ກະລຸນາລອງໃໝ່');return false}
+}
+/* ຣີເຟຣຊລາຍການທຸກ 10 ວິ ຕອນເປີດແທັບບັນຊີ (ເຫັນທັນທີວ່າໃຜເຂົ້າ/ອອກ) */
+setInterval(()=>{
+  const pane=$('#ap-accounts');
+  if(!ADMK||!pane||!pane.classList.contains('on')||!pane.offsetParent||document.hidden) return;
+  if(sheet.classList.contains('on')||pane.querySelector('[data-sure]')) return;
+  accLoad(true);
+},10000);
 paint();renderCats();renderP();renderAdmin();
 
 /* ===== First open: reveal like a premium app waking up (not a loading screen) ===== */
