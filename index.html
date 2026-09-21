@@ -33,6 +33,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Lao+Looped:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Portal unlock: fade-in ຫຼັງ login ສຳເລັດ (opacity ເທົ່ານັ້ນ) */
+@keyframes dkPageIn{from{opacity:0}}
+@media (prefers-reduced-motion:no-preference){html{animation:dkPageIn .7s ease-out backwards}}
 /* ===== Design tokens (แก้สี/ค่าหลักที่นี่) ===== */
 :root{
   --bg:#000000; --glow:#1f0509;
