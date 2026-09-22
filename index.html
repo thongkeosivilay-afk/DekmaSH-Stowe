@@ -1718,10 +1718,10 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </section>
 
   <section class="stats">
-    <div class="stat s1"><span class="ico"><svg><use href="#i-users"/></svg></span><div><p class="lb">ຕົວແທນຈຳໜ່າຍ</p><p class="val"><b>0</b><small>ບັນຊີ</small></p></div></div>
-    <div class="stat s2"><span class="ico"><svg><use href="#i-boxes"/></svg></span><div><p class="lb">ສິນຄ້າໃນລະບົບ</p><p class="val"><b>0</b><small>ລາຍການ</small></p></div></div>
-    <div class="stat s3"><span class="ico"><svg><use href="#i-key"/></svg></span><div><p class="lb">ລະຫັດທີ່ອອກແລ້ວ</p><p class="val"><b>0</b><small>ລະຫັດ</small></p></div></div>
-    <div class="stat s4"><span class="ico"><svg><use href="#i-check"/></svg></span><div><p class="lb">ຄຳສັ່ງຊື້ສຳເລັດ</p><p class="val"><b>0</b><small>ອໍເດີ</small></p></div></div>
+    <div class="stat s1"><span class="ico"><svg><use href="#i-users"/></svg></span><div><p class="lb">ຕົວແທນຈຳໜ່າຍ</p><p class="val"><b id="stAgents">0</b><small>ບັນຊີ</small></p></div></div>
+    <div class="stat s2"><span class="ico"><svg><use href="#i-boxes"/></svg></span><div><p class="lb">ສິນຄ້າໃນລະບົບ</p><p class="val"><b id="stProducts">0</b><small>ລາຍການ</small></p></div></div>
+    <div class="stat s3"><span class="ico"><svg><use href="#i-key"/></svg></span><div><p class="lb">ລະຫັດທີ່ອອກແລ້ວ</p><p class="val"><b id="stCodes">0</b><small>ລະຫັດ</small></p></div></div>
+    <div class="stat s4"><span class="ico"><svg><use href="#i-check"/></svg></span><div><p class="lb">ຄຳສັ່ງຊື້ສຳເລັດ</p><p class="val"><b id="stOrders">0</b><small>ອໍເດີ</small></p></div></div>
   </section>
 
   <section class="panel" id="search">
@@ -1953,7 +1953,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 
   <!-- ===== ແຖບ: ເຕີມສະຕັອກ ===== -->
   <section class="ad-pane ad-legacy" id="ap-restock" role="tabpanel">
-    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີຢູ່ແລ້ວ ເຮັດ 3 ຂັ້ນຕອນ: ເລືອກສິນຄ້າ, ເລືອກວິທີເຕີມ, ໃສ່ຂໍ້ມູນແລ້ວຢືນຢັນ. ສະຕັອກເພີ່ມທັນທີ ແລະລູກຄ້າເຫັນເລີຍ. ຖ້າຍັງບໍ່ມີສິນຄ້າ ໃຫ້ໄປແຖບ "ສິນຄ້າ" ເພື່ອເພີ່ມກ່ອນ.</p></div></div>
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ໃຊ້ເຕີມຂອງເຂົ້າສິນຄ້າທີ່ມີຢູ່ແລ້ວ ເຮັດ 4 ຂັ້ນຕອນ: ເລືອກສິນຄ້າ, ເລືອກວິທີເຕີມ, ເລືອກ/ຕັ້ງໄລຍະເວລາ (ຖ້າໄອດີນີ້ມີ ເຊັ່ນ 4 ມື້ 7 ມື້), ໃສ່ຂໍ້ມູນແລ້ວຢືນຢັນ. ສະຕັອກເພີ່ມທັນທີ ແລະລູກຄ້າເຫັນເລີຍ. ຖ້າຍັງບໍ່ມີສິນຄ້າ ໃຫ້ໄປແຖບ "ສິນຄ້າ" ເພື່ອເພີ່ມກ່ອນ.</p></div></div>
 
     <div class="card">
       <div class="step"><i id="st1"><em>1</em><svg><use href="#i-tick"/></svg></i><div><b>ເລືອກສິນຄ້າ</b><small>ຕົວເລກຫຼັງຊື່ຄືສະຕັອກປັດຈຸບັນ</small></div></div>
@@ -1970,8 +1970,18 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
       <p class="hint" id="rsLock" hidden>ສິນຄ້ານີ້ຕັ້ງເປັນສົ່ງອັດຕະໂນມັດ ຈຶ່ງເຕີມໄດ້ສະເພາະແບບເພີ່ມລະຫັດ.</p>
     </div>
 
+    <div class="card" id="rsDurCard" hidden>
+      <div class="step"><i id="stD"><em>3</em><svg><use href="#i-tick"/></svg></i><div><b>ໄລຍະເວລາ (ຖ້າໄອດີນີ້ມີ)</b><small>ເຊັ່ນ ໄອດີນີ້ຫຼິ້ນໄດ້ 4 ມື້ — ລູກຄ້າຈະເລືອກໄລຍະນີ້ຕອນສັ່ງຊື້ ແລ້ວໄດ້ລະຫັດຊຸດນີ້ພໍດີ</small></div></div>
+      <select class="field" id="rsDur" aria-label="ເລືອກໄລຍະເວລາ"></select>
+      <div id="rsDurNew" hidden style="margin-top:1rem">
+        <p class="h3">ຊື່ໄລຍະໃໝ່</p><input class="field" id="rsDurLabel" placeholder="ເຊັ່ນ 4 ມື້">
+        <p class="h3 sp">ລາຄາ (ກີບ)</p><input class="field" id="rsDurPrice" type="number" inputmode="numeric" min="0" placeholder="0">
+      </div>
+      <p class="hint">ຖ້າໄອດີນີ້ບໍ່ມີໄລຍະເວລາ ເລືອກ "ບໍ່ມີໄລຍະເວລາ" ໄດ້ເລີຍ. ລະຫັດແຕ່ລະຊຸດຜູກກັບໄລຍະທີ່ເລືອກ ລູກຄ້າກົດເລືອກໄລຍະໃດ ຈະໄດ້ລະຫັດຈາກຊຸດນັ້ນ.</p>
+    </div>
+
     <div class="card">
-      <div class="step"><i id="st3"><em>3</em><svg><use href="#i-tick"/></svg></i><div><b>ໃສ່ຂໍ້ມູນ ແລະຢືນຢັນ</b><small>ກວດຕົວຢ່າງຜົນລັບດ້ານລຸ່ມກ່ອນກົດຢືນຢັນ</small></div></div>
+      <div class="step"><i id="st3"><em>4</em><svg><use href="#i-tick"/></svg></i><div><b>ໃສ່ຂໍ້ມູນ ແລະຢືນຢັນ</b><small>ກວດຕົວຢ່າງຜົນລັບດ້ານລຸ່ມກ່ອນກົດຢືນຢັນ</small></div></div>
       <div id="rsKeysBox" hidden>
         <p class="h3">ວາງລະຫັດທີ່ຈະເພີ່ມ</p>
         <textarea class="field ta ta-lg" id="rsKeys" placeholder="XXXX-XXXX-XXXX&#10;XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
@@ -2004,7 +2014,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 
   <!-- ===== ແຖບ: ສິນຄ້າ ===== -->
   <section class="ad-pane" id="ap-products" role="tabpanel">
-    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເພີ່ມ ແກ້ໄຂ ແລະລຶບສິນຄ້າ: ຊື່, ຮູບ, ລາຄາ, ໝວດໝູ່, ລາຍລະອຽດ ແລະຕົວເລືອກໄລຍະເວລາ (ຕັ້ງຊື່ ແລະລາຄາເອງໄດ້).</p></div></div>
+    <div class="ad-help"><span class="ad-i">i</span><div><b>ແຖບນີ້ໃຊ້ເຮັດຫຍັງ</b><p>ເພີ່ມ ແກ້ໄຂ ແລະລຶບສິນຄ້າ: ຊື່, ຮູບ, ລາຄາ, ໝວດໝູ່ ແລະລາຍລະອຽດ. ຕົວເລືອກໄລຍະເວລາ (ເຊັ່ນ 1 ມື້ / 7 ມື້) ຕັ້ງຢູ່ໃນແຖບ "ເຕີມສະຕັອກ" ຕອນເຕີມລະຫັດ.</p></div></div>
     <div class="card">
       <div class="line"><input class="field" id="aq" placeholder="ຄົ້ນຫາຊື່ ຫຼືລະຫັດສິນຄ້າ..." aria-label="ຄົ້ນຫາສິນຄ້າໃນແອດມິນ" autocomplete="off"><button class="btn b2" id="aNew">+ ເພີ່ມສິນຄ້າໃໝ່</button></div>
       <div class="chips ad-legacy" id="apF"><button class="cat on" data-f="all">ທັງໝົດ</button><button class="cat" data-f="low">ໃກ້ໝົດ</button><button class="cat" data-f="out">ໝົດແລ້ວ</button><button class="cat" data-f="auto">ອັດຕະໂນມັດ</button><button class="cat" data-f="man">ສົ່ງເອງ</button></div>
@@ -2206,7 +2216,11 @@ const sym=p=>IC[p.cat]||'i-grid';
 const pDurs=p=>(p.durs||[]).filter(d=>d&&String(d.label||'').trim()).map(d=>({label:String(d.label).trim(),price:Math.max(0,+d.price||0)}));
 const pMin=p=>{const a=pDurs(p);return a.length?Math.min(...a.map(d=>d.price)):p.price};
 const pMulti=p=>pDurs(p).length>1;
-function paint(){setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name;
+function paint(){
+  /* ตัวเลขเครดิตหน้าแรก/หัวข้อ — ให้สำคัญสุด อัปเดตก่อนเสมอ แยก try/catch ของตัวเองไว้
+     กันไม่ให้ element อื่นที่หายไป (เช่น #aName ตอนหน้า admin ยังไม่ mount) ทำให้บรรทัดนี้ไม่ทำงาน */
+  try{setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit)}catch(e){console.error('อัปเดตเครดิตหลักผิดพลาด:',e)}
+  try{$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name}catch(e){}
   /* ซิงก์ยอดเครดิต/ออเดอร์/คีย์ในทุกหน้าให้เท่ากันทันที ไม่ต้องรอ setInterval 15 วิ (แก้ปัญหายอดเงินไม่หักในหน้าบัญชี/topup หลังซื้อ-เติมเงิน) */
   try{renderMyAccount()}catch(e){} try{renderMyKeys()}catch(e){} try{renderMyOrders()}catch(e){}
 }
@@ -2279,23 +2293,35 @@ function placeOrder(id,amount,durLabel,qty){
   const total=(amount!=null&&amount>0)?amount:p.price*n;
   if(DB.credit<total) return {ok:false,code:'credit',msg:'ເຄຣດິດບໍ່ພໍ ກະລຸນາເຕີມເງິນກ່ອນ'};
   DB.credit-=total;addTx('buy',-total,durLabel||'',p.name);
-  const k=p.auto&&p.keys.length>=n?p.keys.splice(0,n).join('\n'):null;
-  p.stock=p.auto?p.keys.length:(p.stock>=UNL?p.stock:p.stock-n); addOrder(p,k,total,durLabel,n); save();
+  /* ถ้าสินค้ามีตัวเลือกระยะเวลา ให้ดึงรหัส/ไอดีจากคลังของระยะเวลานั้นโดยเฉพาะ (เติมไว้ตอนเติมสต๊อก)
+     ถ้าไม่มีตัวเลือกระยะเวลาเลย ใช้คลังรหัสแบบเดิม (p.keys) */
+  const pool=(durLabel&&p.keysByDur&&p.keysByDur[durLabel])?p.keysByDur[durLabel]:p.keys;
+  const k=p.auto&&pool&&pool.length>=n?pool.splice(0,n).join('\n'):null;
+  p.stock=p.auto?allKeys(p).length:(p.stock>=UNL?p.stock:p.stock-n); addOrder(p,k,total,durLabel,n); save();
   const order=DB.orders[0];
-  try{paint();renderP();renderAdmin()}catch(e){console.error(e)} /* ออเดอร์สำเร็จแล้ว — ถ้า render พลาดต้องไม่ทำให้กลายเป็น Error (กันสั่งซ้ำ) */
+  /* ออเดอร์สำเร็จแล้ว (หักเครดิต+save ผ่านไปแล้ว) — แยก try/catch ของแต่ละ render ออกจากกัน
+     เดิมรวมอยู่ใน try เดียว ถ้าตัวใดตัวหนึ่งพัง (เช่น element ของหน้าที่ไม่ได้เปิดอยู่หาไม่เจอ)
+     จะทำให้ตัวที่เหลือ "ไม่ทำงานเลย" รวมถึง paint() ที่อัปเดตตัวเลขเครดิตบนหน้าจอ ->
+     ดูเหมือนสั่งซื้อสำเร็จแต่ยอดเครดิตนิ่ง ทั้งที่ DB.credit ถูกหักและ save ไปแล้วจริง */
+  try{paint()}catch(e){console.error('paint() หลังสั่งซื้อ error:',e)}
+  try{renderP()}catch(e){console.error('renderP() หลังสั่งซื้อ error:',e)}
+  try{renderAdmin()}catch(e){console.error('renderAdmin() หลังสั่งซื้อ error:',e)}
   return {ok:true,p,key:k,order,total,qty:n};
 }
 function buy(id,trigger){openOrderModal(id,trigger)}
 
 /* ----- แอดมิน ----- */
 let LOW=5;
+/* รวมรหัส/ไอดีทั้งหมดของสินค้าชิ้นนี้ ไม่ว่าจะเป็นรหัสแบบไม่มีระยะเวลา (p.keys) หรือรหัสที่ผูกกับระยะเวลาใดระยะเวลาหนึ่ง (p.keysByDur[label]) */
+const allKeys=p=>p?(p.keys||[]).concat(...Object.values(p.keysByDur||{})):[];
 function normDB(){DB.accounts=DB.accounts||[];DB.log=DB.log||[];DB.tx=DB.tx||[];DB.cats=DB.cats||[];LOW=Math.max(1,Math.floor(+DB.low||5));
+  DB.products.forEach(p=>{p.keys=p.keys||[];p.durs=p.durs||[];p.keysByDur=p.keysByDur||{};p.durs.forEach(d=>{p.keysByDur[d.label]=p.keysByDur[d.label]||[]});if(p.auto)p.stock=allKeys(p).length});
   if(!DB.orders) DB.orders=DB.tx.filter(x=>x.type==='buy').map(x=>{const p=DB.products.find(pp=>pp.name===x.name);return{id:0,t:x.t,code:p?p.code:'',cat:p?p.cat:'',name:x.name,price:Math.abs(x.n),status:'auto',key:''}});
   DB.orderSeq=DB.orderSeq||(DB.orders.length?Math.max(1,...DB.orders.map(o=>o.id||0))+1:1);
   DB.orders.forEach(o=>{if(!o.id)o.id=DB.orderSeq++})}
 normDB();
 let adTab='cats',aq='',af='all',asort='name',cf='all',kmId=null,kmSure=-1,rnOld=null,ordQ='',ordF='all';
-const rs={id:null,mode:'keys'},cr={mode:'add'};
+const rs={id:null,mode:'keys',dur:''},cr={mode:'add'};
 const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
 const K=n=>'₭'+Math.round(n).toLocaleString('en-US');
 const fdate=t=>new Date(t).toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
@@ -2303,8 +2329,8 @@ const rsProd=()=>DB.products.find(x=>x.id==rs.id);
 const stKind=p=>p.stock<1?'out':p.stock<=LOW?'low':'ok';
 const stTag=p=>{const k=stKind(p);return [k,k==='out'?'ໝົດແລ້ວ':k==='low'?'ໃກ້ໝົດ '+p.stock:'ເຫຼືອ '+p.stock]};
 const bdg=(c,t)=>`<span class="bdg ${c}">${t}</span>`;
-const dlv=p=>p.auto?`<button class="bdg auto tap" data-keys="${p.id}">ອັດຕະໂນມັດ · ${p.keys.length}</button>`:bdg('man','ສົ່ງເອງ');
-const defMode=p=>p&&!(p.auto||p.keys.length||p.stock<1)?'qty':'keys';
+const dlv=p=>p.auto?`<button class="bdg auto tap" data-keys="${p.id}">ອັດຕະໂນມັດ · ${allKeys(p).length}</button>`:bdg('man','ສົ່ງເອງ');
+const defMode=p=>p&&!(p.auto||allKeys(p).length||p.stock<1)?'qty':'keys';
 const parseKeys=t=>t.split('\n').map(x=>x.trim()).filter(Boolean);
 async function copyQ(t,msg){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say(msg)}
 
@@ -2330,9 +2356,20 @@ function setTab(t){adTab=t;
   posInd();replay($('#ap-'+t));if(t==='accounts'&&typeof accLoad==='function')accLoad()}
 
 /* ---- restock ---- */
-function rsCalc(){const p=rsProd(),raw=parseKeys($('#rsKeys').value),have=new Set(p?p.keys:[]),seen=new Set(),add=[];let dup=0;
+/* ค่าไลยะเวลาที่เลือกอยู่ตอนนี้: '' = ไม่มีไลยะ, '__new__' = กำลังตั้งไลยะใหม่ (ยังไม่ยืนยัน), หรือ label ของไลยะเดิม */
+function rsDurLabel(){return rs.dur==='__new__'?$('#rsDurLabel').value.trim():rs.dur}
+function rsCalc(){const p=rsProd(),raw=parseKeys($('#rsKeys').value),have=new Set(allKeys(p)),seen=new Set(),add=[];let dup=0;
   raw.forEach(k=>{if(have.has(k)||seen.has(k))dup++;else{seen.add(k);add.push(k)}});
-  return {tot:raw.length,add,dup,n:Math.max(0,Math.floor(+$('#rsQty').value||0)),after:(p&&p.auto?p.keys.length:0)+add.length}}
+  return {tot:raw.length,add,dup,n:Math.max(0,Math.floor(+$('#rsQty').value||0)),after:allKeys(p).length+add.length}}
+function rsDurOptions(){
+  const p=rsProd(),sel=$('#rsDur'); if(!sel) return;
+  const opts=['<option value="">ບໍ່ມີໄລຍະເວລາ (ໃຊ້ລາຄາປົກກະຕິ)</option>']
+    .concat((p?p.durs:[]).map(d=>`<option value="${esc(d.label)}">${esc(d.label)} · ${K(d.price)}</option>`))
+    .concat(['<option value="__new__">+ ຕັ້ງໄລຍະເວລາໃໝ່…</option>']);
+  sel.innerHTML=opts.join('');
+  if(p&&!p.durs.some(d=>d.label===rs.dur)&&rs.dur!=='__new__') rs.dur='';
+  sel.value=rs.dur;
+}
 function rsSync(){
   const p=rsProd(); $('#rsProd').value=p?String(p.id):'';
   if(p&&p.auto) rs.mode='keys';
@@ -2340,15 +2377,21 @@ function rsSync(){
   kb.disabled=!p; qb.disabled=!p||!!p.auto;
   kb.setAttribute('aria-pressed',rs.mode==='keys'); qb.setAttribute('aria-pressed',rs.mode==='qty');
   $('#rsLock').hidden=!(p&&p.auto);
+  $('#rsDurCard').hidden=!(p&&rs.mode==='keys');
+  rsDurOptions();
+  $('#rsDurNew').hidden=rs.dur!=='__new__';
   $('#rsKeysBox').hidden=!(p&&rs.mode==='keys'); $('#rsQtyBox').hidden=!(p&&rs.mode==='qty');
   if(p){const t=stTag(p);$('#rsInfo').innerHTML=`<div class="bg">${bdg('code',esc(p.code))}${bdg(t[0],t[1])}${dlv(p)}</div><p class="hint" style="margin:.8rem 0 0">ສະຕັອກປັດຈຸບັນ: <b>${p.stock}</b> ຊິ້ນ</p>`}else $('#rsInfo').innerHTML='';
   const go=$('#rsGo'); delete go.dataset.sure; $('#rsGoT').textContent='ຢືນຢັນເຕີມສະຕັອກ';
   let ok=false,msg='ເລືອກສິນຄ້າໃນຂັ້ນຕອນທີ 1 ກ່ອນ ຈຶ່ງຈະເຫັນຕົວຢ່າງຜົນລັບ',cls='',bar=null,c=rsCalc();
   if(p){
     if(rs.mode==='keys'){
-      if(c.add.length){ok=true;cls='ok';msg=`ຈະເພີ່ມ ${c.add.length} ລະຫັດ`+(c.dup?` (ຂ້າມ ${c.dup} ລະຫັດທີ່ຊ້ຳ)`:'')+`\nສະຕັອກ ${p.stock} → ${c.after}`;
+      const dl=rsDurLabel(),newDur=rs.dur==='__new__';
+      if(newDur&&!dl){ok=false;msg='ໃສ່ຊື່ໄລຍະເວລາໃໝ່ກ່ອນ (ເຊັ່ນ 4 ມື້)';}
+      else if(c.add.length){ok=true;cls='ok';
+        msg=(dl?`ໄລຍະ: ${dl}\n`:'')+`ຈະເພີ່ມ ${c.add.length} ລະຫັດ`+(c.dup?` (ຂ້າມ ${c.dup} ລະຫັດທີ່ຊ້ຳ)`:'')+`\nສະຕັອກ ${p.stock} → ${c.after}`;
         if(!p.auto&&p.stock>0){cls='warn';msg+=`\nຄຳເຕືອນ: ສິນຄ້ານີ້ຕອນນີ້ເປັນແບບສົ່ງເອງ. ຖ້າເພີ່ມລະຫັດ ຈະປ່ຽນເປັນສົ່ງອັດຕະໂນມັດ ແລະສະຕັອກເດີມ (${p.stock}) ຈະຖືກແທນດ້ວຍຈຳນວນລະຫັດ.`}
-        bar=[p.auto?p.stock:0,c.add.length]}
+        bar=[allKeys(p).length,c.add.length]}
       else msg=c.dup?`ລະຫັດທີ່ວາງມາຊ້ຳກັບຂອງເກົ່າທັງໝົດ (${c.dup}) ບໍ່ມີລະຫັດໃໝ່ໃຫ້ເພີ່ມ`:'ວາງລະຫັດໃນຊ່ອງດ້ານເທິງ (1 ແຖວ = 1 ຊິ້ນ)';
     }else{
       if(c.n){ok=true;cls='ok';msg=`ຈະເພີ່ມ ${c.n} ຊິ້ນ\nສະຕັອກ ${p.stock} → ${p.stock+c.n}`;bar=[p.stock,c.n]}else msg='ໃສ່ຈຳນວນທີ່ຈະເພີ່ມ';
@@ -2499,7 +2542,7 @@ function renderAdmin(){
 
   /* dashboard metrics */
   setNum('#mtValue',L.reduce((a,p)=>a+p.stock*p.price,0));
-  setNum('#mtKeys',L.reduce((a,p)=>a+(p.auto?p.keys.length:0),0));
+  setNum('#mtKeys',L.reduce((a,p)=>a+(p.auto?allKeys(p).length:0),0));
   $('#mtAuto').dataset.suf=' / '+N; setNum('#mtAuto',L.filter(p=>p.auto).length);
   setNum('#mtCredit',DB.credit); setNum('#crBal',DB.credit);
   setNum('#mtOrders',(DB.orders||[]).length); setNum('#mtRevenue',DB.tx.filter(x=>x.type==='buy').reduce((a,x)=>a+Math.abs(x.n),0));
@@ -2538,21 +2581,32 @@ function renderAdmin(){
   rsSync();crSync();renderOrders();renderReports();renderAcc();renderMyAccount();renderMyKeys();renderMyOrders();
 }
 
-function goRestock(id){rs.id=id;rs.mode=defMode(rsProd());setTab('restock');rsSync();$('#rsProd').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}
+function goRestock(id){rs.id=id;rs.mode=defMode(rsProd());rs.dur='';setTab('restock');rsSync();$('#rsProd').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}
 const firstNeed=()=>DB.products.filter(p=>p.stock<=LOW).sort((a,b)=>a.stock-b.stock)[0];
 
 /* ---- keys manager sheet ---- */
+/* แสดงรหัส/ไอดีทั้งหมดของสินค้า แยกกลุ่มตามระยะเวลา (ถ้ามี) — ปุ่มลบใช้ data-kdel="<ไลยะ>::<index>" (ไลยะว่าง = คลังไม่มีระยะเวลา) */
+function kmGroups(p){const g=[{label:'',title:'ບໍ່ມີໄລຍະເວລາ',list:p.keys||[]}];
+  (p.durs||[]).forEach(d=>g.push({label:d.label,title:d.label,list:(p.keysByDur&&p.keysByDur[d.label])||[]}));
+  return g.filter(x=>x.list.length||!x.label)}
 function kmRender(){const p=DB.products.find(x=>x.id==kmId);if(!p)return closeSheet();
-  $('#kmSub').textContent=p.name+' · '+p.code;
-  $('#kmBody').innerHTML=`<div class="km-s"><div><b>${p.keys.length}</b><span>ລະຫັດພ້ອມສົ່ງ</span></div><div><b>${p.stock}</b><span>ສະຕັອກ</span></div></div>`+(p.keys.length?`<div class="km-l">${p.keys.map((k,i)=>`<div class="krow"><span class="ki">${i+1}</span><code>${esc(k)}</code><button class="ib" data-kcopy="${i}" aria-label="ສຳເນົາ"><svg><use href="#i-copy"/></svg></button><button class="ib dng${kmSure===i?' sure':''}" data-kdel="${i}" aria-label="ລຶບ">${kmSure===i?'ຢືນຢັນ':'<svg><use href="#i-trash"/></svg>'}</button></div>`).join('')}</div><p class="hint">ກົດຖັງຂີ້ເຫຍື້ອ 2 ຄັ້ງເພື່ອລຶບລະຫັດນັ້ນອອກຈາກສະຕັອກ.</p>`:'<p class="note">ບໍ່ມີລະຫັດຄ້າງໃນສະຕັອກ</p>')}
-function openKeys(id){kmId=id;kmSure=-1;openSheet(`<h3 class="sh-t">ຈັດການລະຫັດ</h3><p class="hint" id="kmSub" style="margin:-.8rem 0 0"></p><div id="kmBody"></div><button class="btn b2 wide sp" data-kall>ສຳເນົາລະຫັດທັງໝົດ</button><button class="btn b3 wide" data-krest style="margin-top:.9rem">ເຕີມລະຫັດເພີ່ມ</button><button class="btn b3 wide" data-close style="margin-top:.9rem">ປິດ</button>`);kmRender()}
+  const tot=allKeys(p).length,groups=kmGroups(p).filter(g=>g.list.length||(p.durs.length===0&&g.label===''));
+  $('#kmBody').innerHTML=`<div class="km-s"><div><b>${tot}</b><span>ລະຫັດພ້ອມສົ່ງ</span></div><div><b>${p.stock}</b><span>ສະຕັອກ</span></div></div>`+
+    (tot?groups.map(g=>(p.durs.length?`<p class="h3 sp">${g.label?esc(g.title):'ບໍ່ມີໄລຍະເວລາ'} · ${g.list.length}</p>`:'')+
+      `<div class="km-l">${g.list.map((k,i)=>`<div class="krow"><span class="ki">${i+1}</span><code>${esc(k)}</code><button class="ib" data-kcopy="${esc(g.label)}::${i}" aria-label="ສຳເນົາ"><svg><use href="#i-copy"/></svg></button><button class="ib dng${kmSure===g.label+'::'+i?' sure':''}" data-kdel="${esc(g.label)}::${i}" aria-label="ລຶບ">${kmSure===g.label+'::'+i?'ຢືນຢັນ':'<svg><use href="#i-trash"/></svg>'}</button></div>`).join('')}</div>`
+    ).join('')+'<p class="hint">ກົດຖັງຂີ້ເຫຍື້ອ 2 ຄັ້ງເພື່ອລຶບລະຫັດນັ້ນອອກຈາກສະຕັອກ.</p>':'<p class="note">ບໍ່ມີລະຫັດຄ້າງໃນສະຕັອກ</p>')}
+function kmPool(p,label){return label?(p.keysByDur&&p.keysByDur[label]):p.keys}
+function openKeys(id){kmId=id;kmSure=-1;openSheet(`<h3 class="sh-t">ຈັດການລະຫັດ</h3><p class="hint" id="kmSub" style="margin:-.8rem 0 0"></p><div id="kmBody"></div><button class="btn b2 wide sp" data-kall>ສຳເນົາລະຫັດທັງໝົດ</button><button class="btn b3 wide" data-krest style="margin-top:.9rem">ເຕີມລະຫັດເພີ່ມ</button><button class="btn b3 wide" data-close style="margin-top:.9rem">ປິດ</button>`);
+  const p=DB.products.find(x=>x.id==id); if(p) $('#kmSub').textContent=p.name+' · '+p.code;
+  kmRender()}
 function openRename(c){rnOld=c;openSheet(`<h3 class="sh-t">ແກ້ຊື່ໝວດໝູ່</h3><p class="hint" style="margin:-.8rem 0 0">ສິນຄ້າໃນໝວດນີ້ຈະຖືກຍ້າຍໄປຊື່ໃໝ່ໃຫ້ອັດຕະໂນມັດ.</p><p class="h3 sp">ຊື່ໝວດໝູ່</p><input class="field" id="rnIn" value="${esc(c)}"><button class="btn b2 wide sp" data-rnsave>ບັນທຶກ</button><button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`)}
 sheet.addEventListener('click',e=>{const t=e.target,p=DB.products.find(x=>x.id==kmId);
   if($('#kmBody')&&p){
-    const kc=t.closest('[data-kcopy]'); if(kc) return copyQ(p.keys[+kc.dataset.kcopy],'ສຳເນົາລະຫັດແລ້ວ');
-    const kd=t.closest('[data-kdel]'); if(kd){const i=+kd.dataset.kdel;if(kmSure!==i){kmSure=i;return kmRender()}
-      p.keys.splice(i,1);p.stock=p.keys.length;kmSure=-1;addLog(p,'del',-1);save();renderP();renderAdmin();return kmRender()}
-    if(t.closest('[data-kall]')) return p.keys.length?copyQ(p.keys.join('\n'),'ສຳເນົາ '+p.keys.length+' ລະຫັດແລ້ວ'):say('ບໍ່ມີລະຫັດໃຫ້ສຳເນົາ');
+    const kc=t.closest('[data-kcopy]'); if(kc){const[label,i]=kc.dataset.kcopy.split('::'),pool=kmPool(p,label);return copyQ(pool[+i],'ສຳເນົາລະຫັດແລ້ວ')}
+    const kd=t.closest('[data-kdel]'); if(kd){const key=kd.dataset.kdel,[label,i]=key.split('::');
+      if(kmSure!==key){kmSure=key;return kmRender()}
+      kmPool(p,label).splice(+i,1);p.stock=allKeys(p).length;kmSure=-1;addLog(p,'del',-1);save();renderP();renderAdmin();return kmRender()}
+    if(t.closest('[data-kall]')){const all=allKeys(p);return all.length?copyQ(all.join('\n'),'ສຳເນົາ '+all.length+' ລະຫັດແລ້ວ'):say('ບໍ່ມີລະຫັດໃຫ້ສຳເນົາ')}
     if(t.closest('[data-krest]')){closeSheet();return goRestock(kmId)}
   }
   if(t.closest('[data-rnsave]')){const v=$('#rnIn').value.trim();if(!v)return say('ກະລຸນາໃສ່ຊື່ໝວດໝູ່');
@@ -2566,9 +2620,12 @@ $('#adTabs').addEventListener('click',e=>{const b=e.target.closest('.ad-tab');if
 if(window.ResizeObserver) new ResizeObserver(posInd).observe($('#adTabs')); else window.addEventListener('resize',posInd);
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(posInd);
 document.addEventListener('click',e=>{if(e.target.closest('[data-go="admin"]'))setTimeout(()=>setTab(adTab),140)});
-$('#rsProd').addEventListener('change',e=>{rs.id=e.target.value||null;rs.mode=defMode(rsProd());rsSync()});
+$('#rsProd').addEventListener('change',e=>{rs.id=e.target.value||null;rs.mode=defMode(rsProd());rs.dur='';rsSync()});
 $('#rsModeKeys').onclick=()=>{rs.mode='keys';rsSync()};
 $('#rsModeQty').onclick=()=>{rs.mode='qty';rsSync()};
+$('#rsDur').addEventListener('change',e=>{rs.dur=e.target.value;rsSync()});
+$('#rsDurLabel').addEventListener('input',rsSync);
+$('#rsDurPrice').addEventListener('input',rsSync);
 $('#rsKeys').addEventListener('input',rsSync);
 $('#rsQty').addEventListener('input',rsSync);
 $('#rsQuick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;$('#rsQty').value=(+$('#rsQty').value||0)+ +b.dataset.q;rsSync()});
@@ -2592,7 +2649,14 @@ $('#rsGo').addEventListener('click',()=>{
   if(rs.mode==='keys'){
     if(!c.add.length) return say('ຍັງບໍ່ມີລະຫັດໃໝ່ທີ່ຈະເພີ່ມ');
     if(!p.auto&&p.stock>0&&!go.dataset.sure){go.dataset.sure=1;$('#rsGoT').textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນປ່ຽນເປັນສົ່ງອັດຕະໂນມັດ';return}
-    p.keys.push(...c.add);p.auto=true;p.stock=p.keys.length;n=c.add.length;
+    let durLabel=rsDurLabel();
+    if(rs.dur==='__new__'){
+      if(!durLabel) return say('ໃສ່ຊື່ໄລຍະເວລາໃໝ່ກ່ອນ');
+      if(!p.durs.some(d=>d.label===durLabel)){p.durs.push({label:durLabel,price:Math.max(0,+$('#rsDurPrice').value||0)});p.keysByDur[durLabel]=p.keysByDur[durLabel]||[]}
+    }
+    const pool=durLabel?(p.keysByDur[durLabel]=p.keysByDur[durLabel]||[]):p.keys;
+    pool.push(...c.add);p.auto=true;p.stock=allKeys(p).length;n=c.add.length;
+    rs.dur=durLabel||'';
   }else{
     if(p.auto||!c.n) return say('ກະລຸນາໃສ່ຈຳນວນ');
     p.stock+=c.n;n=c.n;
@@ -2600,7 +2664,7 @@ $('#rsGo').addEventListener('click',()=>{
   addLog(p,rs.mode,n);
   if(!save()) return;
   $('#rsKeys').value='';$('#rsQty').value='';
-  renderP();renderAdmin();burst('+'+n,p.name+' · ເຫຼືອ '+p.stock);
+  renderP();renderAdmin();rsSync();burst('+'+n,p.name+' · ເຫຼືອ '+p.stock);
 });
 $('#crGo').addEventListener('click',()=>{
   const amt=Math.floor(+$('#crAmt').value||0),add=cr.mode==='add'; if(amt<=0) return;
@@ -2635,18 +2699,17 @@ $('#bkRestore').onclick=function(){let d;try{d=JSON.parse($('#bkBox').value)}cat
   if(!this.dataset.sure){this.dataset.sure=1;this.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນ (ຂໍ້ມູນປັດຈຸບັນຈະຖືກແທນທີ່)';return}
   delete this.dataset.sure;this.textContent='ກູ້ຄືນຂໍ້ມູນ';
   if(d.cur!=='LAK'){const kp=v=>Math.round((+v||0)*650/1000)*1000;d.credit=kp(d.credit);d.products.forEach(p=>{p.price=kp(p.price)});d.cur='LAK'}
-  d.products.forEach(p=>{p.keys=p.keys||[];p.imgs=p.imgs||[]});d.seq=d.seq||d.products.length+1;d.name=d.name||'DekmaSH Stowe';
+  d.products.forEach(p=>{p.keys=p.keys||[];p.imgs=p.imgs||[];p.durs=p.durs||[];p.keysByDur=p.keysByDur||{}});d.seq=d.seq||d.products.length+1;d.name=d.name||'DekmaSH Stowe';
   DB=d;normDB();cat='ທັງໝົດ';save();paint();renderCats();renderP();renderAdmin();$('#bkBox').value='';say('ກູ້ຄືນຂໍ້ມູນແລ້ວ')};
 
 let ed=null;
 function openEd(id){
   const src=DB.products.find(x=>x.id==id);
-  ed=src?JSON.parse(JSON.stringify(src)):{id:null,code:'P-'+String(DB.seq).padStart(4,'0'),name:'',cat:DB.cats[0]||'',price:0,stock:UNL,desc:'',imgs:[],keys:[],auto:false,durs:[]};
-  ed.durs=ed.durs||[];
+  ed=src?JSON.parse(JSON.stringify(src)):{id:null,code:'P-'+String(DB.seq).padStart(4,'0'),name:'',cat:DB.cats[0]||'',price:0,stock:UNL,desc:'',imgs:[],keys:[],auto:false,durs:[],keysByDur:{}};
+  ed.durs=ed.durs||[]; ed.keysByDur=ed.keysByDur||{};
   drawEd();
 }
-function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.desc=$('#eDesc').value;
-  ed.durs=[...document.querySelectorAll('#eDurs .dur-r')].map(r=>({label:r.querySelector('.d-l').value,price:Math.max(0,+r.querySelector('.d-p').value||0)}))}
+function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.desc=$('#eDesc').value}
 function drawEd(){
   openSheet(`<h3 class="sh-t">${ed.id?'ແກ້ໄຂສິນຄ້າ':'ເພີ່ມສິນຄ້າໃໝ່'}</h3>
   <p class="ed-h first">ຂໍ້ມູນສິນຄ້າ</p>
@@ -2659,11 +2722,7 @@ function drawEd(){
   <p class="hint">ສະແດງໃຕ້ຊື່ສິນຄ້າ. ບໍ່ບັງຄັບ.</p>
   <p class="ed-h">ລາຄາ</p>
   <p class="h3">ລາຄາ (ກີບ)</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price}">
-  <p class="hint">ໃຊ້ເມື່ອບໍ່ມີຕົວເລືອກໄລຍະເວລາ. ຖ້າເພີ່ມຕົວເລືອກດ້ານລຸ່ມ ລາຄາຈະໃຊ້ຕາມແຕ່ລະຕົວເລືອກ.</p>
-  <p class="ed-h">ຕົວເລືອກໄລຍະເວລາ</p>
-  <div id="eDurs">${ed.durs.map((d,i)=>`<div class="line dur-r"><input class="field d-l" placeholder="ເຊັ່ນ 7 ມື້" value="${esc(d.label)}" aria-label="ຊື່ຕົວເລືອກ"><input class="field d-p" type="number" inputmode="numeric" min="0" placeholder="ລາຄາ (ກີບ)" value="${+d.price||0}" aria-label="ລາຄາຕົວເລືອກ"><button class="ib dng" data-rmdur="${i}" aria-label="ລຶບຕົວເລືອກ"><svg><use href="#i-trash"/></svg></button></div>`).join('')}</div>
-  <button class="btn b3 wide" id="eDurAdd" type="button">+ ເພີ່ມຕົວເລືອກໄລຍະເວລາ</button>
-  <p class="hint">ຕັ້ງຊື່ ແລະລາຄາເອງໄດ້ ເຊັ່ນ "7 ມື້" · "30 ມື້" · "ຕະຫຼອດຊີບ". ລູກຄ້າຈະເລືອກໄດ້ຕອນສັ່ງຊື້. ບໍ່ເພີ່ມກໍໄດ້.</p>
+  <p class="hint">${ed.durs&&ed.durs.length?'ສິນຄ້ານີ້ມີຕົວເລືອກໄລຍະເວລາແລ້ວ (ຕັ້ງຢູ່ໃນແຖບ "ເຕີມສະຕັອກ") ລາຄານີ້ຈະບໍ່ຖືກໃຊ້.':'ໃຊ້ເປັນລາຄາປົກກະຕິ. ຖ້າຕ້ອງການໃຫ້ມີຕົວເລືອກໄລຍະເວລາ (ເຊັ່ນ 1 ມື້ / 7 ມື້) ໃຫ້ຕັ້ງຕອນເຕີມສະຕັອກໃນແຖບ "ເຕີມສະຕັອກ".'}</p>
   <button class="btn b2 wide sp" id="eSave">ບັນທຶກ</button>${ed.id?'<button class="del" id="eDel">ລຶບສິນຄ້ານີ້</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`);
 }
 function shrink(f){return new Promise(r=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.82))};im.onerror=()=>r(null);im.src=u})}
@@ -2672,12 +2731,10 @@ sheet.addEventListener('click',e=>{
   const t=e.target;
   if(t===sheet||t.closest('[data-close]')) return closeSheet();
   const rm=t.closest('[data-rmimg]'); if(rm){pull();ed.imgs.splice(+rm.dataset.rmimg,1);return drawEd()}
-  if(t.closest('#eDurAdd')){pull();ed.durs.push({label:'',price:ed.price||0});return drawEd()}
-  const rd=t.closest('[data-rmdur]'); if(rd){pull();ed.durs.splice(+rd.dataset.rmdur,1);return drawEd()}
   if(t.closest('#eDel')){const b=t.closest('#eDel');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນການລຶບ';return}
     DB.products=DB.products.filter(p=>p.id!==ed.id);save();renderP();renderAdmin();closeSheet();return say('ລຶບສິນຄ້າແລ້ວ')}
-  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('ກະລຸນາໃສ່ຊື່ສິນຄ້າ');ed.durs=ed.durs.map(d=>({label:String(d.label).trim(),price:d.price})).filter(d=>d.label);
-    ed.auto=ed.keys.length>0; if(ed.auto) ed.stock=ed.keys.length;
+  if(t.closest('#eSave')){pull();if(!ed.name.trim())return say('ກະລຸນາໃສ່ຊື່ສິນຄ້າ');
+    ed.auto=allKeys(ed).length>0; if(ed.auto) ed.stock=allKeys(ed).length;
     if(ed.id){DB.products[DB.products.findIndex(p=>p.id===ed.id)]=ed}else{ed.id=DB.seq++;DB.products.push(ed)}
     if(!save())return; renderCats();renderP();renderAdmin();closeSheet();say('ບັນທຶກສິນຄ້າແລ້ວ')}
 });
@@ -2760,8 +2817,8 @@ function openAcc(id){
   <p class="ed-h first">ຂໍ້ມູນບັນຊີ</p>
   <p class="h3">ຊື່ບັນຊີ</p><input class="field" id="acUser" value="${a?esc(a.user):''}" ${a?'readonly':''} placeholder="ຕັ້ງຊື່ບັນຊີ" autocomplete="off" autocapitalize="off" spellcheck="false">
   <p class="hint">${a?'ຊື່ບັນຊີແກ້ບໍ່ໄດ້.':'ໃຊ້ຕົວອັກສອນ ຫຼືຕົວເລກ ບໍ່ມີຍະຫວ່າງ. ຊື່ຕ້ອງບໍ່ຊ້ຳກັບບັນຊີອື່ນ.'}</p>
-  <p class="h3 sp">ລະຫັດຜ່ານ</p><div class="line"><input class="field" id="acPass" placeholder="${a?'ປ່ອຍວ່າງ = ບໍ່ປ່ຽນລະຫັດ':'ຕັ້ງລະຫັດຜ່ານ'}" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="cat" id="acGen" type="button">ສຸ່ມ</button></div>
-  <p class="hint">ຢ່າງໜ້ອຍ 4 ຕົວ. ລະຫັດຖືກເຂົ້າລະຫັດເກັບໄວ້ ເບິ່ງຄືນບໍ່ໄດ້ ຈຶ່ງຄວນສຳເນົາໃຫ້ລູກຄ້າຕອນສ້າງ.</p>
+  <p class="h3 sp">ລະຫັດຜ່ານ</p><div class="line"><input class="field" id="acPass" placeholder="${a?'ປ່ອຍວ່າງ = ບໍ່ປ່ຽນລະຫັດ':'ປ່ອຍວ່າງ = ສຸ່ມລະຫັດໃຫ້ອັດຕະໂນມັດ'}" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="cat" id="acGen" type="button">ສຸ່ມ</button></div>
+  <p class="hint">${a?'ຢ່າງໜ້ອຍ 4 ຕົວ ຖ້າຕ້ອງການປ່ຽນ. ລະຫັດຖືກເຂົ້າລະຫັດເກັບໄວ້ ເບິ່ງຄືນບໍ່ໄດ້ ຈຶ່ງຄວນສຳເນົາໃຫ້ລູກຄ້າຕອນສ້າງ.':'ບໍ່ຈຳເປັນຕ້ອງໃສ່ — ປ່ອຍວ່າງໄວ້ ລະບົບຈະສຸ່ມລະຫັດຜ່ານໃຫ້ເອງ ແລະໃຊ້ງານໄດ້ຈິງທັນທີ. ລະຫັດຖືກເຂົ້າລະຫັດເກັບໄວ້ ເບິ່ງຄືນບໍ່ໄດ້ ຈຶ່ງຄວນສຳເນົາໃຫ້ລູກຄ້າຕອນສ້າງ.'}</p>
   <p class="ed-h">ກຳນົດເວລາໃຊ້ງານ</p>
   <p class="h3">ໃຊ້ງານໄດ້ກີ່ວັນ</p>
   <div class="chips" id="acChips">${[7,30,90,365].map(n=>`<button class="cat" type="button" data-acd="${n}">${n} ມື້</button>`).join('')}<button class="cat" type="button" data-acd="0">ບໍ່ຈຳກັດ</button></div>
@@ -2817,12 +2874,14 @@ sheet.addEventListener('click',async e=>{
     if(!del.dataset.sure){del.dataset.sure=1;del.textContent='ແຕະອີກຄັ້ງເພື່ອຢືນຢັນການລຶບ';return}
     if(await accCall('delete',{id:acEd.id})){closeSheet();say('ລຶບບັນຊີແລ້ວ')} return}
   const sv=t.closest('#acSave'); if(!sv||sv.disabled) return;
-  const isNew=!acEd.id,user=$('#acUser').value.trim(),pw=$('#acPass').value,raw=$('#acDays').value.trim();
+  const isNew=!acEd.id,user=$('#acUser').value.trim(),raw=$('#acDays').value.trim();
+  let pw=$('#acPass').value;
   if(isNew){
     if(!user) return say('ກະລຸນາໃສ່ຊື່ບັນຊີ');
     if(/\s/.test(user)) return say('ຊື່ບັນຊີຫ້າມມີຍະຫວ່າງ');
+    if(!pw){pw=genPass();$('#acPass').value=pw} /* ບໍ່ໃສ່ລະຫັດຜ່ານ = ສຸ່ມໃຫ້ອັດຕະໂນມັດ ຍັງໃຊ້ງານໄດ້ຈິງ */
   }
-  if((isNew||pw)&&pw.length<4) return say('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວ');
+  if(pw&&pw.length<4) return say('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວ');
   if(raw===''&&isNew) return say('ກະລຸນາໃສ່ຈຳນວນມື້ທີ່ໃຫ້ໃຊ້ງານ (0 = ບໍ່ຈຳກັດ)');
   const n=Math.floor(+raw); if(raw!==''&&!(n>=0&&n<=3650)) return say('ຈຳນວນມື້ຕ້ອງຢູ່ລະຫວ່າງ 0 ຫາ 3650');
   sv.disabled=true;
@@ -2864,13 +2923,32 @@ async function authCheck(){
   if(!tk) return authKick('none');
   try{
     const r=await rpc('dk_check',{p_token:tk});
-    if(r&&r.ok){authExp=r.exp||0;authOff=r.now-Date.now();const un=$('#uname');if(un)un.textContent=r.user;try{localStorage.setItem('dekma_user',r.user)}catch(e){}renderMyAccount();return}
+    if(r&&r.ok){authExp=r.exp||0;authOff=r.now-Date.now();const un=$('#uname');if(un)un.textContent=r.user;try{localStorage.setItem('dekma_user',r.user)}catch(e){}renderMyAccount();loadHomeStats();return}
     if(r&&r.code) authKick(r.code); /* ເຕະອອກສະເພາະເມື່ອເຊີບເວີບອກຊັດເຈນ */
   }catch(e){
     /* ເນັດຫຼຸດ/ເຊີບເວີຊ້າ = ຫ້າມເຕະອອກ · ຍົກເວັ້ນ offline ຫຼັງໝົດເວລາແລ້ວ >60 ວິ */
     if(authExp&&Date.now()+authOff>authExp+60000) authKick('expired');
   }
 }
+
+/* ---- ໜ້າຫຼັກ: 4 ກ່ອງສະຖິຕິ (ຕົວແທນ/ສິນຄ້າ/ລະຫັດ/ອໍເດີ) ດຶງຈາກເຊີບເວີຈິງ ---- */
+let statsBusy=false;
+async function loadHomeStats(){
+  if(statsBusy) return; statsBusy=true;
+  let tk=null; try{tk=localStorage.getItem('dekma_token')}catch(e){}
+  if(!tk){statsBusy=false;return}
+  try{
+    const r=await rpc('dk_home_stats',{p_token:tk});
+    if(r&&r.ok){
+      setNum('#stAgents',r.agents||0);
+      setNum('#stProducts',r.products||0);
+      setNum('#stCodes',r.codes||0);
+      setNum('#stOrders',r.orders||0);
+    }
+  }catch(e){ /* ເນັດຫຼຸດ: ປ່ອຍເລກເກົ່າໄວ້ ລອງໃໝ່ຮອບຕໍ່ໄປ */ }
+  finally{ statsBusy=false }
+}
+setInterval(loadHomeStats,30000);
 function authLogout(){
   let tk=null; try{tk=localStorage.getItem('dekma_token')}catch(e){}
   try{localStorage.removeItem('dekma_token');localStorage.removeItem('dekma_user')}catch(e){}
