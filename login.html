@@ -681,7 +681,7 @@ $('#lgForm').addEventListener('submit',async e=>{
   const rest=550-(performance.now()-t0); if(rest>0) await sleep(rest); /* ໃຫ້ເຫັນ loading ຊັດເຈນ */
 
   if(res&&res.ok){
-    try{localStorage.setItem('dekma_token',res.token);localStorage.setItem('dekma_user',res.user)}
+    try{localStorage.setItem('dekma_token',res.token);localStorage.setItem('dekma_user',res.user);localStorage.setItem('dekma_last_login',String(Date.now()))}
     catch(err){ busy=false; setState('idle',IDLE_LABEL); return showErr('ບຼາວເຊີນີ້ບໍ່ອະນຸຍາດໃຫ້ບັນທຶກການເຂົ້າສູ່ລະບົບ (ປິດໂໝດ Private ແລ້ວລອງໃໝ່)') }
     setState('success','ສຳເລັດ ກຳລັງພາໄປໜ້າເວັບ…');
     grpU.classList.add('is-ok'); grpP.classList.add('is-ok');

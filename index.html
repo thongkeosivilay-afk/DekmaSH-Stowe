@@ -362,6 +362,35 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .dot{width:.9rem;height:.9rem;border-radius:50%;background:var(--green);box-shadow:0 0 .8rem var(--green)}
 .svc em{margin-left:auto;font-style:normal;color:var(--muted);font-size:1.3rem;font-weight:500}
 .av{flex:none;display:grid;place-items:center;width:6rem;height:6rem;border-radius:50%;border:.2rem solid #ff4d6a;background:linear-gradient(145deg,#ff1f42,#7a0016);box-shadow:0 0 1.8rem rgba(205,0,35,.45);font-size:2rem;font-weight:700}
+
+/* ===== หน้าบัญชี / รหัสไลเซนส์ / ประวัติคำสั่งซื้อ (Menu section) ===== */
+.acc-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;padding:3rem 2rem 2.4rem;position:relative;overflow:hidden}
+.acc-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% -10%,rgba(255,31,66,.24),transparent 70%);pointer-events:none}
+.acc-av-wrap{position:relative;width:9rem;height:9rem;display:grid;place-items:center}
+.acc-av{position:relative;z-index:1;width:8.4rem;height:8.4rem;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-size:2.6rem;font-weight:700;color:#fff;background:linear-gradient(145deg,#ff1f42,#7a0016);border:.2rem solid #ff4d6a;box-shadow:0 0 2.4rem rgba(205,0,35,.5)}
+.acc-ring{position:absolute;inset:0;border-radius:50%;border:.15rem solid rgba(255,79,106,.35);animation:accSpin 7s linear infinite}
+.acc-ring::before{content:"";position:absolute;top:-.3rem;left:50%;width:.9rem;height:.9rem;margin-left:-.45rem;border-radius:50%;background:#ff1f42;box-shadow:0 0 1rem rgba(255,31,66,.9)}
+@keyframes accSpin{to{transform:rotate(360deg)}}
+.acc-name{position:relative;z-index:1;margin:.4rem 0 0;font-family:var(--font-display);font-size:2.1rem;font-weight:700;color:#fff}
+.acc-role{position:relative;z-index:1}
+.acc-role svg{width:1.3rem;height:1.3rem;margin-right:.6rem;color:#ff4d6a}
+.acc-exp{padding:1.8rem}
+.acc-exp-top{display:flex;align-items:center;gap:1.2rem}
+.acc-exp-bar{position:relative;height:.8rem;margin-top:1.4rem;border-radius:99rem;background:var(--input-bg);border:1px solid var(--card-border);overflow:hidden}
+.acc-exp-bar>i{display:block;height:100%;border-radius:99rem;background:linear-gradient(90deg,var(--red-dim),var(--red-bright));width:0%;transition:width .8s var(--ease-premium);box-shadow:0 0 1rem rgba(255,31,66,.5)}
+.acc-exp-bar.warn>i{background:linear-gradient(90deg,#8c5a2b,#f5b731)}
+.acc-exp-bar.crit>i{background:linear-gradient(90deg,#7a0016,#ff1f42);animation:pulse 1.6s ease-in-out infinite}
+
+/* license-key card: masked code + reveal/copy, matches .prow rhythm used elsewhere */
+.kcard{display:flex;align-items:center;gap:1.2rem;padding:1.3rem 0;border-top:1px solid var(--card-border)}
+.kcard:first-child{border:0;padding-top:0}
+.kcard .th{flex:none}
+.kcard .pi{min-width:0;flex:1}
+.kcard .kcode{margin-top:.4rem;display:flex;align-items:center;gap:.8rem;height:3.6rem;padding:0 1.2rem;border-radius:1.2rem;background:var(--input-bg);border:max(1px,.15rem) dashed var(--pill-border);font-weight:700;letter-spacing:.06em;font-size:1.3rem;overflow:hidden}
+.kcard .kcode span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:filter .25s ease}
+.kcard .kcode span.masked{filter:blur(.45rem);user-select:none}
+.kcard .pa{display:flex;gap:.6rem;flex:none}
+.kcard .ib.on{color:#ff4d6a;border-color:var(--pill-border)}
 .row{display:flex;align-items:center;gap:1.4rem;width:100%;padding:1.2rem 0;border:0;border-top:1px solid var(--card-border);background:none;color:inherit;text-align:left;font-size:1.6rem;font-weight:600;transition:opacity .2s}
 .row:first-child{border:0}.row:active{opacity:.6}.row>svg{margin-left:auto;width:1.6rem;height:1.6rem;color:#7a6a6c}.row.out{color:#f87171}
 .cv{position:relative;aspect-ratio:4/3;border-radius:1.6rem;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 25% 15%,var(--g1),var(--g2) 85%);border:max(1px,.1rem) solid rgba(255,255,255,.08)}
@@ -1673,6 +1702,8 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="1.5" width="12" height="21" rx="2.600" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 19.2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="10.5" r="2.8" fill="var(--slit,#0a0505)" stroke="currentColor" stroke-width="1.6"/></symbol>
   <symbol id="i-bank" viewBox="0 0 24 24"><path d="M12 2 2 7.5v1.7h20V7.5z"/><path d="M4 10.5v8M9 10.5v8M15 10.5v8M20 10.5v8" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/><rect x="2" y="19.5" width="20" height="2.200" rx="1"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.200" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6.8V12l3.6 2.2" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1.500 12S5 5 12 5s10.500 7 10.500 7-3.5 7-10.500 7S1.500 12 1.500 12z" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.200" fill="none" stroke="currentColor" stroke-width="2.200"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3.500 3.500l17 17M9.900 5.300C10.600 5.100 11.300 5 12 5c7 0 10.500 7 10.500 7-.6 1.200-1.500 2.500-2.700 3.700M6.400 6.700C3.700 8.400 1.500 12 1.500 12s3.5 7 10.500 7c1.200 0 2.300-.2 3.300-.5" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.700 9.700a3.200 3.200 0 0 0 4.500 4.500" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/></symbol>
 </svg>
 
 <main class="app">
@@ -1768,13 +1799,75 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   <div class="stack">
     <div class="card" style="display:flex;align-items:center;gap:1.6rem"><span class="av">ຕທ</span><div><p style="font-size:1.8rem;font-weight:700" id="uname"></p><p class="lb" style="letter-spacing:0">ຕົວແທນຈຳໜ່າຍ</p></div><button class="btn b3" data-go="topup" style="margin-left:auto;height:3.4rem"><svg><use href="#i-wallet"/></svg><span id="ucredit"></span></button></div>
     <div class="card" style="padding:.6rem 1.6rem">
-      <button class="row" data-say="ບັນຊີຂອງຂ້ອຍ"><span class="ico s1"><svg><use href="#i-users"/></svg></span>ບັນຊີຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-say="ລະຫັດໄລເຊັນຂອງຂ້ອຍ"><span class="ico s3"><svg><use href="#i-key"/></svg></span>ລະຫັດໄລເຊັນຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
-      <button class="row" data-say="ປະຫວັດຄຳສັ່ງຊື້"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ປະຫວັດຄຳສັ່ງຊື້<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-go="account"><span class="ico s1"><svg><use href="#i-users"/></svg></span>ບັນຊີຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-go="keys"><span class="ico s3"><svg><use href="#i-key"/></svg></span>ລະຫັດໄລເຊັນຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
+      <button class="row" data-go="myorders"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ປະຫວັດຄຳສັ່ງຊື້<svg><use href="#i-chev"/></svg></button>
       <button class="row" data-go="topup"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span>ເຕີມເງິນເຄຣດິດ<svg><use href="#i-chev"/></svg></button>
     </div>
     <div class="card" style="padding:.6rem 1.6rem"><button class="row out" id="btnLogout"><span class="ico" style="--c:#f87171;--ibg:#2f1420;--bd:#7a2b3d"><svg><use href="#i-out"/></svg></span>ອອກຈາກລະບົບ</button></div>
   </div>
+</div>
+
+<!-- ===== ບັນຊີຂອງຂ້ອຍ ===== -->
+<div class="view" id="v-account">
+  <div class="pg"><button class="back" data-go="menu" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ບັນຊີຂອງຂ້ອຍ</h2><small>ຂໍ້ມູນບັນຊີ ແລະສະຖານະການໃຊ້ງານ</small></div></div>
+
+  <div class="card acc-hero">
+    <div class="acc-av-wrap"><span class="acc-av" id="accAv">ຕທ</span><i class="acc-ring" aria-hidden="true"></i></div>
+    <p class="acc-name" id="accName">—</p>
+    <span class="badge acc-role"><svg><use href="#i-admin"/></svg>ຕົວແທນຈຳໜ່າຍ</span>
+  </div>
+
+  <div class="card acc-exp" id="accExpCard">
+    <div class="acc-exp-top">
+      <span class="ico s2"><svg><use href="#i-clock"/></svg></span>
+      <div><p class="sec-t" style="margin:0">ສະຖານະການໃຊ້ງານ</p><p class="hint" id="accExpSub" style="margin:.2rem 0 0">ກຳລັງກວດສອບ…</p></div>
+      <span class="bdg" id="accExpBadge" style="margin-left:auto"></span>
+    </div>
+    <div class="acc-exp-bar"><i id="accExpFill"></i></div>
+  </div>
+
+  <div class="metrics">
+    <div class="mt"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span><small>ເຄຣດິດຄົງເຫຼືອ</small><b id="accCredit" data-pre="₭">₭0</b></div>
+    <div class="mt"><span class="ico s2"><svg><use href="#i-cart"/></svg></span><small>ຄຳສັ່ງຊື້ທັງໝົດ</small><b id="accOrders">0</b></div>
+    <div class="mt"><span class="ico s4"><svg><use href="#i-key"/></svg></span><small>ລະຫັດທີ່ໄດ້ຮັບ</small><b id="accKeys">0</b></div>
+    <div class="mt"><span class="ico s1"><svg><use href="#i-chart"/></svg></span><small>ຍອດຊື້ລວມ</small><b id="accSpent" data-pre="₭">₭0</b></div>
+  </div>
+
+  <div class="card" style="padding:.6rem 1.6rem">
+    <div class="row" style="cursor:default"><span class="ico s1"><svg><use href="#i-phone"/></svg></span><div class="pi" style="min-width:0"><b style="font-size:1.5rem">ອຸປະກອນນີ້</b><div class="m" id="accDevice" style="margin-top:.2rem"></div></div></div>
+    <div class="row" style="cursor:default"><span class="ico s2"><svg><use href="#i-clock"/></svg></span><div class="pi" style="min-width:0"><b style="font-size:1.5rem">ເຂົ້າສູ່ລະບົບລ່າສຸດ</b><div class="m" id="accLast" style="margin-top:.2rem"></div></div></div>
+  </div>
+
+  <div class="card" style="padding:.6rem 1.6rem">
+    <button class="row" data-go="topup"><span class="ico s3"><svg><use href="#i-wallet"/></svg></span>ເຕີມເງິນເຄຣດິດ<svg><use href="#i-chev"/></svg></button>
+    <button class="row" data-go="keys"><span class="ico s4"><svg><use href="#i-key"/></svg></span>ລະຫັດໄລເຊັນຂອງຂ້ອຍ<svg><use href="#i-chev"/></svg></button>
+    <button class="row" data-go="myorders"><span class="ico s2"><svg><use href="#i-boxes"/></svg></span>ປະຫວັດຄຳສັ່ງຊື້<svg><use href="#i-chev"/></svg></button>
+  </div>
+</div>
+
+<!-- ===== ລະຫັດໄລເຊັນຂອງຂ້ອຍ ===== -->
+<div class="view" id="v-keys">
+  <div class="pg"><button class="back" data-go="menu" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ລະຫັດໄລເຊັນຂອງຂ້ອຍ</h2><small>ລະຫັດຈາກຄຳສັ່ງຊື້ອັດຕະໂນມັດ</small></div></div>
+  <div class="card">
+    <input class="field" id="keyQ" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ ຫຼືລະຫັດ..." aria-label="ຄົ້ນຫາລະຫັດ" autocomplete="off">
+  </div>
+  <div class="card"><p class="hint" id="keyCount" style="margin:0 0 1.2rem"></p><div id="keyList"></div></div>
+</div>
+
+<!-- ===== ປະຫວັດຄຳສັ່ງຊື້ (ຂອງຂ້ອຍ) ===== -->
+<div class="view" id="v-myorders">
+  <div class="pg"><button class="back" data-go="menu" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ປະຫວັດຄຳສັ່ງຊື້</h2><small>ທຸກຄຳສັ່ງຊື້ຂອງບັນຊີນີ້</small></div></div>
+  <div class="metrics" id="moMetrics"></div>
+  <div class="card">
+    <input class="field" id="moQ" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ..." aria-label="ຄົ້ນຫາອໍເດີ" autocomplete="off">
+    <div class="chips" id="moF" style="margin-top:1.1rem">
+      <button class="cat on" data-f="all">ທັງໝົດ</button>
+      <button class="cat" data-f="wait">ລໍຖ້າສົ່ງ</button>
+      <button class="cat" data-f="done">ສຳເລັດ / ສົ່ງແລ້ວ</button>
+    </div>
+  </div>
+  <div class="card"><p class="hint" id="moCount" style="margin:0 0 1.2rem"></p><div id="moList"></div></div>
 </div>
 <!-- ===== แอดมิน ===== -->
 <div class="view" id="v-admin">
@@ -2299,6 +2392,69 @@ function renderOrders(){
     (o.status==='wait'?`<div class="pa"><button class="ib go" data-orddone="${o.id}">ສົ່ງແລ້ວ</button></div>`:o.key?`<div class="pa"><button class="ib" data-ordkey="${o.id}"><svg><use href="#i-copy"/></svg></button></div>`:'')+`</div>`).join('')||'<p class="note">ຍັງບໍ່ມີອໍເດີ</p>';
 }
 
+/* ---- ບັນຊີຂອງຂ້ອຍ ---- */
+function fmtLeft(ms){
+  if(ms<=0) return {t:'ໝົດອາຍຸແລ້ວ',cls:'crit'};
+  const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);
+  const t=d>0?`ເຫຼືອ ${d} ມື້ ${h} ຊມ`:h>0?`ເຫຼືອ ${h} ຊົ່ວໂມງ ${m} ນາທີ`:`ເຫຼືອ ${m} ນາທີ`;
+  const cls=d<1?'crit':d<=3?'warn':'';
+  return {t,cls};
+}
+function renderMyAccount(){
+  if(!$('#accName')) return;
+  const un=(localStorage.getItem('dekma_user')||$('#uname')?.textContent||'—').trim();
+  $('#accName').textContent=un||'—';
+  $('#accAv').textContent=(un||'??').trim().slice(0,2).toUpperCase();
+  setNum('#accCredit',DB.credit);
+  setNum('#accOrders',(DB.orders||[]).length);
+  setNum('#accKeys',(DB.orders||[]).filter(o=>o.key).length);
+  setNum('#accSpent',(DB.orders||[]).reduce((a,o)=>a+o.price,0));
+  let dev='—'; try{dev=(localStorage.getItem('dekma_device')||'').slice(0,8).toUpperCase()||'—'}catch(e){}
+  $('#accDevice').textContent=dev==='—'?'—':'#'+dev;
+  let last=null; try{last=+localStorage.getItem('dekma_last_login')||0}catch(e){}
+  $('#accLast').textContent=last?fdate(last):'ບໍ່ມີຂໍ້ມູນ';
+  const bar=$('#accExpCard .acc-exp-bar'),fill=$('#accExpFill'),badge=$('#accExpBadge'),sub=$('#accExpSub');
+  if(typeof authExp==='number'&&authExp>0){
+    const left=authExp-(Date.now()+authOff), {t,cls}=fmtLeft(left);
+    sub.textContent='ບັນຊີ '+t;
+    badge.textContent=cls==='crit'?'ໃກ້ໝົດອາຍຸ':cls==='warn'?'ໃກ້ໝົດ':'ປົກກະຕິ';
+    badge.className='bdg '+(cls==='crit'?'out':cls==='warn'?'low':'ok');
+    bar.className='acc-exp-bar'+(cls?' '+cls:'');
+    const pct=Math.max(2,Math.min(100,Math.round(left/(30*86400000)*100)));
+    fill.style.width=pct+'%';
+  }else{
+    sub.textContent='ກຳລັງກວດສອບສະຖານະ…'; badge.textContent=''; fill.style.width='0%';
+  }
+}
+/* ---- ລະຫັດໄລເຊັນຂອງຂ້ອຍ ---- */
+let keyQ='';
+function renderMyKeys(){
+  if(!$('#keyList')) return;
+  const os=(DB.orders||[]).filter(o=>o.key);
+  const q=keyQ.toLowerCase(),fl=os.filter(o=>(o.name+o.code).toLowerCase().includes(q));
+  $('#keyCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${os.length} ລະຫັດ`;
+  $('#keyList').innerHTML=fl.map((o,i)=>`<div class="kcard" style="--n:${Math.min(i,9)}"><div class="th"><svg><use href="#${o.cat&&IC[o.cat]?IC[o.cat]:'i-key'}"/></svg></div><div class="pi"><b>${esc(o.name)}</b><span style="color:var(--muted);font-size:1.2rem">${o.code?esc(o.code)+' · ':''}${fdate(o.t)}</span>
+    <div class="kcode"><span class="masked" data-kv="${esc(o.key)}">${esc(o.key)}</span><button class="ib" data-krev="${o.id}" aria-label="ສະແດງ/ເຊື່ອງລະຫັດ"><svg><use href="#i-eye"/></svg></button></div></div>
+    <div class="pa"><button class="ib" data-kcopy2="${o.id}" aria-label="ສຳເນົາ"><svg><use href="#i-copy"/></svg></button></div></div>`).join('')
+    ||'<p class="empty">ຍັງບໍ່ມີລະຫັດ — ຊື້ສິນຄ້າແບບອັດຕະໂນມັດເພື່ອຮັບລະຫັດທັນທີ</p>';
+}
+/* ---- ປະຫວັດຄຳສັ່ງຊື້ (ຂອງຂ້ອຍ) ---- */
+let moQ='',moF='all';
+function renderMyOrders(){
+  if(!$('#moList')) return;
+  const os=DB.orders||[],tot=os.length,rev=os.reduce((a,o)=>a+o.price,0),wait=os.filter(o=>o.status==='wait').length;
+  $('#moMetrics').innerHTML=`<div class="mt"><span class="ico s2"><svg><use href="#i-cart"/></svg></span><small>ຄຳສັ່ງຊື້ທັງໝົດ</small><b>${tot.toLocaleString('en-US')}</b></div>`+
+    `<div class="mt"><span class="ico s4"><svg><use href="#i-wallet"/></svg></span><small>ຍອດຊື້ລວມ</small><b>${K(rev)}</b></div>`+
+    `<div class="mt"><span class="ico s3"><svg><use href="#i-alert"/></svg></span><small>ລໍຖ້າສົ່ງ</small><b>${wait.toLocaleString('en-US')}</b></div>`;
+  const q=moQ.toLowerCase();
+  const fl=os.filter(o=>(o.name+o.code).toLowerCase().includes(q)).filter(o=>moF==='all'||(moF==='wait'&&o.status==='wait')||(moF==='done'&&o.status!=='wait'));
+  $$('#moF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===moF));
+  $('#moCount').textContent=`ສະແດງ ${fl.length} ຈາກ ${tot} ຄຳສັ່ງຊື້`;
+  $('#moList').innerHTML=fl.slice(0,100).map((o,i)=>`<div class="prow" style="--n:${Math.min(i,9)}"><div class="th"><svg><use href="#${ordIcon(o)}"/></svg></div><div class="pi"><b>${esc(o.name)}${o.qty>1?' ×'+o.qty:''}</b><div class="m">${o.code?esc(o.code)+' · ':''}${K(o.price)} · ${fdate(o.t)}</div><div class="bg">${ordBadge(o)}</div></div>`+
+    (o.key?`<div class="pa"><button class="ib" data-ordkey="${o.id}" aria-label="ສຳເນົາລະຫັດ"><svg><use href="#i-copy"/></svg></button></div>`:'')+`</div>`).join('')
+    ||'<p class="empty">ຍັງບໍ່ມີຄຳສັ່ງຊື້</p>';
+}
+
 /* ---- reports ---- */
 function renderReports(){
   const buys=DB.tx.filter(x=>x.type==='buy');
@@ -2378,7 +2534,7 @@ function renderAdmin(){
   $$('#crF .cat').forEach(b=>b.classList.toggle('on',b.dataset.f===cf));
   $('#crLog').innerHTML=DB.tx.filter(x=>cf==='all'||(cf==='in'&&x.n>0)||(cf==='out'&&x.n<0)).map(x=>feedRow(x.n<0?'out':'in',txTitle(x),fdate(x.t)+(x.note?' · '+x.note:''),(x.n<0?'−':'+')+K(Math.abs(x.n)),'ຍອດ '+K(x.after))).join('')||'<p class="note">ຍັງບໍ່ມີທຸລະກຳ</p>';
 
-  rsSync();crSync();renderOrders();renderReports();renderAcc();
+  rsSync();crSync();renderOrders();renderReports();renderAcc();renderMyAccount();renderMyKeys();renderMyOrders();
 }
 
 function goRestock(id){rs.id=id;rs.mode=defMode(rsProd());setTab('restock');rsSync();$('#rsProd').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'})}
@@ -2419,6 +2575,9 @@ $('#rsClear').onclick=()=>{$('#rsKeys').value='';rsSync()};
 $('#rsPaste').onclick=async()=>{try{const t=await navigator.clipboard.readText();$('#rsKeys').value=($('#rsKeys').value?$('#rsKeys').value.replace(/\n*$/,'\n'):'')+t;rsSync()}catch(e){say('ບຼາວເຊີບໍ່ອະນຸຍາດໃຫ້ວາງອັດຕະໂນມັດ ກົດຄ້າງໃນຊ່ອງແລ້ວເລືອກ "ວາງ"')}};
 $('#ordQ').addEventListener('input',e=>{ordQ=e.target.value.trim();renderOrders()});
 $('#ordF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){ordF=b.dataset.f;renderOrders()}});
+$('#keyQ')?.addEventListener('input',e=>{keyQ=e.target.value.trim();renderMyKeys()});
+$('#moQ')?.addEventListener('input',e=>{moQ=e.target.value.trim();renderMyOrders()});
+$('#moF')?.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){moF=b.dataset.f;renderMyOrders()}});
 $('#aq').addEventListener('input',e=>{aq=e.target.value.trim();renderAdmin()});
 $('#apF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){af=b.dataset.f;renderAdmin()}});
 $('#apS').addEventListener('change',e=>{asort=e.target.value;renderAdmin()});
@@ -2461,6 +2620,8 @@ $('#v-admin').addEventListener('click',e=>{
   const st=e.target.closest('[data-step]'); if(st){const i=$('#stLow');i.value=Math.max(1,Math.min(999,(+i.value||LOW)+ +st.dataset.step))}
   const od=e.target.closest('[data-orddone]'); if(od){const o=(DB.orders||[]).find(x=>x.id==od.dataset.orddone);if(o){o.status='done';save();renderOrders();say('ໝາຍວ່າສົ່ງອໍເດີແລ້ວ')}}
   const ok=e.target.closest('[data-ordkey]'); if(ok){const o=(DB.orders||[]).find(x=>x.id==ok.dataset.ordkey);if(o&&o.key)copyQ(o.key,'ສຳເນົາລະຫັດແລ້ວ')}
+  const krv=e.target.closest('[data-krev]'); if(krv){const b=krv,sp=b.previousElementSibling;sp.classList.toggle('masked');b.classList.toggle('on',!sp.classList.contains('masked'));b.querySelector('use').setAttribute('href',sp.classList.contains('masked')?'#i-eye':'#i-eye-off')}
+  const kc2=e.target.closest('[data-kcopy2]'); if(kc2){const o=(DB.orders||[]).find(x=>x.id==kc2.dataset.kcopy2);if(o&&o.key)copyQ(o.key,'ສຳເນົາລະຫັດແລ້ວ')}
 });
 $('#stLowSave').onclick=()=>{const v=Math.floor(+$('#stLow').value);if(!(v>=1&&v<=999))return say('ໃສ່ຕົວເລກ 1 ຫາ 999');DB.low=v;LOW=v;save();renderAdmin();say('ບັນທຶກເກນແຈ້ງເຕືອນແລ້ວ: ≤ '+v)};
 $('#aNameSave').onclick=()=>{const v=$('#aName').value.trim();if(!v)return say('ກະລຸນາໃສ່ຊື່ຮ້ານ');DB.name=v;save();paint();say('ປ່ຽນຊື່ຮ້ານແລ້ວ')};
@@ -2702,7 +2863,7 @@ async function authCheck(){
   if(!tk) return authKick('none');
   try{
     const r=await rpc('dk_check',{p_token:tk});
-    if(r&&r.ok){authExp=r.exp||0;authOff=r.now-Date.now();const un=$('#uname');if(un)un.textContent=r.user;return}
+    if(r&&r.ok){authExp=r.exp||0;authOff=r.now-Date.now();const un=$('#uname');if(un)un.textContent=r.user;try{localStorage.setItem('dekma_user',r.user)}catch(e){}renderMyAccount();return}
     if(r&&r.code) authKick(r.code); /* ເຕະອອກສະເພາະເມື່ອເຊີບເວີບອກຊັດເຈນ */
   }catch(e){
     /* ເນັດຫຼຸດ/ເຊີບເວີຊ້າ = ຫ້າມເຕະອອກ · ຍົກເວັ້ນ offline ຫຼັງໝົດເວລາແລ້ວ >60 ວິ */
@@ -2717,6 +2878,7 @@ function authLogout(){
   Promise.race([rpc('dk_logout',{p_token:tk}).catch(()=>{}),new Promise(r=>setTimeout(r,1500))]).then(go);
 }
 setInterval(authCheck,30000);
+setInterval(renderMyAccount,15000);
 setInterval(()=>{ /* ຮອດເວລາໝົດອາຍຸ (ຕາມເວລາເຊີບເວີ) → ຖາມເຊີບເວີທັນທີ (ອາດຖືກຕໍ່ອາຍຸໄປແລ້ວ) */
   if(authExp&&Date.now()+authOff>=authExp&&Date.now()-authChk>5000){authChk=Date.now();authCheck()}
 },1000);
