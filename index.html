@@ -100,10 +100,10 @@
 }
 /* 1rem = 10px ที่ความกว้าง 428px — ทุกขนาดย่อ/ขยายตามสัดส่วนของภาพต้นฉบับ */
 html{font-size:10px} /* fallback สำหรับเบราว์เซอร์/เว็บวิวที่ไม่รองรับ clamp() หรือ vw ผิดพลาด */
-html{font-size:clamp(7.5px,2.336vw,10.75px);-webkit-text-size-adjust:100%;touch-action:manipulation}
+html{font-size:clamp(7.5px,2.336vw,10.75px);-webkit-text-size-adjust:100%;touch-action:pan-y}
 *,*::before,*::after{box-sizing:border-box}
-html,body{width:100%;max-width:100vw;overflow-x:hidden}
-body{margin:0;min-height:100vh;background:radial-gradient(70% 22rem at 50% 0,var(--glow),transparent),var(--bg);color:var(--text);font-family:var(--font);font-size:1.6rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;overscroll-behavior-x:none}
+body{margin:0;min-height:100vh;background:radial-gradient(70% 22rem at 50% 0,var(--glow),transparent),var(--bg);color:var(--text);font-family:var(--font);font-size:1.6rem;-webkit-tap-highlight-color:transparent;touch-action:pan-y;position:relative;left:0}
 body::after{content:"";position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(120% 85% at 50% 0%,transparent 55%,rgba(0,0,0,.6) 100%)}
 .grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -178,7 +178,7 @@ h1{position:relative;margin:1.6rem 0 0;font-size:2.8rem;line-height:3.1rem;font-
 @media (prefers-reduced-motion:reduce){
   .search:focus-within svg,.search svg.kick{animation:none!important}
 }
-.filters{display:flex;align-items:center;gap:.9rem;margin:1.7rem -1.7rem 0 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.filters{display:flex;align-items:center;gap:.9rem;margin:1.7rem -1.7rem 0 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x}
 .filters::-webkit-scrollbar{display:none}
 .chip{flex:none;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.9rem;height:4.4rem;padding:0 1.3rem 0 .9rem;border-radius:1.6rem;border:.15rem solid var(--chip-bd);background:rgba(205,0,35,.08);backdrop-filter:blur(.8rem);font-size:1.5rem;font-weight:700;white-space:nowrap;transition:background .2s,transform .15s,box-shadow .2s}
 .tile{display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:1rem;border:max(1px,.1rem) solid}
@@ -317,7 +317,7 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .field{width:100%;height:4.9rem;padding:0 1.6rem;border-radius:1.8rem;border:max(1px,.15rem) solid rgba(255,255,255,.1);background:rgba(0,0,0,.28);font-size:1.6rem;outline:0;transition:border-color .2s,box-shadow .2s}
 .field::placeholder{color:var(--placeholder);opacity:1}
 .field:focus{border-color:var(--accent);box-shadow:0 0 0 .3rem rgba(205,0,35,.18)}
-.cats{position:relative;display:flex;gap:.8rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 1.4rem 0;padding-right:1.6rem}.cats::-webkit-scrollbar{display:none}
+.cats{position:relative;display:flex;gap:.8rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 1.4rem 0;padding-right:1.6rem;touch-action:pan-x}.cats::-webkit-scrollbar{display:none}
 .cat{flex:none;position:relative;z-index:1;height:3.6rem;padding:0 1.5rem;border-radius:99rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03);backdrop-filter:blur(1rem);color:var(--nav-idle);font-size:1.4rem;font-weight:600;white-space:nowrap;transition:background .2s,color .2s,border-color .2s,transform .15s}
 .cat:active{transform:scale(.96)}
 .cat.on,.cat[aria-pressed=true]{background:linear-gradient(90deg,var(--b2-a),var(--b2-b));border-color:var(--b2-bd);color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.3)}
@@ -517,7 +517,7 @@ select.field{padding-right:4rem;background-image:url("data:image/svg+xml;utf8,<s
 .ac-b.go{color:var(--green);border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.08)}
 .ac-cp{height:3.2rem;min-width:3.2rem;padding:0;border-radius:1.1rem}.ac-cp svg{width:1.5rem;height:1.5rem}
 .dur-r{margin-bottom:.8rem}.dur-r .d-l{flex:1.4}.dur-r .d-p{flex:1}
-.ad-tabs{margin:0 -1.6rem 1.4rem;padding:.2rem 1.6rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ad-tabs{margin:0 -1.6rem 1.4rem;padding:.2rem 1.6rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x}
 .ad-tabs::-webkit-scrollbar{display:none}
 .ad-tabs-in{position:relative;display:flex;gap:.3rem;width:max-content;padding:.5rem;border-radius:2.3rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03)}
 .ad-ind{position:absolute;top:.5rem;bottom:.5rem;left:0;width:0;border-radius:1.8rem;background:linear-gradient(120deg,var(--b2-a),var(--b2-b));box-shadow:0 0 2rem rgba(255,31,66,.45),inset 0 .1rem 0 rgba(255,255,255,.25);transition:transform .55s var(--ease-premium),width .55s var(--ease-premium);z-index:0}
@@ -641,7 +641,7 @@ select.field{padding-right:4rem;background-image:url("data:image/svg+xml;utf8,<s
 .ta-lg{height:15rem}
 .tools{display:flex;gap:.7rem;margin-top:.9rem}
 .cnt{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
-.qk{display:flex;gap:.8rem;margin-top:1rem;overflow-x:auto;scrollbar-width:none}
+.qk{display:flex;gap:.8rem;margin-top:1rem;overflow-x:auto;scrollbar-width:none;touch-action:pan-x}
 .qk::-webkit-scrollbar{display:none}
 .prev{margin:1.4rem 0 0;padding:1.3rem 1.4rem;border-radius:1.6rem;border:max(1px,.15rem) dashed var(--input-border);background:rgba(0,0,0,.25);color:var(--muted);font-size:1.35rem;line-height:2.1rem;white-space:pre-line;transition:border-color .3s,color .3s}
 .prev.ok{border-color:rgba(74,222,128,.5);color:#d8f8e4}
@@ -662,7 +662,7 @@ button.bdg:active{transform:scale(.94)}button.bdg:hover{filter:brightness(1.2)}
 .bdg.auto{color:#7cc4f5;background:rgba(74,168,232,.1);border-color:rgba(74,168,232,.35)}
 .bdg.man{color:#cdbfc1;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
 .bdg.code{color:#d9cccd;background:var(--input-bg);border-color:var(--card-border);letter-spacing:.04em}
-.chips{display:flex;gap:.7rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 0 0;padding-right:1.6rem}
+.chips{display:flex;gap:.7rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 0 0;padding-right:1.6rem;touch-action:pan-x}
 .chips::-webkit-scrollbar{display:none}
 .legend{margin-top:1.2rem;padding-top:1.1rem;border-top:1px solid var(--card-border)}
 .legend summary{cursor:pointer;color:var(--muted);font-size:1.25rem;font-weight:600;line-height:2rem;list-style:none}
@@ -1528,7 +1528,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 #v-topup .tu-grid{
   grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(11.6rem,1fr);
   overflow-x:auto;scroll-snap-type:x proximity;padding:.6rem .1rem 1rem;margin:0 -.1rem -.6rem;
-  -ms-overflow-style:none;scrollbar-width:none;
+  -ms-overflow-style:none;scrollbar-width:none;touch-action:pan-x;
 }
 #v-topup .tu-grid::-webkit-scrollbar{display:none}
 .tu-chip{
@@ -1772,9 +1772,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
     <div class="card">
       <p class="sec-t">ຊ່ອງທາງຊຳລະເງິນ</p>
       <div class="tu-pms" id="pms">
-        <button class="tu-pm" data-pm="BCEL One (LaoQR)" aria-pressed="true"><span class="tu-pm-ic bcel"><svg><use href="#i-qr"/></svg></span><div><b>BCEL One</b><span>ສະແກນ LaoQR ຈ່າຍທັນທີ</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
-        <button class="tu-pm" data-pm="U-Money" aria-pressed="false"><span class="tu-pm-ic umoney"><svg><use href="#i-phone"/></svg></span><div><b>U-Money</b><span>ກະເປົາເງິນມືຖື</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
-        <button class="tu-pm" data-pm="ໂອນຜ່ານທະນາຄານ" aria-pressed="false"><span class="tu-pm-ic bank"><svg><use href="#i-bank"/></svg></span><div><b>ໂອນທະນາຄານ</b><span>ໂອນແລ້ວແຈ້ງສະລິບ</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
+        <button class="tu-pm" data-pm="BCEL One (LaoQR)" aria-pressed="true"><span class="tu-pm-ic bcel"><svg><use href="#i-qr"/></svg></span><div><b>QR</b><span>ສະແກນ LaoQR ຈ່າຍທັນທີ</span></div><i class="tu-check"><svg><use href="#i-tick"/></svg></i></button>
       </div>
       <div class="tu-qr on" id="tuQr">
         <div class="tu-qr-box"><svg><use href="#i-qr"/></svg><i class="tu-qr-scan"></i></div>
@@ -2208,7 +2206,10 @@ const sym=p=>IC[p.cat]||'i-grid';
 const pDurs=p=>(p.durs||[]).filter(d=>d&&String(d.label||'').trim()).map(d=>({label:String(d.label).trim(),price:Math.max(0,+d.price||0)}));
 const pMin=p=>{const a=pDurs(p);return a.length?Math.min(...a.map(d=>d.price)):p.price};
 const pMulti=p=>pDurs(p).length>1;
-function paint(){setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name}
+function paint(){setNum('#credit',DB.credit);$('#ucredit').textContent='₭'+fmt(DB.credit);$('#storeName').textContent=DB.name;document.title=DB.name+' - ລະບົບຕົວແທນຈຳໜ່າຍ';$('#aName').value=DB.name;
+  /* ซิงก์ยอดเครดิต/ออเดอร์/คีย์ในทุกหน้าให้เท่ากันทันที ไม่ต้องรอ setInterval 15 วิ (แก้ปัญหายอดเงินไม่หักในหน้าบัญชี/topup หลังซื้อ-เติมเงิน) */
+  try{renderMyAccount()}catch(e){} try{renderMyKeys()}catch(e){} try{renderMyOrders()}catch(e){}
+}
 async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}say('ສຳເນົາແລ້ວ: '+t.slice(0,40))}
 const sheet=$('#sheet'),box=$('#shBox');
 const openSheet=h=>{box.innerHTML=h;sheet.classList.add('on')}, closeSheet=()=>sheet.classList.remove('on');
@@ -3276,7 +3277,7 @@ if(!RM) omEl.addEventListener('pointerdown',e=>{
    ===================================================================== */
 const tu={open:false,busy:false,slip:null};
 const tuEl=$('#tuModal'),tuCard=$('#tuCard'),tuScroll=$('#tuScroll'),tuFoot=$('#tuFoot'),tuX=$('#tuX');
-const pmShort=p=>({'BCEL One (LaoQR)':'BCEL One','U-Money':'U-Money','ໂອນຜ່ານທະນາຄານ':'ໂອນທະນາຄານ'}[p]||p);
+const pmShort=p=>({'BCEL One (LaoQR)':'QR','U-Money':'U-Money','ໂອນຜ່ານທະນາຄານ':'ໂອນທະນາຄານ'}[p]||p);
 const pmNote=p=>p==='ໂອນຜ່ານທະນາຄານ'?'ໂອນເຂົ້າບັນຊີທະນາຄານຕາມທີ່ຮ້ານແຈ້ງ ຫຼືສະແກນ QR ດ້ານລຸ່ມ ແລ້ວແນບສະລິບ':'ສະແກນຜ່ານແອັບທະນາຄານ ຫຼືວໍເລັດທີ່ຮອງຮັບ LaoQR ແລ້ວແນບສະລິບ';
 
 function tuReview(){
