@@ -4,12 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
+<meta http-equiv="Cache-Control" content="no-store">
 <title>DekmaSH Stowe - ລະບົບຕົວແທນຈຳໜ່າຍ</title>
+<noscript>
+  <meta http-equiv="refresh" content="0; url=login.html">
+  <style>body{visibility:visible!important}</style>
+</noscript>
 <script>
-/* ===== Login gate: ต้องมี token จาก login.html (เก็บใน localStorage = ไม่หลุดเมื่อปิด/เปิดแอป) · เซิร์ฟเวอร์ตรวจสอบจริงอีกชั้นใน authCheck() ===== */
+/* =====================================================================
+   ===== Login gate (เข้ม) =====
+   เดิม: เช็คแค่ "มี token ไหม" ฝั่งเบราว์เซอร์ล้วนๆ — ใครเปิด console แล้วยัด
+   localStorage.dekma_token = 'อะไรก็ได้' ก็เห็นหน้าแอปได้ทันที (แค่ยังไม่ถูกเตะออก
+   จนกว่า authCheck() ท้ายหน้าจะทำงานอีกที ~ไม่กี่วิ ซึ่งพอแล้วให้เห็นข้อมูลหลุดไปแวบนึง)
+   ใหม่: ซ่อนทั้งหน้าไว้ก่อน (visibility:hidden) แล้วถาม "เซิร์ฟเวอร์จริง" ผ่าน dk_check
+   ทันทีที่หน้าโหลด — เห็นแอปได้ก็ต่อเมื่อเซิร์ฟเวอร์ยืนยัน token ว่าใช้ได้จริงเท่านั้น
+   ไม่ว่าจะเข้าทางลิงก์ตรง, bookmark, พิมพ์ URL เอง, หรือเปิดไฟล์ index.html ตรงๆ
+   ก็โดนเช็คเหมือนกันหมด เพราะสคริปต์นี้รันก่อนเนื้อหาทุกบรรทัดของหน้า
+   ===================================================================== */
 (function(){
-  try{ if(!localStorage.getItem('dekma_token')){ location.replace('login.html'); } }
-  catch(e){}
+  document.documentElement.style.visibility='hidden'; /* ซ่อนก่อน กันแวบเห็นข้อมูล */
+  var tk=null; try{tk=localStorage.getItem('dekma_token')}catch(e){}
+  function kick(code){
+    try{localStorage.removeItem('dekma_token');localStorage.removeItem('dekma_user')}catch(e){}
+    location.replace('login.html'+(code?('?r='+encodeURIComponent(code)):''));
+  }
+  if(!tk) return kick('none');
+  var SB_URL='https://ebmambgqghyzrenknkeb.supabase.co';
+  var SB_KEY='sb_publishable__t5g88mepIjky1Kq-BQUtg_zMjaNHlH';
+  var done=false;
+  function reveal(){ if(done)return; done=true; clearTimeout(safety); document.documentElement.style.visibility=''; }
+  /* กันจอค้างมืดถ้าเน็ต/เซิร์ฟเวอร์ไม่ตอบเลย — ไม่งั้นเน็ตหลุดตอนโหลด = เปิดแอปไม่ได้ตลอดกาล */
+  var safety=setTimeout(reveal,4000);
+  fetch(SB_URL+'/rest/v1/rpc/dk_check',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_token:tk})})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(r){
+      if(done) return;
+      if(r&&r.ok){ reveal(); } else { done=true; clearTimeout(safety); kick(r&&r.code); }
+    })
+    .catch(function(){
+      /* เรียกเซิร์ฟเวอร์ไม่สำเร็จตอนโหลดหน้า (เน็ตกระตุก ฯลฯ): ปล่อยผ่านชั่วคราว
+         authCheck() ท้ายหน้าจะยิงถามซ้ำภายในไม่กี่วิ ถ้า token ปลอมจริงจะโดนเตะออกตอนนั้น */
+      reveal();
+    });
 })();
 </script>
 <script>
@@ -119,12 +155,29 @@ h1{position:relative;margin:1.6rem 0 0;font-size:2.8rem;line-height:3.1rem;font-
 
 /* ===== Search card ===== */
 .panel{margin-top:4.9rem;padding:1.7rem;border-radius:2.7rem;border:max(1px,.15rem) solid var(--glass-line);background:linear-gradient(160deg,var(--glass),var(--glass-2) 80%);backdrop-filter:blur(1.8rem);-webkit-backdrop-filter:blur(1.8rem);overflow:hidden;box-shadow:inset 0 .1rem 0 var(--glass-hi)}
-.search{position:relative}
-.search svg{position:absolute;left:1.6rem;top:50%;width:1.8rem;height:1.8rem;margin-top:-.9rem;color:var(--accent);pointer-events:none;transition:filter .4s var(--ease-premium)}
-.search input{width:100%;height:4.9rem;padding:0 1.6rem 0 var(--search-pad);border-radius:1.8rem;border:max(1px,.15rem) solid rgba(255,255,255,.1);background:rgba(0,0,0,.28);font-size:1.6rem;font-weight:400;outline:0;transition:border-color .4s var(--ease-premium),box-shadow .4s var(--ease-premium)}
+.search{position:relative;isolation:isolate}
+.search svg{position:absolute;left:1.6rem;top:50%;width:1.8rem;height:1.8rem;margin-top:-.9rem;color:var(--accent);pointer-events:none;z-index:2;transform-origin:46% 46%}
+.search input{width:100%;height:4.9rem;padding:0 3.6rem 0 var(--search-pad);border-radius:1.8rem;border:max(1px,.15rem) solid rgba(255,255,255,.1);background:rgba(0,0,0,.28);font-size:1.6rem;font-weight:400;outline:0;position:relative;z-index:1;transition:border-color .4s var(--ease-premium),box-shadow .4s var(--ease-premium)}
 .search input::placeholder{color:var(--placeholder);opacity:1}
 .search input:focus{border-color:var(--accent);box-shadow:0 0 0 .3rem rgba(205,0,35,.18)}
-.search:focus-within svg{filter:drop-shadow(0 0 .5rem rgba(255,31,66,.65))}
+/* ไอคอนแว่นขยาย: เด้งซูมเข้าหา + เอียงเหมือนหยิบขึ้นมาส่อง ตอนแตะเข้าช่องค้นหา (ครั้งเดียว) */
+.search:focus-within svg{animation:skZoom .5s var(--ease-premium)}
+@keyframes skZoom{0%{transform:scale(1) rotate(0)}32%{transform:scale(1.28) rotate(-16deg)}58%{transform:scale(.92) rotate(6deg)}80%{transform:scale(1.06) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
+/* ไอคอนสะบัดเบาๆ ทุกครั้งที่พิมพ์ตัวอักษร (ตั้งค่าโดย JS ผ่านคลาส .kick) — มาทีหลังเพื่อชนะ specificity ตอน focus */
+.search svg.kick{animation:skKick .22s var(--ease-premium)}
+@keyframes skKick{0%{transform:scale(1) rotate(0)}45%{transform:scale(.82) rotate(-9deg)}100%{transform:scale(1) rotate(0)}}
+/* ปุ่มกากบาทล้างคำค้นหา: โผล่มาเองด้วย CSS ล้วน (ไม่ต้องพึ่ง JS toggle) ตอนพิมพ์มีตัวอักษร */
+.search-clear{position:absolute;right:.6rem;top:50%;width:3.2rem;height:3.2rem;margin-top:-1.6rem;border:0;border-radius:50%;
+  background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;
+  opacity:0;pointer-events:none;transform:scale(.4) rotate(-90deg);
+  transition:opacity .3s var(--ease-premium),transform .35s var(--ease-premium),background .2s}
+.search-clear:active{background:rgba(255,79,106,.22)}
+.search-clear i{position:absolute;width:1.3rem;height:.17rem;border-radius:1rem;background:var(--nav-idle)}
+.search-clear i:nth-child(1){transform:rotate(45deg)}.search-clear i:nth-child(2){transform:rotate(-45deg)}
+.search input:not(:placeholder-shown)~.search-clear{opacity:1;pointer-events:auto;transform:scale(1) rotate(0)}
+@media (prefers-reduced-motion:reduce){
+  .search:focus-within svg,.search svg.kick{animation:none!important}
+}
 .filters{display:flex;align-items:center;gap:.9rem;margin:1.7rem -1.7rem 0 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
 .chip{flex:none;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:.9rem;height:4.4rem;padding:0 1.3rem 0 .9rem;border-radius:1.6rem;border:.15rem solid var(--chip-bd);background:rgba(205,0,35,.08);backdrop-filter:blur(.8rem);font-size:1.5rem;font-weight:700;white-space:nowrap;transition:background .2s,transform .15s,box-shadow .2s}
@@ -264,10 +317,16 @@ body.transitioning .pm,body.transitioning .nav,body.transitioning .sh-box{
 .field{width:100%;height:4.9rem;padding:0 1.6rem;border-radius:1.8rem;border:max(1px,.15rem) solid rgba(255,255,255,.1);background:rgba(0,0,0,.28);font-size:1.6rem;outline:0;transition:border-color .2s,box-shadow .2s}
 .field::placeholder{color:var(--placeholder);opacity:1}
 .field:focus{border-color:var(--accent);box-shadow:0 0 0 .3rem rgba(205,0,35,.18)}
-.cats{display:flex;gap:.8rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 1.4rem 0;padding-right:1.6rem}.cats::-webkit-scrollbar{display:none}
-.cat{flex:none;height:3.6rem;padding:0 1.5rem;border-radius:99rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03);backdrop-filter:blur(1rem);color:var(--nav-idle);font-size:1.4rem;font-weight:600;white-space:nowrap;transition:background .2s,color .2s,border-color .2s,transform .15s}
+.cats{position:relative;display:flex;gap:.8rem;overflow-x:auto;scrollbar-width:none;margin:1.2rem -1.6rem 1.4rem 0;padding-right:1.6rem}.cats::-webkit-scrollbar{display:none}
+.cat{flex:none;position:relative;z-index:1;height:3.6rem;padding:0 1.5rem;border-radius:99rem;border:max(1px,.15rem) solid var(--glass-line);background:rgba(255,255,255,.03);backdrop-filter:blur(1rem);color:var(--nav-idle);font-size:1.4rem;font-weight:600;white-space:nowrap;transition:background .2s,color .2s,border-color .2s,transform .15s}
 .cat:active{transform:scale(.96)}
 .cat.on,.cat[aria-pressed=true]{background:linear-gradient(90deg,var(--b2-a),var(--b2-b));border-color:var(--b2-bd);color:#fff;box-shadow:0 0 1.6rem rgba(255,31,66,.3)}
+/* แผ่นไฟเลื่อน (เหมือนแท็บแอดมิน) เฉพาะแถวหมวดหมู่สินค้า #cats — เลือกหมวดแล้วไถลลื่นไปแทนการกระพริบเปลี่ยนสี */
+#cats .cat-ind{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:99rem;z-index:0;pointer-events:none;
+  background:linear-gradient(90deg,var(--b2-a),var(--b2-b));box-shadow:0 0 1.6rem rgba(255,31,66,.3),inset 0 .1rem 0 rgba(255,255,255,.25);
+  transition:transform .5s var(--ease-premium),width .5s var(--ease-premium)}
+#cats .cat.on{background:transparent;border-color:transparent;box-shadow:none}
+@media (prefers-reduced-motion:reduce){#cats .cat-ind{transition:none}}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}.amt{height:4.4rem;font-size:1.6rem}
 .pcard{display:flex;flex-direction:column;gap:1.1rem;padding:.9rem;overflow:hidden;transition:transform .3s var(--ease-premium);animation:cardIn .65s var(--ease-premium) both}
@@ -701,6 +760,42 @@ button.bdg:active{transform:scale(.94)}button.bdg:hover{filter:brightness(1.2)}
 .tu-pay{box-shadow:0 0 2.4rem rgba(255,31,66,.4);animation:tuGlow 2.6s ease-in-out infinite}
 @keyframes tuGlow{50%{box-shadow:0 0 3.6rem rgba(255,31,66,.62)}}
 @media (prefers-reduced-motion:reduce){.tu-pay,.tu-qr-scan,.tu-bal-ic,.tu-dot{animation:none}}
+
+/* =====================================================================
+   ເຕີມເງິນ · ໜ້າຕ່າງສະແກນຈ່າຍ + ແນບສະລິບ (ໃຊ້ໂຄງລະບົບ .om ເດີມ — ไม่แตะ style เดิม)
+   ===================================================================== */
+.tu-modal-qr{display:flex;flex-direction:column;align-items:center;gap:1.2rem}
+.tu-modal-qr .tu-qr-box{width:15rem;height:15rem}
+.tu-modal-qr p{color:var(--om-mute);font-size:1.25rem;line-height:1.9rem;text-align:center;max-width:30rem}
+
+.tu-slip-drop{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  width:100%;padding:2.4rem 1.6rem;border-radius:1.9rem;text-align:center;cursor:pointer;
+  border:max(1px,.17rem) dashed rgba(255,79,106,.42);background:linear-gradient(160deg,rgba(255,79,106,.07),rgba(0,0,0,.24));
+  transition:border-color .3s,background .3s,transform .2s var(--om-ease)}
+.tu-slip-drop::after{content:"";position:absolute;inset:0;background:var(--sheen);transform:translateX(-130%);transition:transform .7s var(--om-ease)}
+.tu-slip-drop:active{transform:scale(.98)}
+.tu-slip-drop:active::after{transform:translateX(130%)}
+.tu-slip-ic{position:relative;display:grid;place-items:center;width:4.8rem;height:4.8rem;margin-bottom:.3rem;border-radius:50%;
+  background:rgba(255,79,106,.14);border:max(1px,.15rem) solid rgba(255,79,106,.42);color:#ff8fa3;animation:tuFloat 3.4s ease-in-out infinite}
+.tu-slip-ic svg{width:2.2rem;height:2.2rem}
+.tu-slip-drop b{position:relative;font-size:1.5rem;font-weight:700}
+.tu-slip-drop span{position:relative;color:var(--om-mute);font-size:1.2rem;max-width:26rem}
+
+.tu-slip-preview{position:relative;overflow:hidden;border-radius:1.9rem;border:max(1px,.15rem) solid rgba(74,222,128,.48);
+  box-shadow:0 0 2.2rem rgba(74,222,128,.2);animation:tuSlipIn .5s var(--om-ease) both}
+@keyframes tuSlipIn{from{opacity:0;transform:scale(.94) translateY(.6rem);filter:blur(3px)}to{opacity:1;transform:none;filter:blur(0)}}
+.tu-slip-preview img{display:block;width:100%;max-height:26rem;object-fit:cover}
+.tu-slip-rm{position:absolute;top:1rem;right:1rem;display:grid;place-items:center;width:3.6rem;height:3.6rem;border-radius:50%;
+  background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(.7rem);backdrop-filter:blur(.7rem);border:max(1px,.14rem) solid rgba(255,255,255,.25);
+  color:#fff;transition:transform .2s var(--om-ease)}
+.tu-slip-rm svg{width:1.5rem;height:1.5rem;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;fill:none}
+.tu-slip-rm:active{transform:scale(.88)}
+.tu-slip-ok{position:absolute;left:1rem;bottom:1rem;display:inline-flex;align-items:center;gap:.6rem;height:3.3rem;padding:0 1.3rem;border-radius:99rem;
+  background:rgba(6,20,14,.74);-webkit-backdrop-filter:blur(.7rem);backdrop-filter:blur(.7rem);border:max(1px,.13rem) solid rgba(74,222,128,.5);
+  color:#bdf5cf;font-size:1.25rem;font-weight:700;animation:tuOkIn .4s var(--om-ease) .1s both}
+@keyframes tuOkIn{from{opacity:0;transform:translateY(.5rem)}to{opacity:1;transform:none}}
+.tu-slip-ok svg{width:1.4rem;height:1.4rem;color:#4ade80}
+@media (prefers-reduced-motion:reduce){.tu-slip-ic,.tu-slip-preview,.tu-slip-ok{animation:none}}
 
 /* =====================================================================
    ORDER CONFIRM MODAL · ຢືນຢັນຄຳສັ່ງຊື້   (ทุก selector ขึ้นต้นด้วย om- — ไม่แตะ style เดิม)
@@ -1316,6 +1411,228 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   transform:translate(0,0) rotate(var(--a,0deg)) translateY(0);opacity:1;animation:gpFly .62s cubic-bezier(.2,.8,.3,1) forwards}
 @keyframes gpFly{to{transform:rotate(var(--a,0deg)) translateY(calc(var(--r,2.4rem)*-1));opacity:0}}
 @media (prefers-reduced-motion:reduce){.gp-pick,.gp-pt{animation:none!important}}
+
+/* =====================================================================================
+   ✦ AURORA VAULT — redesign เฉพาะหน้า "ເຕີມເງິນ" (#v-topup) + หน้าต่างยืนยัน (#tuModal)
+   ไม่แตะ class/id เดิมที่ JS ใช้อยู่ (setAmt, tu-pm, #tot ฯลฯ) — override สไตล์ทับเฉยๆ
+   คอนเซปต์: แผงคอนโทรลกระเป๋าเงินโฮโลกราฟิก ลอยอยู่เหนือหมอกออโรร่า มัลติสี
+   ===================================================================================== */
+#v-topup{
+  --vt-gold:#ffd27a; --vt-violet:#a879ff; --vt-cyan:#4fe0ff;
+  --vt-glass:rgba(18,8,10,.62); --vt-glass-2:rgba(10,4,5,.82); --vt-line:rgba(255,255,255,.09);
+  position:relative; isolation:isolate;
+}
+#v-topup::before,#v-topup::after{content:"";position:absolute;left:0;right:0;top:-2rem;height:58rem;z-index:-1;pointer-events:none;filter:blur(6px)}
+#v-topup::before{
+  background:
+    radial-gradient(38rem 30rem at 8% 6%, rgba(168,121,255,.22), transparent 60%),
+    radial-gradient(34rem 28rem at 96% 18%, rgba(79,224,255,.16), transparent 62%),
+    radial-gradient(40rem 32rem at 50% 0%, rgba(255,31,66,.24), transparent 65%);
+  animation:vtDrift 16s ease-in-out infinite alternate;
+}
+#v-topup::after{
+  background:radial-gradient(30rem 22rem at 70% 34%, rgba(255,210,122,.14), transparent 68%);
+  animation:vtDrift 21s ease-in-out infinite alternate-reverse;
+}
+@keyframes vtDrift{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(1.6rem,-1.4rem,0) scale(1.06)}}
+#v-topup .stack{position:relative;z-index:1;gap:1.5rem}
+
+/* ---- Header ---- */
+#v-topup .pg h2{
+  font-family:var(--font-display);font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(100deg,#fff 6%,var(--vt-gold) 32%,var(--red-bright) 54%,var(--vt-violet) 76%,#fff 96%);
+  background-size:240% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleShimmer 6s ease-in-out infinite;
+}
+#v-topup .back{background:var(--vt-glass);border-color:var(--vt-line);backdrop-filter:blur(1rem)}
+
+/* ---- แผงกระจกโฮโลกราฟิก สำหรับทุกการ์ดในหน้านี้ ---- */
+#v-topup .card{
+  position:relative;overflow:hidden;border-radius:2.2rem;
+  background:linear-gradient(155deg,rgba(28,14,18,.72),rgba(8,4,5,.88));
+  border:max(1px,.14rem) solid var(--vt-line);
+  backdrop-filter:blur(1.6rem);-webkit-backdrop-filter:blur(1.6rem);
+  box-shadow:0 1.2rem 3.2rem rgba(0,0,0,.4),inset 0 .1rem 0 rgba(255,255,255,.05);
+}
+#v-topup .card::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);
+}
+#v-topup .sec-t{color:#f2e9ea;text-transform:none}
+#v-topup .sec-t::before{content:"";width:.5rem;height:1.4rem;border-radius:99rem;background:linear-gradient(var(--red-bright),var(--vt-violet));box-shadow:0 0 .8rem rgba(255,31,66,.6)}
+
+/* =====================================================================
+   1) ยอดเครดิต — วงแหวนพลังงานหมุน + ตัวเลขโฮโลกราฟิก
+   ===================================================================== */
+.tu-bal{
+  align-items:center;text-align:center;padding:3rem 2rem 2.6rem;
+  background:radial-gradient(70% 90% at 50% 0%,rgba(168,121,255,.14),transparent 65%),
+             linear-gradient(160deg,rgba(30,10,14,.85),rgba(6,3,3,.95))!important;
+  border-color:rgba(255,210,122,.28)!important;
+}
+.tu-bal::after{
+  content:"";position:absolute;top:-6rem;left:50%;width:24rem;height:24rem;margin-left:-12rem;z-index:0;pointer-events:none;
+  background:conic-gradient(from 0deg,var(--red-bright),var(--vt-violet),var(--vt-cyan),var(--vt-gold),var(--red-bright));
+  opacity:.22;filter:blur(2.2rem);animation:vtSpin 9s linear infinite;
+}
+@keyframes vtSpin{to{transform:rotate(360deg)}}
+.tu-bal-ic{
+  position:relative;top:0;right:0;margin:0 auto 1.4rem;z-index:1;
+  background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,255,255,.03));
+  border-color:rgba(255,210,122,.4);color:var(--vt-gold);
+  box-shadow:0 0 2.4rem rgba(255,210,122,.28),inset 0 .1rem 0 rgba(255,255,255,.2);
+  animation:tuFloat 3.4s ease-in-out infinite, vtRing 3.4s ease-in-out infinite;
+}
+@keyframes vtRing{0%,100%{box-shadow:0 0 2.4rem rgba(255,210,122,.28),inset 0 .1rem 0 rgba(255,255,255,.2)}50%{box-shadow:0 0 3.6rem rgba(255,210,122,.5),inset 0 .1rem 0 rgba(255,255,255,.25)}}
+.tu-bal small{position:relative;z-index:1;color:var(--vt-gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:1.15rem}
+.tu-bal b{
+  position:relative;z-index:1;margin:.6rem 0;font-size:4rem;line-height:1.15;
+  background:linear-gradient(100deg,#fff 4%,var(--vt-gold) 24%,#fff 40%,var(--vt-violet) 58%,#fff 74%,var(--vt-cyan) 90%);
+  background-size:260% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 2.6rem rgba(255,210,122,.3));animation:titleShimmer 5s ease-in-out infinite;
+}
+.tu-bal-sub{position:relative;z-index:1;justify-content:center}
+
+/* =====================================================================
+   2) เลือกจำนวนเงิน — แถบเลื่อนแนวนอน ทิเลนยกตัว 3D
+   ===================================================================== */
+#v-topup .tu-grid{
+  grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(11.6rem,1fr);
+  overflow-x:auto;scroll-snap-type:x proximity;padding:.6rem .1rem 1rem;margin:0 -.1rem -.6rem;
+  -ms-overflow-style:none;scrollbar-width:none;
+}
+#v-topup .tu-grid::-webkit-scrollbar{display:none}
+.tu-chip{
+  scroll-snap-align:start;height:8.4rem;border-radius:1.9rem;gap:.3rem;
+  background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(0,0,0,.32));
+  border-color:rgba(255,255,255,.12);
+  transform-style:preserve-3d;
+}
+.tu-chip b{font-size:1.7rem;letter-spacing:-.01em}
+.tu-chip span{
+  position:absolute;top:.7rem;left:50%;transform:translateX(-50%);order:-1;
+  padding:.15rem .8rem;border-radius:99rem;font-size:.95rem;font-weight:800;letter-spacing:.03em;
+  background:linear-gradient(90deg,var(--vt-gold),#ffb144);color:#2a1400;
+  box-shadow:0 .3rem 1rem rgba(255,210,122,.4);
+}
+.tu-chip.on{
+  border-color:var(--vt-gold);
+  background:linear-gradient(160deg,rgba(255,210,122,.22),rgba(205,0,35,.14));
+  box-shadow:0 0 2.2rem rgba(255,210,122,.32),0 .6rem 1.6rem rgba(0,0,0,.35);
+}
+.tu-chip.on b{
+  background:linear-gradient(100deg,#fff,var(--vt-gold));-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.tu-chip.on::before{
+  top:.7rem;right:.7rem;width:1.5rem;height:1.5rem;background-color:var(--vt-gold);box-shadow:0 0 .8rem var(--vt-gold);
+}
+.tu-chip.on::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  border:.15rem solid var(--vt-gold);opacity:0;animation:vtPulseRing 1.1s var(--ease-premium);
+}
+@keyframes vtPulseRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
+
+#v-topup .tu-custom{margin-top:1.5rem}
+.tu-custom .field{
+  height:5.4rem;border-radius:1.7rem;background:rgba(0,0,0,.34);border-color:rgba(255,210,122,.22);
+  transition:border-color .3s,box-shadow .3s;
+}
+.tu-custom .field:focus{border-color:var(--vt-gold);box-shadow:0 0 0 .3rem rgba(255,210,122,.14)}
+.tu-pre{color:var(--vt-gold)}
+
+/* =====================================================================
+   3) ช่องทางชำระ — การ์ดกระจก + เส้นขอบไล่สีเรืองแสง (ไหลตอนเลือก)
+   ===================================================================== */
+.tu-pm{
+  border-radius:1.9rem;padding:1.3rem 1.4rem;background:rgba(255,255,255,.03);
+  border:max(1px,.15rem) solid transparent;
+  background-image:linear-gradient(var(--card-bg),var(--card-bg)),linear-gradient(120deg,rgba(255,255,255,.1),rgba(255,255,255,.1));
+  background-origin:border-box;background-clip:padding-box,border-box;
+}
+.tu-pm-ic{border-radius:1.3rem;box-shadow:0 .5rem 1.4rem rgba(0,0,0,.35)}
+.tu-pm[aria-pressed=true]{
+  background-image:linear-gradient(rgba(28,10,10,.9),rgba(10,4,5,.94)),
+    linear-gradient(90deg,var(--red-bright),var(--vt-violet),var(--vt-cyan),var(--vt-gold),var(--red-bright));
+  background-size:100% 100%,300% 100%;
+  box-shadow:0 0 2rem rgba(168,121,255,.26);
+  animation:vtBorderFlow 5s linear infinite;
+}
+@keyframes vtBorderFlow{to{background-position:0 0,300% 0}}
+.tu-pm[aria-pressed=true] .tu-check{background:linear-gradient(135deg,var(--red-bright),var(--vt-violet));border-color:transparent}
+
+/* ---- QR: กรอบเทอร์มินัลสแกน แบบมุมกล้อง ---- */
+.tu-qr-box{
+  background:linear-gradient(155deg,#0d1116,#05070a);border-radius:1.6rem;
+  box-shadow:0 0 3rem rgba(79,224,255,.28),inset 0 0 0 .1rem rgba(79,224,255,.15);
+}
+.tu-qr-box svg{color:#eaf9ff;filter:drop-shadow(0 0 .6rem rgba(79,224,255,.4))}
+.tu-qr-box::before,.tu-qr-box::after,.tu-modal-qr .tu-qr-box::before,.tu-modal-qr .tu-qr-box::after{
+  content:"";position:absolute;width:1.9rem;height:1.9rem;border:.22rem solid var(--vt-cyan);
+  filter:drop-shadow(0 0 .5rem var(--vt-cyan));
+}
+.tu-qr-box::before{top:.6rem;left:.6rem;border-right:0;border-bottom:0;border-top-left-radius:.6rem}
+.tu-qr-box::after{bottom:.6rem;right:.6rem;border-left:0;border-top:0;border-bottom-right-radius:.6rem}
+.tu-qr-scan{background:linear-gradient(90deg,transparent,var(--vt-cyan),transparent);box-shadow:0 0 1rem var(--vt-cyan)}
+
+/* =====================================================================
+   4) สรุปยอด + ปุ่มยืนยัน — โฮโลแบดจ์ + ปุ่มพลังงานไหล
+   ===================================================================== */
+.tu-sum-card{background:linear-gradient(150deg,rgba(30,10,10,.9),rgba(8,3,4,.96))!important}
+.tu-sum-card .sum{
+  display:flex;align-items:center;justify-content:space-between;padding:.2rem .2rem 1.4rem;
+  border-bottom:1px dashed var(--vt-line);
+}
+.tu-sum-card .sum span{color:var(--muted);font-size:1.3rem}
+.tu-pay{
+  border-radius:1.7rem;height:6rem;font-size:1.75rem;
+  background:linear-gradient(100deg,var(--red-bright),var(--vt-violet) 55%,var(--red-bright));
+  background-size:220% auto;border-color:rgba(255,255,255,.2);
+  animation:tuGlow 2.6s ease-in-out infinite,vtBtnFlow 5s ease-in-out infinite;
+}
+@keyframes vtBtnFlow{50%{background-position:100% 50%}}
+.tu-pay .cta-ic,.tu-pay svg{filter:drop-shadow(0 0 .5rem rgba(255,255,255,.5))}
+
+/* =====================================================================
+   5) ประวัติ — ไทม์ไลน์เชื่อมเส้น
+   ===================================================================== */
+#hist{position:relative;padding-left:.4rem}
+#hist .tx{position:relative;padding-left:1.6rem;border-top:0;margin-top:0}
+#hist .tx:not(:last-child){padding-bottom:1.3rem}
+#hist .tx:not(:last-child)::before{content:"";position:absolute;left:2.35rem;top:3.8rem;bottom:-1rem;width:1px;background:linear-gradient(var(--vt-line),transparent)}
+#hist .tx-i{border-radius:50%;box-shadow:0 0 1rem currentColor}
+#hist .tx-i.in{box-shadow:0 0 1rem rgba(74,222,128,.35)}
+
+@media (prefers-reduced-motion:reduce){
+  #v-topup::before,#v-topup::after,.tu-bal::after,.tu-bal-ic,.tu-chip.on::after,.tu-pm[aria-pressed=true],.tu-pay{animation:none!important}
+}
+
+/* =====================================================================
+   6) หน้าต่างยืนยันเติมเงิน (#tuModal) — โทนเดียวกับหน้าเติมเงิน
+   ===================================================================== */
+#tuModal .om-card{border-color:rgba(255,210,122,.22)}
+#tuModal .om-title{
+  background:linear-gradient(100deg,#fff 10%,var(--vt-gold,#ffd27a) 40%,var(--red-bright) 65%,#fff 92%);
+  background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:titleShimmer 5.5s ease-in-out infinite;
+}
+#tuModal .tu-modal-qr .tu-qr-box{width:15rem;height:15rem}
+#tuModal .om-sum{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:1.6rem;padding:1.4rem 1.6rem}
+#tuModal .om-total b{
+  background:linear-gradient(100deg,#fff,#ffd27a);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.tu-slip-drop{
+  border-radius:1.9rem;border:.16rem dashed rgba(255,210,122,.35);
+  background:linear-gradient(160deg,rgba(255,210,122,.06),rgba(0,0,0,.2));
+  animation:vtDashPulse 2.8s ease-in-out infinite;
+}
+@keyframes vtDashPulse{50%{border-color:rgba(255,210,122,.65)}}
+.tu-slip-ic{background:linear-gradient(135deg,rgba(255,210,122,.22),rgba(168,121,255,.16));color:var(--vt-gold,#ffd27a);box-shadow:0 0 1.6rem rgba(255,210,122,.25)}
+.tu-slip-preview{transform:rotate(-.6deg);box-shadow:0 1rem 2.4rem rgba(0,0,0,.5)}
+#tuModal .om-cta{
+  background:linear-gradient(100deg,var(--red-bright),var(--vt-violet,#a879ff) 60%,var(--red-bright));
+  background-size:220% auto;animation:vtBtnFlow 5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion:reduce){.tu-slip-drop{animation:none}}
 </style>
 </head>
 <body>
@@ -1380,6 +1697,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
     <div class="search">
       <svg><use href="#i-search"/></svg>
       <input id="q" type="text" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ, ໂປຣແກຣມ, ຫຼື ໝວດໝູ່..." autocomplete="off" enterkeyhint="search" aria-label="ຄົ້ນຫາສິນຄ້າ">
+      <button type="button" class="search-clear" aria-label="ລ້າງຄຳຄົ້ນຫາ" tabindex="-1"><i></i><i></i></button>
     </div>
     <div class="filters">
       <button class="chip" data-cat="IOS"><span class="tile ios"><svg><use href="#i-apple"/></svg></span>ໝວດໝູ່ IOS</button>
@@ -1391,7 +1709,7 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
 <!-- ===== สินค้า ===== -->
 <div class="view" id="v-products">
   <div class="pg"><button class="back" data-go="home" aria-label="ກັບຄືນ"><svg><use href="#i-back"/></svg></button><div><h2>ສິນຄ້າທັງໝົດ</h2><small id="pcount"> </small></div></div>
-  <div class="search"><svg><use href="#i-search"/></svg><input class="field" id="pq" style="padding-left:var(--search-pad)" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ, ໂປຣແກຣມ, ຫຼື ໝວດໝູ່..." autocomplete="off" aria-label="ຄົ້ນຫາສິນຄ້າ"></div>
+  <div class="search"><svg><use href="#i-search"/></svg><input class="field" id="pq" style="padding-left:var(--search-pad)" placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ, ໂປຣແກຣມ, ຫຼື ໝວດໝູ່..." autocomplete="off" aria-label="ຄົ້ນຫາສິນຄ້າ"><button type="button" class="search-clear" aria-label="ລ້າງຄຳຄົ້ນຫາ" tabindex="-1"><i></i><i></i></button></div>
   <div class="cats" id="cats"></div>
   <div class="grid2" id="plist"></div>
 </div>
@@ -1697,6 +2015,24 @@ html.om-lock .item.on::before,html.om-lock .item.on svg,html.om-lock .nav-spot::
   </div>
 </div>
 
+<!-- ===== ເຕີມເງິນ: ໜ້າຕ່າງສະແກນຈ່າຍ + ແນບສະລິບ (เนื้อหาเติมด้วย JS จากจำนวนเงิน/ช่องทางที่เลือกจริง) ===== -->
+<div class="om" id="tuModal" role="dialog" aria-modal="true" aria-labelledby="tuT">
+  <div class="om-back" data-tuclose></div>
+  <div class="om-amb" aria-hidden="true"><i></i><i></i></div>
+  <div class="om-card" id="tuCard" tabindex="-1">
+    <div class="om-fx" aria-hidden="true">
+      <i style="--x:9%;--s:.4rem;--t:16s;--d:-3s;--dx:1.6rem"></i><i style="--x:24%;--s:.3rem;--t:21s;--d:-11s;--dx:-1.4rem"></i>
+      <i style="--x:38%;--s:.5rem;--t:18s;--d:-7s;--dx:2rem"></i><i style="--x:53%;--s:.3rem;--t:23s;--d:-15s;--dx:-2rem"></i>
+      <i style="--x:67%;--s:.4rem;--t:17s;--d:-1s;--dx:1.2rem"></i><i style="--x:80%;--s:.3rem;--t:20s;--d:-9s;--dx:-1.8rem"></i>
+      <i style="--x:92%;--s:.5rem;--t:19s;--d:-13s;--dx:1rem"></i>
+    </div>
+    <button class="om-x" id="tuX" type="button" aria-label="ປິດ" data-tuclose><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="om-scroll" id="tuScroll"></div>
+    <div class="om-foot" id="tuFoot"></div>
+    <div class="om-edge" aria-hidden="true"></div>
+  </div>
+</div>
+
 
 <script>
 /* ===== Router: หน้า = home | products | topup | status | menu ===== */
@@ -1786,7 +2122,11 @@ const openSheet=h=>{box.innerHTML=h;sheet.classList.add('on')}, closeSheet=()=>s
 
 /* ----- สินค้า (ฝั่งลูกค้า) ----- */
 let cat='ທັງໝົດ',only=false,pq='';
-function renderCats(){$('#cats').innerHTML=['ທັງໝົດ',...DB.cats].map((c,i)=>`<button class="cat${c===cat?' on':''}" data-cat="${esc(c)}" style="--k:${i}">${esc(c)}</button>`).join('')+`<button class="cat" id="onlyStock" aria-pressed="${only}" style="--k:${DB.cats.length+1}">ສະເພາະທີ່ມີສະຕັອກ</button>`}
+function renderCats(){$('#cats').innerHTML='<i class="cat-ind" id="catInd"></i>'+['ທັງໝົດ',...DB.cats].map((c,i)=>`<button class="cat${c===cat?' on':''}" data-cat="${esc(c)}" style="--k:${i}">${esc(c)}</button>`).join('')+`<button class="cat" id="onlyStock" aria-pressed="${only}" style="--k:${DB.cats.length+1}">ສະເພາະທີ່ມີສະຕັອກ</button>`;posCatInd()}
+/* แผ่นไฟใต้หมวดหมู่ที่เลือกอยู่ (เหมือน posInd() ของแท็บแอดมิน) */
+function posCatInd(){const b=$('#cats .cat.on'),i=$('#catInd'),bar=$('#cats');if(!b||!i||!b.offsetWidth)return;
+  i.style.width=b.offsetWidth+'px';i.style.transform='translateX('+b.offsetLeft+'px)';
+  bar.scrollTo({left:Math.max(0,b.offsetLeft-(bar.clientWidth-b.offsetWidth)/2),behavior:RM?'auto':'smooth'})}
 function renderP(){
   const l=DB.products.filter(p=>(cat==='ທັງໝົດ'||p.cat===cat)&&(!only||p.stock>0)&&(p.name+p.cat+p.code).toLowerCase().includes(pq));
   $('#pcount').textContent='ສະແດງ '+l.length+' ຈາກ '+DB.products.length+' ລາຍການ';
@@ -1798,12 +2138,32 @@ function renderP(){
 }
 $('#cats').addEventListener('click',e=>{
   const c=e.target.closest('.cat'); if(!c) return;
-  if(c.id==='onlyStock') only=!only; else cat=c.dataset.cat;
-  const list=$('#plist'),cs=$('#cats');
-  list.classList.add('sw-out');cs.classList.add('sw-out');
-  setTimeout(()=>{renderCats();renderP();list.classList.remove('sw-out');cs.classList.remove('sw-out')},240);
+  if(c.id==='onlyStock'){
+    only=!only; c.setAttribute('aria-pressed',only);
+  }else{
+    if(c.classList.contains('on')) return; /* เลือกอยู่แล้ว ไม่ต้องทำอะไรซ้ำ */
+    cat=c.dataset.cat;
+    $$('#cats .cat.on').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+    posCatInd();
+  }
+  const list=$('#plist');
+  list.classList.add('sw-out');
+  setTimeout(()=>{renderP();list.classList.remove('sw-out')},220);
 });
 $('#pq').addEventListener('input',e=>{pq=e.target.value.trim().toLowerCase();renderP()});
+document.addEventListener('click',e=>{
+  const cb=e.target.closest('.search-clear'); if(!cb) return;
+  const inp=cb.previousElementSibling; if(!inp||inp.tagName!=='INPUT') return;
+  inp.value='';inp.dispatchEvent(new Event('input',{bubbles:true}));inp.focus();
+});
+/* ไอคอนแว่นขยายสะบัดเบาๆ ทุกครั้งที่พิมพ์ในช่องค้นหา */
+document.addEventListener('input',e=>{
+  if(typeof RM!=='undefined'&&RM) return;
+  const inp=e.target.closest('.search input'); if(!inp) return;
+  const svg=inp.parentElement.querySelector('svg'); if(!svg) return;
+  svg.classList.remove('kick');void svg.offsetWidth;svg.classList.add('kick');
+});
 $('#plist').addEventListener('click',e=>{ /* แตะรูปปก = สลับรูปถัดไป */
   const cv=e.target.closest('.cv'); if(!cv) return;
   const p=DB.products.find(x=>x.id==cv.dataset.pid); if(!p||p.imgs.length<2) return;
@@ -2432,7 +2792,7 @@ function setAmt(v){amt=Math.max(0,+v||0);$$('.tu-chip').forEach(b=>b.classList.t
 $('#amts').addEventListener('click',e=>{const b=e.target.closest('.tu-chip');if(b){$('#amt').value='';setAmt(b.dataset.a)}});
 $('#amt').addEventListener('input',e=>setAmt(e.target.value));
 $('#pms').addEventListener('click',e=>{const b=e.target.closest('.tu-pm');if(!b)return;$$('.tu-pm').forEach(x=>x.setAttribute('aria-pressed',x===b));pm=b.dataset.pm;$('#tuQr').classList.toggle('on',pm==='BCEL One (LaoQR)')});
-$('#pay').addEventListener('click',()=>amt>0?burst('+'+K(amt),'ຜ່ານ '+pm+' — ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ລະບົບຊຳລະເງິນແທ້'):say('ກະລຸນາລະບຸຈຳນວນເງິນ'));
+$('#pay').addEventListener('click',()=>amt>0?tuOpen():say('ກະລຸນາລະບຸຈຳນວນເງິນ'));
 $('#hist').innerHTML=[['ເຕີມເງິນຜ່ານ BCEL One','ມື້ນີ້ 09:41',200000],['ເຕີມເງິນຜ່ານ U-Money','ມື້ວານນີ້ 18:20',100000],['ເຕີມເງິນຜ່ານການໂອນທະນາຄານ','3 ມື້ກ່ອນ',500000]].map(r=>feedRow('in',r[0],r[1],'+'+K(r[2]))).join('');
 
 
@@ -2746,6 +3106,179 @@ if(!RM) omEl.addEventListener('pointerdown',e=>{
   i.style.left=(e.clientX-r.left-d/2)+'px';i.style.top=(e.clientY-r.top-d/2)+'px';
   b.appendChild(i);setTimeout(()=>i.remove(),700);
 });
+
+/* =====================================================================
+   ເຕີມເງິນ · ໜ້າຕ່າງສະແກນຈ່າຍ + ແນບສະລິບ
+   ໄຫຼ: ເລືອກຈຳນວນ/ຊ່ອງທາງ → ກົດ "ຢືນຢັນເຕີມເງິນ" → ໜ້າຕ່າງນີ້ເດ້ງກາງຈໍ (ໃຊ້ໂຄງ .om ເດີມ)
+        → ສະແກນ QR + ແນບຮູບສະລິບ → ກົດຢືນຢັນ → Loading (ແຖບສະແກນ) → ສຳເລັດ + ກະດາษสี → ເຄຣດິດເຂົ້າຈິງ
+   ===================================================================== */
+const tu={open:false,busy:false,slip:null};
+const tuEl=$('#tuModal'),tuCard=$('#tuCard'),tuScroll=$('#tuScroll'),tuFoot=$('#tuFoot'),tuX=$('#tuX');
+const pmShort=p=>({'BCEL One (LaoQR)':'BCEL One','U-Money':'U-Money','ໂອນຜ່ານທະນາຄານ':'ໂອນທະນາຄານ'}[p]||p);
+const pmNote=p=>p==='ໂອນຜ່ານທະນາຄານ'?'ໂອນເຂົ້າບັນຊີທະນາຄານຕາມທີ່ຮ້ານແຈ້ງ ຫຼືສະແກນ QR ດ້ານລຸ່ມ ແລ້ວແນບສະລິບ':'ສະແກນຜ່ານແອັບທະນາຄານ ຫຼືວໍເລັດທີ່ຮອງຮັບ LaoQR ແລ້ວແນບສະລິບ';
+
+function tuReview(){
+  tuFoot.className='om-foot';
+  tuScroll.innerHTML=`
+    <div class="om-head">
+      <h2 class="om-title om-in" id="tuT" style="--i:1">ຢືນຢັນການເຕີມເງິນ</h2>
+      <p class="om-sub om-in" style="--i:2">ສະແກນຈ່າຍ ແລ້ວແນບສະລິບເພື່ອຢືນຢັນ</p>
+    </div>
+    <div class="om-body">
+      <div class="tu-modal-qr om-in" style="--i:3">
+        <div class="tu-qr-box"><svg aria-hidden="true"><use href="#i-qr"/></svg><i class="tu-qr-scan"></i></div>
+        <p>${esc(pmNote(pm))}</p>
+      </div>
+      <div class="om-sum om-in" style="--i:4">
+        <div class="om-row"><span>ຊ່ອງທາງຊຳລະ</span><b>${esc(pmShort(pm))}</b></div>
+        <div class="om-hr"></div>
+        <div class="om-row om-total"><span>ຍອດທີ່ຕ້ອງຊຳລະ</span><b>${K(amt)}</b></div>
+      </div>
+      <div class="tu-slip om-in" style="--i:5">
+        <label class="tu-slip-drop" id="tuSlipDrop"${tu.slip?' hidden':''}>
+          <input type="file" id="tuSlipInput" accept="image/*" capture="environment" hidden>
+          <span class="tu-slip-ic"><svg aria-hidden="true"><use href="#i-up"/></svg></span>
+          <b>ແນບສະລິບການໂອນເງິນ</b>
+          <span>ແຕະເພື່ອເລືອກຮູບ ຫຼືຖ່າຍຮູບສະລິບ</span>
+        </label>
+        <div class="tu-slip-preview" id="tuSlipPreview"${tu.slip?'':' hidden'}>
+          ${tu.slip?`<img src="${tu.slip}" alt="ສະລິບການໂອນເງິນ">`:''}
+          <button type="button" class="tu-slip-rm" id="tuSlipRemove" aria-label="ລຶບຮູບ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <span class="tu-slip-ok">${OM_TICK}ແນບສະລິບແລ້ວ</span>
+        </div>
+      </div>
+    </div>`;
+  tuFoot.innerHTML=`<div class="om-in" style="--i:6"><button class="om-cta" id="tuGo" type="button"${tu.slip?'':' disabled'}>${OM_TICK}<span>ຢືນຢັນການເຕີມເງິນ</span></button></div>`;
+}
+
+/* ---- ສຳເລັດ: checkmark ແບບ draw + ກະດາษสี ---- */
+function tuSuccess(){
+  tuFoot.className='om-foot';
+  tuScroll.innerHTML=`
+    <div class="om-res" role="status">
+      <div class="om-ok" aria-hidden="true"><i class="glow"></i><svg viewBox="0 0 52 52"><circle class="oc" cx="26" cy="26" r="24"/><path class="ot" d="M14 27l8 8 16-17"/></svg></div>
+      <h2 class="om-title rs" id="tuT" style="--i:0">ເຕີມເງິນສຳເລັດ</h2>
+      <p class="om-sub rs" style="--i:1">ເຄຣດິດຂອງທ່ານຖືກເຕີມເຂົ້າບັນຊີທັນທີ</p>
+      <span class="om-oid rs" style="--i:2">+${K(amt)}</span>
+      <p class="om-line rs" style="--i:3">ຜ່ານ ${esc(pmShort(pm))} · ເຄຣດິດຄົງເຫຼືອ ${K(DB.credit)}</p>
+    </div>`;
+  tuFoot.innerHTML=`<div class="rs" style="--i:5"><button class="om-cta" id="tuDone" type="button" data-tuclose>${OM_TICK}<span>ສຳເລັດ</span></button></div>`;
+  tuConfetti();
+}
+function tuConfetti(){
+  if(RM||tuCard.querySelector('.om-conf')) return;
+  const cols=['#4ade80','#ffffff','#f4c542','#86efac','#ff8fa3'], box=document.createElement('div');
+  box.className='om-conf'; box.setAttribute('aria-hidden','true');
+  for(let i=0;i<26;i++){
+    const s=document.createElement('i');
+    s.style.cssText='--x:'+(Math.random()*100).toFixed(1)+'%;--w:'+(.5+Math.random()*.5).toFixed(2)+'rem;--c:'+cols[i%cols.length]+
+      ';--dx:'+((Math.random()-.5)*14).toFixed(1)+'rem;--r:'+Math.round((Math.random()-.5)*1080)+'deg;--t:'+(1.6+Math.random()*1.4).toFixed(2)+
+      's;--d:'+(.5+Math.random()*.5).toFixed(2)+'s';
+    box.appendChild(s);
+  }
+  tuCard.appendChild(box); setTimeout(()=>box.remove(),3600);
+}
+
+/* ---- ເປີດ / ປິດ ---- */
+function tuOpen(){
+  if(tu.open||amt<=0) return;
+  Object.assign(tu,{open:true,busy:false,slip:null});
+  tuEl.dataset.st='review'; tuX.disabled=false; tuCard.classList.remove('swap','shake');
+  tuReview(); tuScroll.scrollTop=0;
+  document.documentElement.classList.add('om-lock');
+  tuEl.classList.remove('closing'); tuEl.classList.add('on');
+  void tuEl.offsetWidth; /* ให้ transition เริ่มจาก state ตั้งต้น */
+  tuEl.classList.add('show');
+  tuCard.focus({preventScroll:true});
+}
+function tuClose(){
+  if(!tu.open||tu.busy) return;
+  tu.open=false; tuEl.classList.add('closing');
+  setTimeout(()=>{
+    tuEl.classList.remove('on','show','closing');
+    document.documentElement.classList.remove('om-lock');
+    tuScroll.innerHTML=''; tuFoot.innerHTML=''; tuCard.classList.remove('swap','shake','om-busy');
+    tuCard.querySelectorAll('.om-conf').forEach(x=>x.remove());
+  },300);
+  const t=$('#pay'); if(t&&!t.disabled) t.focus({preventScroll:true});
+}
+
+/* ---- ແນບ/ລຶບ ຮູບສະລິບ ---- */
+function tuSetSlip(d){tu.slip=d;tuReview()}
+async function tuPickFile(f){
+  if(!f) return;
+  const d=await shrink(f);
+  if(!d) return say('ອ່ານຮູບບໍ່ໄດ້ ລອງໃໝ່ອີກຄັ້ງ');
+  tuSetSlip(d);
+}
+
+/* ---- ກົດຢືນຢັນ → Loading (ແຖບສະແກນ) → ບັນທຶກເຄຣດິດຈິງເຂົ້າ DB → ສຳເລັດ ---- */
+async function tuRun(btn){
+  if(tu.busy||!tu.open) return;
+  if(!tu.slip) return say('ກະລຸນາແນບສະລິບການໂອນເງິນກ່ອນ');
+  tu.busy=true; tuX.disabled=true;
+  btn.disabled=true; btn.classList.add('is-load'); btn.setAttribute('aria-busy','true');
+  btn.innerHTML=OM_SPIN+'<span>ກຳລັງກວດສອບສະລິບ…</span>';
+  tuCard.classList.add('om-busy'); tuCard.focus({preventScroll:true});
+  await omSleep(1100);
+  tuCard.classList.add('swap'); await omSleep(180);
+  tuScroll.scrollTop=0; tuCard.classList.remove('om-busy');
+  DB.credit+=amt; addTx('add',amt,'ເຕີມເງິນຜ່ານ '+pm+' (ແນບສະລິບ)'); save(); paint();
+  const hist=$('#hist'); if(hist) hist.insertAdjacentHTML('afterbegin',feedRow('in','ເຕີມເງິນຜ່ານ '+esc(pmShort(pm))+' (ແນບສະລິບ)','ຫາກໍ່ນີ້','+'+K(amt)));
+  tuEl.dataset.st='success'; tu.done=true; tuSuccess();
+  tuCard.classList.remove('swap');
+  tu.busy=false; tuX.disabled=false;
+  const f=$('#tuDone'); if(f) f.focus({preventScroll:true});
+}
+
+tuEl.addEventListener('click',e=>{
+  const t=e.target;
+  if(t.closest('#tuSlipRemove')) return tuSetSlip(null);
+  const run=t.closest('#tuGo'); if(run) return tuRun(run);
+  if(t.closest('[data-tuclose]')) return tuClose();
+});
+tuEl.addEventListener('change',e=>{
+  if(e.target.id!=='tuSlipInput') return;
+  const f=e.target.files&&e.target.files[0];
+  if(f) tuPickFile(f);
+  e.target.value='';
+});
+
+/* Esc = ปิด · Tab วนอยู่ใน modal (focus trap) */
+document.addEventListener('keydown',e=>{
+  if(!tu.open) return;
+  if(e.key==='Escape'){if(!tu.busy){e.preventDefault();tuClose()}return}
+  if(e.key!=='Tab') return;
+  const f=[...tuEl.querySelectorAll('button:not([disabled]),label:not([hidden])')].filter(x=>x.getClientRects().length);
+  if(!f.length){e.preventDefault();tuCard.focus();return}
+  const a=document.activeElement,first=f[0],last=f[f.length-1];
+  if(!tuEl.contains(a)||a===tuCard){e.preventDefault();(e.shiftKey?last:first).focus();return}
+  if(e.shiftKey&&a===first){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&a===last){e.preventDefault();first.focus()}
+});
+
+/* Ripple ของปุ่มใน modal (ใช้ .rip เดิมของเว็บ) */
+if(!RM) tuEl.addEventListener('pointerdown',e=>{
+  const b=e.target.closest('.om-cta,.tu-slip-drop,.tu-slip-rm'); if(!b||b.disabled) return;
+  const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*1.4,i=document.createElement('i');
+  i.className='rip';i.style.width=i.style.height=d+'px';
+  i.style.left=(e.clientX-r.left-d/2)+'px';i.style.top=(e.clientY-r.top-d/2)+'px';
+  b.appendChild(i);setTimeout(()=>i.remove(),700);
+});
+
+/* --- สปอตไลต์ตามนิ้วทั้งการ์ด (เอฟเฟกต์เดียวกับ order modal) --- */
+if(!RM){
+  let tuRaf=0,tuPe=null;
+  const tuUpd=()=>{tuRaf=0;if(!tuPe)return;const e=tuPe,cr=tuCard.getBoundingClientRect();
+    tuCard.style.setProperty('--mx',(e.clientX-cr.left).toFixed(1)+'px');tuCard.style.setProperty('--my',(e.clientY-cr.top).toFixed(1)+'px')};
+  const tuMove=e=>{tuPe=e;tuCard.classList.add('om-lit');if(!tuRaf)tuRaf=requestAnimationFrame(tuUpd)};
+  const tuOff=()=>tuCard.classList.remove('om-lit');
+  tuCard.addEventListener('pointermove',tuMove,{passive:true});
+  tuCard.addEventListener('pointerdown',tuMove,{passive:true});
+  tuCard.addEventListener('pointerleave',tuOff);
+  tuCard.addEventListener('pointercancel',tuOff);
+  tuCard.addEventListener('pointerup',e=>{if(e.pointerType==='touch')setTimeout(tuOff,260)});
+}
 
 /* =====================================================================
    PRODUCT CARD FX · เอียง 3D + สปอตไลต์ตามนิ้ว + นับราคา + ตรวจว่าการ์ดอยู่ในจอ
