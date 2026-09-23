@@ -2746,9 +2746,10 @@ function drawEd(){
   <p class="h3 sp">ລາຍລະອຽດສິນຄ້າ</p><textarea class="field ta" id="eDesc">${esc(ed.desc)}</textarea>
   <p class="hint">ສະແດງໃຕ້ຊື່ສິນຄ້າ. ບໍ່ບັງຄັບ.</p>
   <p class="ed-h">ລາຄາ</p>
-  <p class="h3">ລາຄາ (ພັນກີບ) · ພິມ 15 = 15,000 ກີບ</p><input class="field" id="ePrice" type="number" inputmode="numeric" min="0" value="${ed.price?Math.round(ed.price/1000):''}">
+  <p class="h3">ລາຄາ (ພັນກີບ) · ພິມ 15 = 15,000 ກີບ</p><input class="field" id="ePrice" type="text" inputmode="numeric" min="0" value="${ed.price?Math.round(ed.price/1000).toLocaleString('en-US'):''}">
   <p class="hint">${ed.durs&&ed.durs.length?'ສິນຄ້ານີ້ມີຕົວເລືອກໄລຍະເວລາແລ້ວ (ຕັ້ງຢູ່ໃນແຖບ "ເຕີມສະຕັອກ") ລາຄານີ້ຈະບໍ່ຖືກໃຊ້.':'ໃຊ້ເປັນລາຄາປົກກະຕິ. ຖ້າຕ້ອງການໃຫ້ມີຕົວເລືອກໄລຍະເວລາ (ເຊັ່ນ 1 ມື້ / 7 ມື້) ໃຫ້ຕັ້ງຕອນເຕີມສະຕັອກໃນແຖບ "ເຕີມສະຕັອກ".'}</p>
   <button class="btn b2 wide sp" id="eSave">ບັນທຶກ</button>${ed.id?'<button class="del" id="eDel">ລຶບສິນຄ້ານີ້</button>':''}<button class="btn b3 wide" data-close style="margin-top:.9rem">ຍົກເລີກ</button>`);
+  bindMoneyInput('#ePrice');
 }
 function shrink(f){return new Promise(r=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.82))};im.onerror=()=>r(null);im.src=u})}
 sheet.addEventListener('change',async e=>{if(e.target.id!=='eImg')return;pull();for(const f of e.target.files){const d=await shrink(f);if(d)ed.imgs.push(d)}drawEd()});
