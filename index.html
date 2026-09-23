@@ -2194,6 +2194,15 @@ const UNL=9999; /* สินค้าที่สร้างใหม่ = ไ�
 const P=[]; /* ไม่มีสินค้าตัวอย่างแล้ว — เพิ่มสินค้าจริงผ่านแท็บแอดมิน */
 const IC={'ໂປຣແກຣມ':'i-grid','ຫ້ອງການ':'i-boxes','ຄວາມປອດໄພ':'i-check','ເກມ':'i-bolt','IOS':'i-apple','ANDROID':'i-android'};
 const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0});
+/* แก้บั๊ก: <input type="number"> อ่านจุด(.) เป็นทศนิยม ทำให้พิมพ์ "700.000" (700,000 ກີບ) กลายเป็น 700
+   เปลี่ยนช่องกรอกเงิน/ราคาให้เป็น text แล้วดึงเฉพาะตัวเลข ไม่สนจุด/คอมมาที่พิมพ์มา (ເງິນກີບບໍ່ມີທົດສະນິຍົມ) */
+const digitsOnly=v=>String(v??'').replace(/[^0-9]/g,'');
+const numVal=v=>+digitsOnly(v)||0;
+function bindMoneyInput(sel){
+  const el=$(sel); if(!el) return;
+  el.type='text';
+  el.addEventListener('input',()=>{const n=numVal(el.value);el.value=n?n.toLocaleString('en-US'):''});
+}
 $('#credit').textContent=fmt(DEMO.credit); $('#uname').textContent=DEMO.user; $('#ucredit').textContent='₭'+fmt(DEMO.credit);
 
 /* ===== ร้านค้า: ข้อมูลเก็บใน localStorage ของเครื่องนี้ (ต่อฐานข้อมูลกลางภายหลังได้) ===== */
@@ -2410,7 +2419,7 @@ const feedRow=(dir,ttl,sub,val,after)=>`<div class="tx"><span class="tx-i ${dir}
 
 /* ---- credit ---- */
 function crSync(){
-  const amt=Math.floor(+$('#crAmt').value||0),add=cr.mode==='add';
+  const amt=Math.floor(numVal($('#crAmt').value)),add=cr.mode==='add';
   $$('#crSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===cr.mode));
   let ok=false,msg='ໃສ່ຈຳນວນເງິນທີ່ຈະ'+(add?'ເພີ່ມ':'ຫັກ'),cls='';
   if(amt>0){const after=DB.credit+(add?amt:-amt);
@@ -2643,7 +2652,7 @@ $('#apS').addEventListener('change',e=>{asort=e.target.value;renderAdmin()});
 $('#crF').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){cf=b.dataset.f;renderAdmin()}});
 $('#crSeg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){cr.mode=b.dataset.m;crSync()}});
 $('#crAmt').addEventListener('input',crSync);
-$('#crQuick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;$('#crAmt').value=(+$('#crAmt').value||0)+ +b.dataset.q;crSync()});
+$('#crQuick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;$('#crAmt').value=(numVal($('#crAmt').value)+ +b.dataset.q).toLocaleString('en-US');crSync()});
 $('#rsGo').addEventListener('click',()=>{
   const p=rsProd(); if(!p) return say('ກະລຸນາເລືອກສິນຄ້າກ່ອນ');
   const c=rsCalc(),go=$('#rsGo'); let n;
@@ -2653,7 +2662,7 @@ $('#rsGo').addEventListener('click',()=>{
     let durLabel=rsDurLabel();
     if(rs.dur==='__new__'){
       if(!durLabel) return say('ໃສ່ຊື່ໄລຍະເວລາໃໝ່ກ່ອນ');
-      if(!p.durs.some(d=>d.label===durLabel)){p.durs.push({label:durLabel,price:Math.max(0,+$('#rsDurPrice').value||0)});p.keysByDur[durLabel]=p.keysByDur[durLabel]||[]}
+      if(!p.durs.some(d=>d.label===durLabel)){p.durs.push({label:durLabel,price:Math.max(0,numVal($('#rsDurPrice').value))});p.keysByDur[durLabel]=p.keysByDur[durLabel]||[]}
     }
     const pool=durLabel?(p.keysByDur[durLabel]=p.keysByDur[durLabel]||[]):p.keys;
     pool.push(...c.add);p.auto=true;p.stock=allKeys(p).length;n=c.add.length;
@@ -2668,7 +2677,7 @@ $('#rsGo').addEventListener('click',()=>{
   renderP();renderAdmin();rsSync();burst('+'+n,p.name+' · ເຫຼືອ '+p.stock);
 });
 $('#crGo').addEventListener('click',()=>{
-  const amt=Math.floor(+$('#crAmt').value||0),add=cr.mode==='add'; if(amt<=0) return;
+  const amt=Math.floor(numVal($('#crAmt').value)),add=cr.mode==='add'; if(amt<=0) return;
   if(!add&&amt>DB.credit) return say('ຫັກເກີນຍອດຄົງເຫຼືອບໍ່ໄດ້');
   DB.credit+=add?amt:-amt; addTx(add?'add':'sub',add?amt:-amt,$('#crNote').value.trim());
   if(!save()) return; paint(); $('#crAmt').value='';$('#crNote').value='';renderAdmin();
@@ -2710,7 +2719,7 @@ function openEd(id){
   ed.durs=ed.durs||[]; ed.keysByDur=ed.keysByDur||{};
   drawEd();
 }
-function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,+$('#ePrice').value||0);ed.desc=$('#eDesc').value}
+function pull(){if(!$('#eName'))return;ed.name=$('#eName').value;ed.cat=$('#eCat').value;ed.price=Math.max(0,numVal($('#ePrice').value));ed.desc=$('#eDesc').value}
 function drawEd(){
   openSheet(`<h3 class="sh-t">${ed.id?'ແກ້ໄຂສິນຄ້າ':'ເພີ່ມສິນຄ້າໃໝ່'}</h3>
   <p class="ed-h first">ຂໍ້ມູນສິນຄ້າ</p>
@@ -3030,9 +3039,10 @@ window.addEventListener('load',()=>{
 
 /* ===== เติมเงิน ===== */
 let amt=200000,pm='BCEL One (LaoQR)';
-function setAmt(v){amt=Math.max(0,+v||0);$$('.tu-chip').forEach(b=>b.classList.toggle('on',+b.dataset.a===amt));setNum('#tot',amt)}
+function setAmt(v){amt=Math.max(0,numVal(v));$$('.tu-chip').forEach(b=>b.classList.toggle('on',+b.dataset.a===amt));setNum('#tot',amt)}
 $('#amts').addEventListener('click',e=>{const b=e.target.closest('.tu-chip');if(b){$('#amt').value='';setAmt(b.dataset.a)}});
 $('#amt').addEventListener('input',e=>setAmt(e.target.value));
+['#amt','#crAmt','#rsDurPrice','#ePrice'].forEach(bindMoneyInput);
 $('#pms').addEventListener('click',e=>{const b=e.target.closest('.tu-pm');if(!b)return;$$('.tu-pm').forEach(x=>x.setAttribute('aria-pressed',x===b));pm=b.dataset.pm;$('#tuQr').classList.toggle('on',pm==='BCEL One (LaoQR)')});
 $('#pay').addEventListener('click',()=>amt>0?tuOpen():say('ກະລຸນາລະບຸຈຳນວນເງິນ'));
 $('#hist').innerHTML=[['ເຕີມເງິນຜ່ານ BCEL One','ມື້ນີ້ 09:41',200000],['ເຕີມເງິນຜ່ານ U-Money','ມື້ວານນີ້ 18:20',100000],['ເຕີມເງິນຜ່ານການໂອນທະນາຄານ','3 ມື້ກ່ອນ',500000]].map(r=>feedRow('in',r[0],r[1],'+'+K(r[2]))).join('');
